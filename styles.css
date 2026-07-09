@@ -5,9 +5,12 @@
 ---------------------------------------------------------------- */
 
 :root {
-  --bg: #1d1c21;
-  --bg-alt: #2e2d36;
+  /* Single background everywhere per Tara (2026-07-09): #292831.
+     --bg-deep is only used for image-slot fills so they still read. */
+  --bg: #292831;
+  --bg-alt: #292831;
   --bg-footer: #292831;
+  --bg-deep: #1d1c21;
   --text: #e9efff;
   --blue: #5c87ff;
   --pink: #e85baf;
@@ -49,7 +52,7 @@ img { display: block; max-width: 100%; }
   position: sticky;
   top: 0;
   z-index: 50;
-  background: rgba(29, 28, 33, 0.85);
+  background: rgba(41, 40, 49, 0.85);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
@@ -57,7 +60,7 @@ img { display: block; max-width: 100%; }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 80px;
+  height: 100px;
 }
 .navbar .logo {
   font-family: var(--display);
@@ -69,22 +72,21 @@ img { display: block; max-width: 100%; }
 .navbar .links {
   display: flex;
   align-items: center;
-  gap: 16px;
-  font-weight: 600;
-  font-size: 15px;
+  gap: 24px;
+  font-weight: 700;
+  font-size: 14px;
 }
+/* Underlined text links on all pages (Figma 105:7 / 126:928) */
 .navbar .links a {
-  border: 1px solid rgba(232, 91, 175, 0.6);
-  border-radius: 100px;
-  padding: 9px 24px;
+  border-bottom: 1px solid var(--pink);
+  padding: 10px 24px;
   color: var(--text);
-  transition: background 0.2s, border-color 0.2s, color 0.2s;
+  transition: color 0.2s;
 }
 .navbar .links a:hover,
 .navbar .links a.active {
-  background: var(--pink);
-  border-color: var(--pink);
-  color: #fff;
+  color: var(--pink);
+  font-weight: 800;
 }
 @media (max-width: 760px) {
   .navbar .links { gap: 8px; font-size: 13px; }
@@ -116,7 +118,9 @@ img { display: block; max-width: 100%; }
 .label.white { color: var(--text); }
 .label.center { align-items: center; }
 .label.wpink { color: var(--text); } /* white text, white bar (currentColor) */
-.hero-kicker { font-size: 15px; margin-bottom: 18px; }
+/* Role label below the name (Figma 105:21): Outfit Bold 24px + 32px bar */
+.hero-role { font-size: 24px; font-weight: 700; }
+.hero-role::after { width: 32px; }
 
 /* ------------------------------- Hero --------------------------- */
 .hero {
@@ -124,26 +128,31 @@ img { display: block; max-width: 100%; }
   display: flex;
   align-items: flex-start;
   gap: 40px;
-  padding-top: 100px;
-  padding-bottom: 80px;
-  /* The venn's lower-right circles bleed ~120px past the hero into the
-     TL;DR section (ending level with the statement's first line, right of
-     the text) — per the Figma detail. Text itself never collides. */
-  min-height: calc(80px + min(738px, 55.5vw));
+  padding-top: 80px;
+  padding-bottom: 0;
+  /* Fixed 800px hero per Figma 105:15 — the venn (737px tall, top 158px)
+     ends level with the hero's bottom edge. */
+  min-height: 800px;
 }
 .hero .left {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 48px;
   position: relative;
   z-index: 1; /* name renders over the venn stroke where they cross */
+}
+.hero .intro {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
 }
 
 .hero h1 {
   font-family: var(--display-alt);
   font-weight: 400;
-  font-size: clamp(40px, 5.6vw, 80px);
+  font-size: clamp(40px, 5vw, 70px);
   line-height: 0.9;
   text-transform: uppercase;
   color: var(--text);
@@ -151,23 +160,28 @@ img { display: block; max-width: 100%; }
 .hero h1 .first { color: var(--blue); display: block; }
 
 .hero .tagline {
-  font-size: 16px;
+  font-size: 20px;
   line-height: 1.6;
   opacity: 0.9;
-  max-width: 600px;
+  max-width: 586px;
 }
 
-.hero .cta-row { display: flex; gap: 24px; flex-wrap: wrap; }
+.hero .cta-row { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
 
 .btn-primary,
 .btn-teal,
-.btn-outline {
-  display: inline-block;
+.btn-outline,
+.btn-white,
+.btn-outline-white {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
   font-family: var(--body);
   font-weight: 700;
   font-size: 15px;
   padding: 13px 28px;
-  border-radius: 100px;
+  border-radius: 16px;
   transition: transform 0.15s ease, filter 0.15s ease, background 0.15s ease, color 0.15s ease;
 }
 .btn-primary { background: var(--pink); color: var(--text); }
@@ -176,15 +190,25 @@ img { display: block; max-width: 100%; }
 .btn-teal:hover { filter: brightness(1.08); transform: translateY(-2px); }
 .btn-outline { border: 1.5px solid var(--text); color: var(--text); }
 .btn-outline:hover { background: var(--text); color: var(--bg); transform: translateY(-2px); }
+/* Hero buttons (Figma 105:25): 1px white outline + translucent fill.
+   Get in touch is ~10% smaller per Tara. */
+.btn-outline-white { padding: 18px 40px; font-size: 16px; }
+.btn-white { padding: 16px 36px; font-size: 14px; }
+.btn-white { background: rgba(255, 255, 255, 0.2); color: #fff; }
+.btn-white:hover { background: rgba(255, 255, 255, 0.3); transform: translateY(-2px); }
+.btn-outline-white { border: 1px solid #fff; color: #fff; }
+.btn-outline-white:hover { background: #fff; color: var(--bg); transform: translateY(-2px); }
 
 /* The venn is pinned to the hero's right edge so its top circle crosses
    the "D" in SHEFFIELD, and its lower circles bleed past the hero into
    the TL;DR section — matching the Figma placement. */
 .hero .venn {
   position: absolute;
-  top: 200px;
-  right: 0;
-  width: min(772px, 58vw);
+  /* High enough that the top circle crosses under the "D" in SHEFFIELD,
+     with clear air above the TL;DR copy below. */
+  top: 60px;
+  right: -11px;
+  width: min(771px, 56vw);
   z-index: 0;
   pointer-events: none;
 }
@@ -205,30 +229,24 @@ img { display: block; max-width: 100%; }
 
 /* ------------------------------- TL;DR -------------------------- */
 .tldr {
-  padding-top: 64px;
-  padding-bottom: 140px;
+  padding-top: 40px;
+  padding-bottom: 80px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 48px;
+  gap: 24px;
   text-align: left;
 }
 .tldr .statement {
   font-family: var(--body);
-  font-weight: 400;
-  font-size: clamp(21px, 2.1vw, 30px);
-  line-height: 1.4;
+  font-weight: 300;
+  font-size: clamp(24px, 2.4vw, 32px);
+  line-height: 1.3;
+  letter-spacing: 0.03em;
   max-width: 900px;
   margin: 0;
 }
-.tldr .statement + .statement.boxed { margin-top: -34px; }
-.tldr .statement.boxed {
-  display: inline-block;
-  border: 1.5px solid var(--pink);
-  border-radius: 22px;
-  padding: 16px 26px;
-}
-.tldr .statement .d { color: var(--blue); font-weight: 600; }
+.tldr .statement .d { color: var(--pink); font-weight: 600; }
 .tldr .statement .f { color: var(--teal); font-weight: 600; }
 .tldr .statement .v { color: var(--orange); font-weight: 600; }
 @media (max-width: 900px) { .tldr br.lg { display: none; } }
@@ -236,39 +254,40 @@ img { display: block; max-width: 100%; }
 
 /* -------- Experience + Education + Skills (one band, 3 cols) ---- */
 .info-cols {
-  display: grid;
-  grid-template-columns: 1.5fr 1fr 0.9fr;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
   gap: 64px;
-  align-items: start;
 }
-@media (max-width: 1100px) { .info-cols { grid-template-columns: 1fr 1fr; } }
-@media (max-width: 760px) { .info-cols { grid-template-columns: 1fr; } }
+@media (max-width: 1100px) { .info-cols { flex-wrap: wrap; } }
+@media (max-width: 760px) { .info-cols { flex-direction: column; } }
 
 .info-cols .col { display: flex; flex-direction: column; gap: 48px; }
 
 .skills-sub {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 40px;
+  gap: 48px 24px;
 }
 @media (max-width: 480px) { .skills-sub { grid-template-columns: 1fr; } }
 
 .skill-group h4 {
-  font-family: var(--display);
-  font-weight: 900;
-  font-size: 16px;
+  font-family: "Outfit", sans-serif;
+  font-weight: 600;
+  font-size: 18px;
   color: var(--text);
-  margin-bottom: 14px;
+  margin-bottom: 6px;
 }
-.skill-group ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.skill-group ul { list-style: none; display: flex; flex-direction: column; gap: 4px; }
 .skill-group li {
   display: flex;
   gap: 8px;
-  font-size: 14px;
+  font-family: "Outfit", sans-serif;
+  font-size: 15px;
   line-height: 1.5;
-  opacity: 0.8;
+  color: var(--text);
 }
-.skill-group li::before { content: "•"; opacity: 0.6; }
+.skill-group li::before { content: "•"; font-weight: 700; font-size: 14px; }
 
 .skill-cat { display: flex; flex-direction: column; gap: 24px; }
 .skill-cat ul { list-style: none; display: flex; flex-direction: column; gap: 12px; }
@@ -285,11 +304,14 @@ img { display: block; max-width: 100%; }
 .skill-cat.white li::before { color: var(--text); }
 
 /* --------------------- Work page (Key Projects) ----------------- */
+/* Tabs strip directly under the nav, hairline below (Figma 126:935) */
+.work-header-band { border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
 .work-header {
   display: flex;
   flex-direction: column;
   gap: 24px;
-  padding-top: 80px;
+  padding-top: 40px;
+  padding-bottom: 40px;
 }
 .key-projects {
   font-family: var(--display-alt);
@@ -301,21 +323,34 @@ img { display: block; max-width: 100%; }
 }
 .tabs { display: flex; gap: 24px; flex-wrap: wrap; }
 .tab {
+  display: inline-flex;
+  align-items: center;
+  height: 51px;
   font-family: var(--body);
-  font-weight: 600;
-  font-size: 15px;
-  color: var(--text);
+  font-weight: 700;
+  font-size: 14px;
+  color: #fff;
   background: transparent;
-  border: 1px solid rgba(92, 255, 220, 0.45);
-  border-radius: 100px;
-  padding: 9px 24px;
+  border: 1px solid var(--teal);
+  border-radius: 16px;
+  padding: 10px 24px;
   cursor: pointer;
   transition: background 0.2s, border-color 0.2s, color 0.2s;
 }
-.tab:hover { border-color: var(--teal); }
+.tab:hover { background: rgba(92, 255, 220, 0.12); }
 .tab.active {
   background: var(--teal);
   border-color: var(--teal);
+  color: var(--bg);
+  font-weight: 800;
+}
+/* Placeholder case studies get an orange outline (Figma 126:948),
+   and highlight/fill in the same orange — not teal */
+.tab.tab-alt { border-color: var(--orange); }
+.tab.tab-alt:hover { background: rgba(255, 171, 92, 0.12); }
+.tab.tab-alt.active {
+  background: var(--orange);
+  border-color: var(--orange);
   color: var(--bg);
 }
 
@@ -333,51 +368,101 @@ img { display: block; max-width: 100%; }
 .panel-title {
   font-family: var(--display);
   font-weight: 900;
-  font-size: clamp(30px, 3.4vw, 48px);
-  line-height: 1.05;
+  font-size: clamp(40px, 5.8vw, 80px);
+  line-height: 1.06;
   text-transform: uppercase;
   color: var(--text);
-  margin-bottom: 28px;
+  margin-bottom: 24px;
 }
+/* Compact inline meta row (Figma 127:1171): 15px, gap 48 */
 .panel .case-meta {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 24px;
-  margin: 0 0 40px;
-  padding-bottom: 24px;
-  border-bottom: 1px solid rgba(233, 239, 255, 0.08);
+  display: flex;
+  gap: 48px;
+  flex-wrap: wrap;
+  margin: 0;
+  padding-bottom: 0;
+  border-bottom: none;
 }
-@media (max-width: 860px) { .panel .case-meta { grid-template-columns: repeat(2, 1fr); } }
+.panel .case-meta .micro-label {
+  font-weight: 500;
+  font-size: 15px;
+  letter-spacing: 0;
+  text-transform: none; /* "Role", not "ROLE" (Figma 133:1850) */
+  color: var(--pink);
+  margin-bottom: 0;
+}
+.panel .case-meta .val { font-weight: 400; font-size: 15px; opacity: 0.6; }
 
-/* Two-column case rows: text beside an image slot */
+.panel-head { padding: 40px 0 0; }
+.panel-body { padding: 48px 0 120px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+
+/* Home / Back / Next pager at the bottom of each project (Figma 144:1162) */
+.pager { display: flex; gap: 24px; }
+.pager-btn {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  padding: 10px 24px;
+  font-family: var(--body);
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--text);
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+.pager-btn:hover { background: rgba(255, 255, 255, 0.12); }
+
+.placeholder {
+  font-style: italic;
+  opacity: 0.45 !important;
+}
+
+/* Case rows (Figma 127:1188 / 127:1202 / 142:743):
+   default row = copy (flex) + 52% slot; .slot-sm row = 26.5% slot + copy */
 .case-cols {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
   gap: 48px;
   align-items: stretch;
   margin-bottom: 48px;
 }
+.case-cols .case-body { flex: 1; padding-right: 24px; }
+.case-cols .img-slot { width: 52%; flex-shrink: 0; }
+.case-cols.slot-sm .img-slot { width: 26.5%; }
 @media (max-width: 860px) {
-  .case-cols { grid-template-columns: 1fr; }
-  .case-cols .img-slot { order: 2; min-height: 220px; }
+  .case-cols { flex-direction: column; }
+  .case-cols .img-slot,
+  .case-cols.slot-sm .img-slot { order: 2; width: 100%; min-height: 220px; }
+  .case-cols .case-body { padding-right: 0; }
 }
 
 .img-slot {
-  border: 1px solid rgba(233, 239, 255, 0.18);
-  border-radius: 16px;
-  min-height: 280px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.27);
+  border-radius: 20px;
+  min-height: 220px;
 }
-.img-slot.wide { width: 100%; min-height: 300px; margin-bottom: 48px; }
-.img-slot img { width: 100%; height: 100%; object-fit: cover; border-radius: 16px; }
+.img-slot.wide { width: 100%; min-height: 212px; margin-bottom: 48px; }
+.img-slot img { width: 100%; height: 100%; object-fit: cover; border-radius: 20px; }
 
-.panel .case-body section { padding: 0 0 32px; }
-.panel .case-body h2 { color: var(--teal); }
+.panel .case-body section { padding: 0 0 64px; }
+.panel .case-body section:last-child { padding-bottom: 0; }
+.panel .case-body h2 { color: var(--teal); margin-bottom: 13px; }
 .panel .case-body h2::after { background: var(--teal); }
+.panel .case-body p { font-size: 15px; opacity: 1; }
+.panel .case-body p + p { margin-top: 10px; }
 .xy {
-  font-weight: 800;
+  font-weight: 400;
   color: var(--text) !important;
   opacity: 1 !important;
   margin-bottom: 12px;
+}
+
+/* Work-page footer: no heading, blue-outlined button (Figma 144:830) */
+.work-page .footer .cta .big-btn {
+  background: transparent;
+  border: 1px solid var(--blue);
+  color: #fff;
 }
 .coming-soon {
   display: inline-block;
@@ -385,13 +470,8 @@ img { display: block; max-width: 100%; }
   font-size: 15px;
   color: var(--orange);
   border: 1px solid var(--orange);
-  border-radius: 100px;
+  border-radius: 16px;
   padding: 12px 28px;
-}
-
-.footer .cta h2.sentence {
-  text-transform: none;
-  font-size: clamp(32px, 4vw, 56px);
 }
 
 /* ------------------------------- Work --------------------------- */
@@ -455,9 +535,11 @@ a.project:hover .thumb img { transform: scale(1.04); }
 
 /* ------------------------------- Experience --------------------- */
 .experience {
-  background: var(--bg-alt);
-  padding-top: 120px;
-  padding-bottom: 120px;
+  /* Hairlines above + below, tight padding (Figma 123:347) */
+  border-top: 1px solid rgba(255, 255, 255, 0.27);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.27);
+  padding-top: 40px;
+  padding-bottom: 40px;
 }
 .experience .cols {
   display: flex;
@@ -468,8 +550,8 @@ a.project:hover .thumb img { transform: scale(1.04); }
 .experience .exp { flex: 1; display: flex; flex-direction: column; gap: 48px; }
 .experience .edu { width: 400px; max-width: 100%; display: flex; flex-direction: column; gap: 48px; }
 
-.exp-list { display: flex; flex-direction: column; gap: 40px; }
-.exp-item { display: flex; flex-direction: column; gap: 12px; }
+.exp-list { display: flex; flex-direction: column; gap: 48px; }
+.exp-item { display: flex; flex-direction: column; gap: 6px; }
 .exp-item .row {
   display: flex;
   align-items: baseline;
@@ -478,23 +560,23 @@ a.project:hover .thumb img { transform: scale(1.04); }
   flex-wrap: wrap;
 }
 .exp-item .row h3 {
-  font-family: var(--display);
-  font-weight: 900;
-  font-size: 24px;
+  font-family: "Outfit", sans-serif;
+  font-weight: 600;
+  font-size: 18px;
   color: var(--text);
 }
-.exp-item .row .dates { font-weight: 700; font-size: 14px; color: var(--teal); }
-.exp-item .org { font-weight: 600; font-size: 16px; color: var(--pink); }
-.exp-item .blurb { font-size: 15px; opacity: 0.6; }
+.exp-item .row .dates { font-weight: 600; font-size: 14px; color: var(--text); }
+.exp-item .org { font-family: "Outfit", sans-serif; font-weight: 500; font-size: 15px; color: var(--text); }
+.exp-item .blurb { font-family: "Outfit", sans-serif; font-size: 14px; opacity: 0.6; }
 
-.edu-list { display: flex; flex-direction: column; gap: 40px; }
+.edu-list { display: flex; flex-direction: column; gap: 48px; }
 .edu-item h3 {
-  font-family: var(--display);
-  font-weight: 900;
-  font-size: 20px;
+  font-family: "Outfit", sans-serif;
+  font-weight: 600;
+  font-size: 18px;
   color: var(--text);
 }
-.edu-item p { font-size: 14px; color: var(--orange); margin-top: 8px; }
+.edu-item p { font-family: "Outfit", sans-serif; font-size: 15px; font-weight: 500; color: var(--text); margin-top: 6px; }
 
 /* ------------------------------- Referrals ---------------------- */
 .referrals { padding-top: 120px; padding-bottom: 120px; }
@@ -539,10 +621,10 @@ a.project:hover .thumb img { transform: scale(1.04); }
   background: var(--bg-footer);
   width: 100%;
   padding-top: 120px;
-  padding-bottom: 64px;
+  padding-bottom: 120px;
   display: flex;
   flex-direction: column;
-  gap: 120px;
+  gap: 24px;
 }
 .footer .cta {
   display: flex;
@@ -552,26 +634,32 @@ a.project:hover .thumb img { transform: scale(1.04); }
   text-align: center;
 }
 .footer .cta h2 {
+  /* Outfit Medium, sentence case, bold pink accent (Figma 127:1036) */
   font-family: var(--display);
-  font-weight: 900;
-  font-size: clamp(36px, 5.5vw, 80px);
+  font-weight: 500;
+  font-size: clamp(40px, 5.5vw, 80px);
   line-height: 1;
-  text-transform: uppercase;
   color: var(--text);
 }
-.footer .cta h2 span { color: var(--pink); }
+.footer .cta h2 span { color: var(--pink); font-weight: 700; }
 .footer .cta .big-btn {
-  background: var(--pink);
-  color: var(--text);
+  background: var(--blue);
+  color: var(--bg);
   font-weight: 800;
-  font-size: 24px;
-  padding: 24px 64px;
-  border-radius: 100px;
+  font-size: 21px;
+  padding: 21px 57px;
+  border-radius: 16px;
   transition: transform 0.15s ease, filter 0.15s ease;
 }
 .footer .cta .big-btn:hover { filter: brightness(1.08); transform: translateY(-2px); }
 
 .footer .bottom {
+  /* Full-bleed: name pinned to the left window edge, copyright to the
+     right (per Figma). Overrides .wrap's max-width AND its auto margins —
+     as a flex item, `margin: 0 auto` shrink-wraps + centers the row. */
+  max-width: none;
+  width: 100%;
+  margin: 0;
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
@@ -706,4 +794,4 @@ a.project:hover .thumb img { transform: scale(1.04); }
   border-top: 1px solid rgba(233, 239, 255, 0.1);
   margin-top: 24px;
 }
-.case-nav .btn-outline { padding: 12px 28px; font-size: 15px; border-radius: 100px; }
+.case-nav .btn-outline { padding: 12px 28px; font-size: 15px; border-radius: 16px; }

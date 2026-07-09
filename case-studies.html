@@ -7,11 +7,11 @@
   <meta name="description" content="Key projects by Tara Sheffield — data visualisation and AI-assisted analytics at SafetyCulture.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@900&family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;900&family=Manrope:wght@300;400;600;700;800&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/@fontsource/bbh-sans-bartle/index.css" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body class="work-page">
 
   <div class="navbar">
     <div class="wrap inner">
@@ -26,225 +26,679 @@
 
   <main>
     <!-- ===================== KEY PROJECTS header ==================== -->
-    <section class="wrap work-header">
-      <div class="label teal">Work</div>
-      <h1 class="key-projects">Key Projects</h1>
-      <div class="tabs" role="tablist" aria-label="Projects">
-        <button class="tab active" id="tab-kpi" role="tab" aria-selected="true" aria-controls="panel-kpi" data-panel="kpi">KPI Visualisation</button>
-        <button class="tab" id="tab-ttc" role="tab" aria-selected="false" aria-controls="panel-ttc" data-panel="ttc">AI Text to Chart</button>
-        <button class="tab" id="tab-media" role="tab" aria-selected="false" aria-controls="panel-media" data-panel="media">Media-editing UX</button>
+    <section class="work-header-band">
+      <div class="wrap work-header">
+        <div class="tabs" role="tablist" aria-label="Projects">
+          <button class="tab active" id="tab-ttc" role="tab" aria-selected="true" aria-controls="panel-ttc" data-panel="ttc">AI Text to Chart</button>
+          <button class="tab" id="tab-kpi" role="tab" aria-selected="false" aria-controls="panel-kpi" data-panel="kpi">KPI Visualisation</button>
+          <button class="tab" id="tab-media" role="tab" aria-selected="false" aria-controls="panel-media" data-panel="media">Mobile-editing UX</button>
+          <button class="tab tab-alt" id="tab-har" role="tab" aria-selected="false" aria-controls="panel-har" data-panel="har">Holistic Analytics discovery research</button>
+          <button class="tab tab-alt" id="tab-tars" role="tab" aria-selected="false" aria-controls="panel-tars" data-panel="tars">Project TARS validation</button>
+        </div>
       </div>
     </section>
+
+    <!-- ===================== AI Text to Chart ===================== -->
+    <div class="panel" id="panel-ttc" role="tabpanel" aria-labelledby="tab-ttc">
+      <div class="panel-head">
+        <div class="wrap">
+          <h2 class="panel-title">A chart builder<br>you can talk to</h2>
+          <div class="case-meta">
+            <div>
+              <span class="micro-label">Role</span>
+              <span class="val">Product Designer, end to end</span>
+            </div>
+            <div>
+              <span class="micro-label">Company</span>
+              <span class="val">SafetyCulture</span>
+            </div>
+            <div>
+              <span class="micro-label">Domain</span>
+              <span class="val">Analytics</span>
+            </div>
+            <div>
+              <span class="micro-label">Platform</span>
+              <span class="val">Web</span>
+            </div>
+            <div>
+              <span class="micro-label">Status</span>
+              <span class="val">Launch ready (design &amp; spec)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="wrap">
+          <div class="case-cols">
+            <div class="case-body">
+              <section>
+                <h2>Overview</h2>
+                <p>
+                  I designed a conversational, AI-powered chart builder to fix the
+                  #1 complaint about SafetyCulture Analytics: that building a chart
+                  was too manual and fiddly to bother with.
+                </p>
+              </section>
+              <section>
+                <h2>The problem</h2>
+                <p class="xy">Manual, fiddly chart-building → charts created through conversation</p>
+                <p>
+                  Only ~45% of users who started building a chart actually finished
+                  it (Nov 2024 – Mar 2025). In customer calls, "the learning curve"
+                  came up repeatedly — the existing builder asked users to make a
+                  series of configuration decisions before they saw anything useful.
+                </p>
+              </section>
+            </div>
+            <div class="img-slot" aria-hidden="true"></div>
+          </div>
+
+          <div class="img-slot wide" aria-hidden="true"></div>
+
+          <div class="case-cols slot-sm">
+            <div class="img-slot" aria-hidden="true"></div>
+            <div class="case-body">
+              <section>
+                <h2>How I got here</h2>
+                <p>
+                  The drop-off data pointed at a specific failure: the old
+                  builder made users answer every question before showing them
+                  anything. So the design inverts it — show a chart first,
+                  refine after. Given even just a metric, the system generates a
+                  chart with sensible defaults, then asks the single most
+                  valuable follow-up question, in a fixed hierarchy: metric →
+                  attribute → filters and chart type → configuration. That order
+                  wasn't arbitrary — it mirrors the existing chart builder's
+                  sequence, so the AI asks questions in the same order customers
+                  already built charts manually.
+                </p>
+                <p>
+                  Just as important is what I designed out. Editing inside the
+                  chat was cut — it blurred "save" and "edit" and duplicated the
+                  dashboard editor. Saving multiple charts per session was cut —
+                  mismatched filters break a dashboard's global filters.
+                  Click-based chart editing was cut — syncing chart interactions
+                  back to the model added complexity V1 didn't need. And the
+                  unglamorous half of the work: error and clarification flows,
+                  session and token limits, and a model-agnostic UI that
+                  survives the underlying model being swapped.
+                </p>
+              </section>
+            </div>
+          </div>
+
+          <div class="case-cols">
+            <div class="case-body">
+              <section>
+                <h2>The solution</h2>
+                <p>
+                  A conversational chart builder on the Analytics landing page:
+                  describe what you want, get a chart instantly, refine it
+                  through guided follow-ups. V1 was deliberately limited to that
+                  single entry point — dashboard-level creation introduced
+                  filter-consistency issues and outstripped design capacity.
+                </p>
+              </section>
+              <section>
+                <h2>Outcome</h2>
+                <p>
+                  Design and spec were complete and the project was entering
+                  back-end review — with a staged rollout planned (dogfood →
+                  closed EA → GA) — when the roadmap shifted and the release was
+                  paused. Success metrics were defined up front: lift completion
+                  past the ~45% baseline, and track the share of charts created
+                  via natural language as the adoption signal.
+                </p>
+              </section>
+            </div>
+            <div class="img-slot" aria-hidden="true"></div>
+          </div>
+
+          <div class="pager">
+            <a class="pager-btn" href="index.html">Home</a>
+            <button class="pager-btn" type="button" data-goto="kpi">Next →</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- ===================== KPI Visualisation ====================== -->
-    <section class="wrap work">
-      <div class="panel" id="panel-kpi" role="tabpanel" aria-labelledby="tab-kpi">
-        <h2 class="panel-title">Making one chart<br>do the work of five</h2>
-        <div class="case-meta">
-          <div>
-            <span class="micro-label">Role</span>
-            <span class="val">Product Designer, end to end</span>
-          </div>
-          <div>
-            <span class="micro-label">Company</span>
-            <span class="val">SafetyCulture</span>
-          </div>
-          <div>
-            <span class="micro-label">Domain</span>
-            <span class="val">Analytics</span>
-          </div>
-          <div>
-            <span class="micro-label">Platform</span>
-            <span class="val">Web</span>
-          </div>
-          <div>
-            <span class="micro-label">Status</span>
-            <span class="val">Released</span>
-          </div>
-        </div>
-
-        <div class="case-cols">
-          <div class="case-body">
-            <section>
-              <h2>Overview</h2>
-              <p>
-                Customers used KPI thresholds to judge performance at a glance —
-                but charts supported only a single KPI, with no custom ranges or
-                colour coding. I designed multiple-KPI support across
-                SafetyCulture's chart library, letting customers track several
-                targets and performance bands in a single chart.
-              </p>
-            </section>
-            <section>
-              <h2>The problem</h2>
-              <p class="xy">Poor UX forcing workarounds → unlock $770K ARR</p>
-              <p>
-                Without multiple KPIs or custom thresholds, customers resorted to
-                two workarounds: creating several near-identical charts, or
-                exporting data to spreadsheets and analysing it outside the
-                platform. Both were time-consuming and undermined the value of
-                Analytics itself. Demand was well-evidenced in customer calls and
-                on the product feedback board.
-              </p>
-            </section>
-          </div>
-          <div class="img-slot" aria-hidden="true"></div>
-        </div>
-
-        <div class="img-slot wide" aria-hidden="true"></div>
-
-        <div class="case-cols">
-          <div class="img-slot" aria-hidden="true"></div>
-          <div class="case-body">
-            <section>
-              <h2>The solution</h2>
-              <p>
-                A KPI configuration modal with two modes: single-value KPIs — up
-                to 4 per chart, shown as line indicators with custom names and
-                colours — and range KPIs — up to 5 performance bands defined by
-                min/max values. The design extended the platform's existing
-                bar-colour behaviour to multiple targets, keeping the mental
-                model customers already had, across seven chart types: stacked,
-                column, grouped, bar, line, timetable, and dial.
-              </p>
-            </section>
-            <section>
-              <h2>Outcome</h2>
-              <p>
-                Released to all customers on web. Post-release impact wasn't
-                instrumented, so the honest answer is: shipped, impact not
-                tracked — a gap I'd push to close earlier if I ran this project
-                again.
-              </p>
-            </section>
+    <div class="panel" id="panel-kpi" role="tabpanel" aria-labelledby="tab-kpi" hidden>
+      <div class="panel-head">
+        <div class="wrap">
+          <h2 class="panel-title">Making one chart<br>do the work of five</h2>
+          <div class="case-meta">
+            <div>
+              <span class="micro-label">Role</span>
+              <span class="val">Product Designer, end to end</span>
+            </div>
+            <div>
+              <span class="micro-label">Company</span>
+              <span class="val">SafetyCulture</span>
+            </div>
+            <div>
+              <span class="micro-label">Domain</span>
+              <span class="val">Analytics</span>
+            </div>
+            <div>
+              <span class="micro-label">Platform</span>
+              <span class="val">Web</span>
+            </div>
+            <div>
+              <span class="micro-label">Status</span>
+              <span class="val">Released</span>
+            </div>
           </div>
         </div>
       </div>
+      <div class="panel-body">
+        <div class="wrap">
+          <div class="case-cols">
+            <div class="case-body">
+              <section>
+                <h2>Overview</h2>
+                <p>
+                  Customers used KPI thresholds to judge performance at a glance —
+                  but charts supported only a single KPI, with no custom ranges or
+                  colour coding. I designed multiple-KPI support across
+                  SafetyCulture's chart library, letting customers track several
+                  targets and performance bands in a single chart.
+                </p>
+              </section>
+              <section>
+                <h2>The problem</h2>
+                <p class="xy">Several near-identical charts and spreadsheet exports → one chart tracking every target</p>
+                <p>
+                  Without multiple KPIs or custom thresholds, customers resorted to
+                  two workarounds: creating several near-identical charts, or
+                  exporting data to spreadsheets and analysing it outside the
+                  platform. Both were time-consuming and undermined the value of
+                  Analytics itself. Demand was well-evidenced: roughly $770K AUD
+                  in linked ARR across customer calls and the product feedback
+                  board.
+                </p>
+              </section>
+            </div>
+            <div class="img-slot" aria-hidden="true"></div>
+          </div>
 
-      <!-- ===================== AI Text to Chart ===================== -->
-      <div class="panel" id="panel-ttc" role="tabpanel" aria-labelledby="tab-ttc" hidden>
-        <h2 class="panel-title">A chart builder<br>you can talk to</h2>
-        <div class="case-meta">
-          <div>
-            <span class="micro-label">Role</span>
-            <span class="val">Product Designer, end to end</span>
+          <div class="img-slot wide" aria-hidden="true"></div>
+
+          <div class="case-cols slot-sm">
+            <div class="img-slot" aria-hidden="true"></div>
+            <div class="case-body">
+              <section>
+                <h2>How I got here</h2>
+                <p>
+                  The demand was already quantified, so the design question
+                  wasn't whether — it was how to add complexity without breaking
+                  what customers already understood. The platform had one
+                  existing KPI behaviour: bar colours change when a single
+                  target is met. Rather than invent a new visual language, I
+                  extended that mental model to multiple targets, and split
+                  configuration into two modes — single-value lines for targets,
+                  min/max range bands for performance zones — so users only see
+                  the options their job needs.
+                </p>
+                <p>
+                  The design was pressure-tested through rounds of front-end
+                  engineering review and internal dogfooding — including a
+                  debate over how many KPI lines a chart could reasonably carry,
+                  which is where the shipped caps were settled. The hardest
+                  constraint was consistency: one configuration pattern that
+                  behaves predictably across seven chart types, from stacked
+                  columns to dials.
+                </p>
+              </section>
+            </div>
           </div>
-          <div>
-            <span class="micro-label">Company</span>
-            <span class="val">SafetyCulture</span>
+
+          <div class="case-cols">
+            <div class="case-body">
+              <section>
+                <h2>The solution</h2>
+                <p>
+                  A KPI configuration modal with two modes: single-value KPIs — up
+                  to 4 per chart, shown as line indicators with custom names and
+                  colours — and range KPIs — up to 5 performance bands defined by
+                  min/max values. The design extended the platform's existing
+                  bar-colour behaviour to multiple targets, keeping the mental
+                  model customers already had, across seven chart types: stacked,
+                  column, grouped, bar, line, timetable, and dial.
+                </p>
+              </section>
+              <section>
+                <h2>Outcome</h2>
+                <p>
+                  Released to all customers on web. Post-release impact wasn't
+                  instrumented, so the honest answer is: shipped, impact not
+                  tracked — a gap I'd push to close earlier if I ran this project
+                  again.
+                </p>
+              </section>
+            </div>
+            <div class="img-slot" aria-hidden="true"></div>
           </div>
-          <div>
-            <span class="micro-label">Domain</span>
-            <span class="val">Analytics</span>
-          </div>
-          <div>
-            <span class="micro-label">Platform</span>
-            <span class="val">Web</span>
-          </div>
-          <div>
-            <span class="micro-label">Status</span>
-            <span class="val">Launch ready (design &amp; spec)</span>
+
+          <div class="pager">
+            <button class="pager-btn" type="button" data-goto="ttc">Back</button>
+            <button class="pager-btn" type="button" data-goto="media">Next →</button>
           </div>
         </div>
+      </div>
+    </div>
 
-        <div class="case-cols">
-          <div class="case-body">
-            <section>
-              <h2>Overview</h2>
-              <p>
-                I designed a conversational, AI-powered chart builder to fix the
-                #1 complaint about SafetyCulture Analytics: that building a chart
-                was too manual and fiddly to bother with. The project reached
-                launch-readiness — design and spec through dogfood → beta → GA —
-                before the roadmap shifted.
-              </p>
-            </section>
-            <section>
-              <h2>The problem</h2>
-              <p class="xy">Manual, fiddly chart-building → charts created through conversation</p>
-              <p>
-                Only ~45% of users who started building a chart actually finished
-                it (Nov 2024 – Mar 2025). In customer calls, "the learning curve"
-                came up repeatedly — the existing builder asked users to make a
-                series of configuration decisions before they saw anything useful.
-              </p>
-            </section>
-          </div>
-          <div class="img-slot" aria-hidden="true"></div>
-        </div>
-
-        <div class="img-slot wide" aria-hidden="true"></div>
-
-        <div class="case-cols">
-          <div class="img-slot" aria-hidden="true"></div>
-          <div class="case-body">
-            <section>
-              <h2>The approach</h2>
-              <p>
-                A natural-language chat interface that generates a chart
-                instantly, then asks guided follow-up questions — metric →
-                attribute → filters → chart type → config — only when needed. V1
-                was deliberately limited to one entry point (the Analytics
-                landing page), excluding dashboard-level creation to avoid
-                filter-consistency issues and match design capacity.
-              </p>
-            </section>
-            <section>
-              <h2>Outcome</h2>
-              <p>
-                Launch-ready: design and spec complete, with a staged rollout
-                planned (dogfood → beta → GA) before the roadmap shifted and the
-                release was paused. Success metrics were defined up front: lift
-                completion past the ~45% baseline, and track the share of charts
-                created via natural language as the adoption signal.
-              </p>
-            </section>
+    <!-- ===================== Mobile-editing UX ===================== -->
+    <div class="panel" id="panel-media" role="tabpanel" aria-labelledby="tab-media" hidden>
+      <div class="panel-head">
+        <div class="wrap">
+          <h2 class="panel-title">A 2013 photo editor,<br>rebuilt for today</h2>
+          <div class="case-meta">
+            <div>
+              <span class="micro-label">Role</span>
+              <span class="val">Product Designer, end to end</span>
+            </div>
+            <div>
+              <span class="micro-label">Company</span>
+              <span class="val">SafetyCulture</span>
+            </div>
+            <div>
+              <span class="micro-label">Domain</span>
+              <span class="val">SafetyCulture App</span>
+            </div>
+            <div>
+              <span class="micro-label">Platform</span>
+              <span class="val">Mobile</span>
+            </div>
+            <div>
+              <span class="micro-label">Status</span>
+              <span class="val">Shipped</span>
+            </div>
           </div>
         </div>
       </div>
+      <div class="panel-body">
+        <div class="wrap">
+          <div class="case-cols">
+            <div class="case-body">
+              <section>
+                <h2>Overview</h2>
+                <p>
+                  For frontline workers, annotating a photo is how evidence gets
+                  made — circling the hazard, marking the defect. But the mobile
+                  editing experience they relied on was built in 2013 and had
+                  barely changed since. I redesigned it end to end, validated
+                  the new pattern with user testing, and it shipped.
+                </p>
+              </section>
+              <section>
+                <h2>The problem</h2>
+                <p class="xy">An editor unchanged since 2013 → editing patterns workers already know</p>
+                <p>
+                  The iOS editor dated back to 2013 and its flows were a long
+                  way from what anyone now expects from a photo tool. Every
+                  inspection that needed an annotated image ran through that
+                  friction. The project goal was to bring the user flow and UI
+                  in line with current-day intuitive editing experiences.
+                </p>
+              </section>
+            </div>
+            <div class="img-slot" aria-hidden="true"></div>
+          </div>
 
-      <!-- ===================== Media-editing UX ===================== -->
-      <div class="panel" id="panel-media" role="tabpanel" aria-labelledby="tab-media" hidden>
-        <h2 class="panel-title">Media-editing UX</h2>
-        <div class="case-meta">
-          <div>
-            <span class="micro-label">Role</span>
-            <span class="val">Product Designer, end to end</span>
-          </div>
-          <div>
-            <span class="micro-label">Company</span>
-            <span class="val">SafetyCulture</span>
-          </div>
-          <div>
-            <span class="micro-label">Domain</span>
-            <span class="val">SafetyCulture App</span>
-          </div>
-          <div>
-            <span class="micro-label">Platform</span>
-            <span class="val">Mobile</span>
-          </div>
-          <div>
-            <span class="micro-label">Status</span>
-            <span class="val">Shipped</span>
-          </div>
-        </div>
+          <div class="img-slot wide" aria-hidden="true"></div>
 
-        <div class="case-body">
-          <section>
-            <p>
-              A refreshed mobile media-editing experience for frontline workers —
-              shipped and validated by user testing.
-            </p>
-            <p style="margin-top: 24px;"><span class="coming-soon">Full case study coming soon</span></p>
-          </section>
+          <div class="case-cols slot-sm">
+            <div class="img-slot" aria-hidden="true"></div>
+            <div class="case-body">
+              <section>
+                <h2>How I got here</h2>
+                <p>
+                  The guiding decision was <em>not</em> to reinvent the wheel:
+                  every worker's phone has already taught them how a photo
+                  editor behaves, so the new design borrows those conventions
+                  instead of inventing proprietary ones. I prototyped the new
+                  screen pattern in Figma and validated it before build with a
+                  remote preference test — five participants, managers and
+                  frontline workers across construction, manufacturing, and
+                  utilities in four countries. Navigation proved intuitive;
+                  participants moved between features without prompting. The
+                  test also caught a language problem I'd have missed:
+                  "Original" and "Done" didn't clearly say what they did once
+                  edits auto-saved — a copy fix that went straight into the
+                  design.
+                </p>
+                <p>
+                  The design work also fed the build decision: after evaluating
+                  third-party editing SDKs with engineering, the editor was
+                  rebuilt natively — the first release mirroring existing
+                  features under the new UI, on an architecture that let
+                  follow-on features (brightness, crop, rotate) ship behind
+                  flags roughly a week apart.
+                </p>
+              </section>
+            </div>
+          </div>
+
+          <div class="case-cols">
+            <div class="case-body">
+              <section>
+                <h2>The solution</h2>
+                <p>
+                  A rebuilt mobile editing experience: pen and shape annotation,
+                  arrows, text with styling, colour and stroke controls, rotate
+                  and flip, undo/redo — in a carousel-based UI I designed
+                  natively for both iOS and Android.
+                </p>
+              </section>
+              <section>
+                <h2>Outcome</h2>
+                <!-- PLACEHOLDER: adoption metric below (~300K increase in photo
+                     uploads) is awaiting final measurement — CONFIRM the number
+                     and its time period before uploading this page to the live
+                     site. -->
+                <p>
+                  Shipped to customers through a staged rollout, with the
+                  redesigned pattern validated by user testing before a line of
+                  code was written. Early adoption measurement points to an
+                  increase of roughly 300,000 photos uploaded — final numbers
+                  are still being confirmed.
+                </p>
+              </section>
+            </div>
+            <div class="img-slot" aria-hidden="true"></div>
+          </div>
+
+          <div class="pager">
+            <button class="pager-btn" type="button" data-goto="kpi">Back</button>
+            <button class="pager-btn" type="button" data-goto="har">Next →</button>
+          </div>
         </div>
       </div>
-    </section>
+    </div>
+
+    <!-- ============ Holistic Analytics discovery research =========== -->
+    <!-- Content sourced from Notion "Analytics domain discovery"
+         (research plan, DoD, brief) — reviewed with Tara 2026-07-09. -->
+    <div class="panel" id="panel-har" role="tabpanel" aria-labelledby="tab-har" hidden>
+      <div class="panel-head">
+        <div class="wrap">
+          <h2 class="panel-title">Which problem<br>do we solve first?</h2>
+          <div class="case-meta">
+            <div>
+              <span class="micro-label">Role</span>
+              <span class="val">Product Designer</span>
+            </div>
+            <div>
+              <span class="micro-label">Company</span>
+              <span class="val">SafetyCulture</span>
+            </div>
+            <div>
+              <span class="micro-label">Domain</span>
+              <span class="val">Analytics</span>
+            </div>
+            <div>
+              <span class="micro-label">Platform</span>
+              <span class="val">Web</span>
+            </div>
+            <div>
+              <span class="micro-label">Status</span>
+              <span class="val">Discovery — cut short</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="wrap">
+          <div class="case-cols">
+            <div class="case-body">
+              <section>
+                <h2>Overview</h2>
+                <p>
+                  When Analytics work was set to resume, the domain team held
+                  three competing beliefs about what was most broken — and no
+                  evidence-based way to choose between them. I designed a
+                  two-phase discovery project to make that call — not to
+                  design a solution, but to define the problem sharply enough
+                  for the team to commit — and ran its first phase.
+                </p>
+              </section>
+              <section>
+                <h2>The problem</h2>
+                <p class="xy">Three competing problem hypotheses → one evidence-backed priority</p>
+                <p>
+                  The three hypotheses: a legacy experience gap (the top
+                  feedback on Analytics was that users missed the old
+                  experience), a chart builder with no scalable version, and
+                  low discoverability of Analytics features. The brief was
+                  explicitly not a solution — it was a sharp, evidenced
+                  problem definition with a recommended priority order the
+                  team could act on.
+                </p>
+              </section>
+            </div>
+            <div class="img-slot" aria-hidden="true"></div>
+          </div>
+
+          <div class="img-slot wide" aria-hidden="true"></div>
+
+          <div class="case-cols slot-sm">
+            <div class="img-slot" aria-hidden="true"></div>
+            <div class="case-body">
+              <section>
+                <h2>How I got here</h2>
+                <p>
+                  I structured the work as the Discover and Define halves of
+                  the Double Diamond, run deliberately data-first: before
+                  recruiting a single interviewee, Phase 1 mined every source
+                  the company already had — Amplitude and Hex behavioural
+                  funnels, Gong call reviews, a 90-day Intercom pull plus the
+                  2024 migration period, ProductBoard requests, Salesforce
+                  win/loss and churn signals, and competitive benchmarks.
+                  Each source had a defined job: behavioural data surfaces
+                  symptoms like drop-offs and abandoned sessions, calls and
+                  support tickets explain cause, Salesforce shows business
+                  impact. The themes from that phase defined mutually
+                  exclusive customer cohorts, so Phase 2 interviews validated
+                  with exactly the right people instead of a convenience
+                  sample.
+                </p>
+                <p>
+                  The research questions were segmented by usage: power users
+                  were asked what almost made them give up and why they
+                  didn't; casual users what keeps them coming back and what
+                  stops them going deeper; low-usage users what it's like just
+                  working out what to do. And because a priority call is only
+                  useful if people trust it, I applied an explicit
+                  decision-making framework — weighing institutional
+                  knowledge, then user-familiarity signals, then behavioural
+                  data at scale — with the rationale documented, and the
+                  synthesis peer-reviewed by engineering, product, and design
+                  before stakeholder sign-off.
+                </p>
+              </section>
+            </div>
+          </div>
+
+          <div class="case-cols">
+            <div class="case-body">
+              <section>
+                <h2>The solution</h2>
+                <p>
+                  The deliverable was designed as a prioritised, evidence-backed
+                  problem definition: an insight statement per problem area
+                  (observation, evidence, implication), a structured problem
+                  statement (context, user, pain, impact), defined customer
+                  cohorts ready for targeted recruitment, and a recommended
+                  priority order with the reasoning shown — so the team could
+                  disagree with the conclusion without distrusting the
+                  process.
+                </p>
+              </section>
+              <section>
+                <h2>Outcome</h2>
+                <p>
+                  The project ended where Phase 1 did: my role was made
+                  redundant before synthesis was complete — no priority call
+                  was made, and the validation interviews were never run.
+                  What remains is the framework: the research plan, the
+                  decision-making rationale, the interview guides, and the
+                  Phase 1 evidence base were all documented to a standard
+                  where whoever picks the problem up next doesn't start from
+                  zero.
+                </p>
+              </section>
+            </div>
+            <div class="img-slot" aria-hidden="true"></div>
+          </div>
+
+          <div class="pager">
+            <button class="pager-btn" type="button" data-goto="media">Back</button>
+            <button class="pager-btn" type="button" data-goto="tars">Next →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== Project TARS validation ================= -->
+    <!-- Content sourced from Notion "Final TARS Validation" (brief +
+         findings) — drafted 2026-07-09. Customer names deliberately
+         kept generalised. -->
+    <div class="panel" id="panel-tars" role="tabpanel" aria-labelledby="tab-tars" hidden>
+      <div class="panel-head">
+        <div class="wrap">
+          <h2 class="panel-title">What makes an insight<br>worth surfacing?</h2>
+          <div class="case-meta">
+            <div>
+              <span class="micro-label">Role</span>
+              <span class="val">Product Designer — research lead</span>
+            </div>
+            <div>
+              <span class="micro-label">Company</span>
+              <span class="val">SafetyCulture</span>
+            </div>
+            <div>
+              <span class="micro-label">Domain</span>
+              <span class="val">AI</span>
+            </div>
+            <div>
+              <span class="micro-label">Platform</span>
+              <span class="val">Web</span>
+            </div>
+            <div>
+              <span class="micro-label">Status</span>
+              <span class="val">Research delivered</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="wrap">
+          <div class="case-cols">
+            <div class="case-body">
+              <section>
+                <h2>Overview</h2>
+                <p>
+                  As SafetyCulture invested in AI agents and workflows, one
+                  question kept blocking the roadmap: everyone agreed
+                  customers want insights, but no one could say which ones,
+                  when, or where. I led the insights validation research
+                  within the broader TARS program — a pure research project,
+                  no designs — to answer that with evidence and give product
+                  design a framework to build against.
+                </p>
+              </section>
+              <section>
+                <h2>The problem</h2>
+                <p class="xy">"Customers want insights" → knowing which, when, and through what channel</p>
+                <p>
+                  Delivering insights in ways that drive both customer value
+                  and business impact was the unknown. The starting
+                  hypotheses — insights split into operational, strategic,
+                  and governance categories; needs differ by role; value
+                  evolves over the customer journey — were untested. Building
+                  AI-driven insight features on top of unvalidated
+                  assumptions was the risk this research existed to remove.
+                </p>
+              </section>
+            </div>
+            <div class="img-slot" aria-hidden="true"></div>
+          </div>
+
+          <div class="img-slot wide" aria-hidden="true"></div>
+
+          <div class="case-cols slot-sm">
+            <div class="img-slot" aria-hidden="true"></div>
+            <div class="case-body">
+              <section>
+                <h2>How I got here</h2>
+                <p>
+                  Eighteen in-depth interviews across 24 stakeholders,
+                  spanning seven industries — construction, facilities
+                  management, hospitality &amp; QSR, manufacturing, retail,
+                  logistics, entertainment — and five personas, from
+                  executives to function leads to frontline managers,
+                  alongside competitor benchmarking and quantitative analysis
+                  of existing customer requests. The output of the fieldwork
+                  was a persona-based evidence matrix mapping what insight
+                  each role needs, at what cadence, and in what format.
+                </p>
+                <p>
+                  The synthesis tested assumptions rather than fishing for
+                  themes — and the assumptions didn't all survive. "Insights
+                  must be actionable to be valuable" was overturned:
+                  customers value descriptive context first, and actionability
+                  only as a second layer once they have an overview. "Roles
+                  prioritise different business drivers" was validated but
+                  qualified: nearly everyone anchors on risk and compliance —
+                  role changes how an insight must be framed and delivered,
+                  not whether it matters.
+                </p>
+              </section>
+            </div>
+          </div>
+
+          <div class="case-cols">
+            <div class="case-body">
+              <section>
+                <h2>The solution</h2>
+                <p>
+                  A four-tier insight taxonomy — descriptive, diagnostic,
+                  predictive, prescriptive — and a prioritisation framework
+                  for what to ship first, scoring every candidate insight on
+                  risk impact, decision readiness, and delivery fit. Plus the
+                  delivery principles the data kept repeating: summaries beat
+                  dashboards; the moment and channel matter more than
+                  sophistication; and predictive or prescriptive insights
+                  only land after trust is earned through descriptive and
+                  diagnostic ones.
+                </p>
+              </section>
+              <section>
+                <h2>Outcome</h2>
+                <p>
+                  Delivered as a final report with the evidence matrix,
+                  taxonomy, and prioritisation framework — research the TARS
+                  program's prototyping phase could build against, replacing
+                  "customers want insights" with a tested answer to which,
+                  when, and where.
+                </p>
+              </section>
+            </div>
+            <div class="img-slot" aria-hidden="true"></div>
+          </div>
+
+          <div class="pager">
+            <a class="pager-btn" href="index.html">Home</a>
+            <button class="pager-btn" type="button" data-goto="har">Back</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </main>
 
   <footer class="footer">
     <div class="wrap cta">
-      <h2 class="sentence">Ready to work <span>together?</span></h2>
       <a class="big-btn" href="mailto:sheffield.tara@gmail.com">Get in touch</a>
     </div>
     <div class="wrap bottom">
@@ -252,16 +706,18 @@
         <div class="name">Tara Sheffield</div>
         <div class="sub">Product Designer · Sydney, Australia</div>
       </div>
-      <div class="copyright">© 2026 SHEFFIELD DESIGN</div>
+      <div class="copyright">© 2026 TS.DESIGN</div>
     </div>
   </footer>
 
   <script>
     const tabs = document.querySelectorAll('.tab');
     const panels = {
-      kpi: document.getElementById('panel-kpi'),
       ttc: document.getElementById('panel-ttc'),
+      kpi: document.getElementById('panel-kpi'),
       media: document.getElementById('panel-media'),
+      har: document.getElementById('panel-har'),
+      tars: document.getElementById('panel-tars'),
     };
     function select(name) {
       tabs.forEach((t) => {
@@ -275,6 +731,13 @@
       select(t.dataset.panel);
       history.replaceState(null, '', '#' + t.dataset.panel);
     }));
+    document.querySelectorAll('.pager-btn[data-goto]').forEach((b) => {
+      b.addEventListener('click', () => {
+        select(b.dataset.goto);
+        history.replaceState(null, '', '#' + b.dataset.goto);
+        window.scrollTo({ top: 0 });
+      });
+    });
     const initial = location.hash.slice(1);
     if (panels[initial]) select(initial);
   </script>
