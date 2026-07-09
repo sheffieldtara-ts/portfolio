@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Key Projects — Tara Sheffield</title>
+  <meta name="description" content="Key projects by Tara Sheffield — data visualisation and AI-assisted analytics at SafetyCulture.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@900&family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@fontsource/bbh-sans-bartle/index.css" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div class="navbar">
+    <div class="wrap inner">
+      <a class="logo" href="index.html">TS<span>.</span></a>
+      <nav class="links">
+        <a class="active" href="case-studies.html">Work</a>
+        <a href="index.html#contact">Contact</a>
+        <a href="TaraSheffield_Design_CV26.pdf" target="_blank" rel="noopener">Download</a>
+      </nav>
+    </div>
+  </div>
+
+  <main>
+    <!-- ===================== KEY PROJECTS header ==================== -->
+    <section class="wrap work-header">
+      <div class="label teal">Work</div>
+      <h1 class="key-projects">Key Projects</h1>
+      <div class="tabs" role="tablist" aria-label="Projects">
+        <button class="tab active" id="tab-kpi" role="tab" aria-selected="true" aria-controls="panel-kpi" data-panel="kpi">KPI Visualisation</button>
+        <button class="tab" id="tab-ttc" role="tab" aria-selected="false" aria-controls="panel-ttc" data-panel="ttc">AI Text to Chart</button>
+        <button class="tab" id="tab-media" role="tab" aria-selected="false" aria-controls="panel-media" data-panel="media">Media-editing UX</button>
+      </div>
+    </section>
+
+    <!-- ===================== KPI Visualisation ====================== -->
+    <section class="wrap work">
+      <div class="panel" id="panel-kpi" role="tabpanel" aria-labelledby="tab-kpi">
+        <h2 class="panel-title">Making one chart<br>do the work of five</h2>
+        <div class="case-meta">
+          <div>
+            <span class="micro-label">Role</span>
+            <span class="val">Product Designer, end to end</span>
+          </div>
+          <div>
+            <span class="micro-label">Company</span>
+            <span class="val">SafetyCulture</span>
+          </div>
+          <div>
+            <span class="micro-label">Domain</span>
+            <span class="val">Analytics</span>
+          </div>
+          <div>
+            <span class="micro-label">Platform</span>
+            <span class="val">Web</span>
+          </div>
+          <div>
+            <span class="micro-label">Status</span>
+            <span class="val">Released</span>
+          </div>
+        </div>
+
+        <div class="case-cols">
+          <div class="case-body">
+            <section>
+              <h2>Overview</h2>
+              <p>
+                Customers used KPI thresholds to judge performance at a glance —
+                but charts supported only a single KPI, with no custom ranges or
+                colour coding. I designed multiple-KPI support across
+                SafetyCulture's chart library, letting customers track several
+                targets and performance bands in a single chart.
+              </p>
+            </section>
+            <section>
+              <h2>The problem</h2>
+              <p class="xy">Poor UX forcing workarounds → unlock $770K ARR</p>
+              <p>
+                Without multiple KPIs or custom thresholds, customers resorted to
+                two workarounds: creating several near-identical charts, or
+                exporting data to spreadsheets and analysing it outside the
+                platform. Both were time-consuming and undermined the value of
+                Analytics itself. Demand was well-evidenced in customer calls and
+                on the product feedback board.
+              </p>
+            </section>
+          </div>
+          <div class="img-slot" aria-hidden="true"></div>
+        </div>
+
+        <div class="img-slot wide" aria-hidden="true"></div>
+
+        <div class="case-cols">
+          <div class="img-slot" aria-hidden="true"></div>
+          <div class="case-body">
+            <section>
+              <h2>The solution</h2>
+              <p>
+                A KPI configuration modal with two modes: single-value KPIs — up
+                to 4 per chart, shown as line indicators with custom names and
+                colours — and range KPIs — up to 5 performance bands defined by
+                min/max values. The design extended the platform's existing
+                bar-colour behaviour to multiple targets, keeping the mental
+                model customers already had, across seven chart types: stacked,
+                column, grouped, bar, line, timetable, and dial.
+              </p>
+            </section>
+            <section>
+              <h2>Outcome</h2>
+              <p>
+                Released to all customers on web. Post-release impact wasn't
+                instrumented, so the honest answer is: shipped, impact not
+                tracked — a gap I'd push to close earlier if I ran this project
+                again.
+              </p>
+            </section>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================== AI Text to Chart ===================== -->
+      <div class="panel" id="panel-ttc" role="tabpanel" aria-labelledby="tab-ttc" hidden>
+        <h2 class="panel-title">A chart builder<br>you can talk to</h2>
+        <div class="case-meta">
+          <div>
+            <span class="micro-label">Role</span>
+            <span class="val">Product Designer, end to end</span>
+          </div>
+          <div>
+            <span class="micro-label">Company</span>
+            <span class="val">SafetyCulture</span>
+          </div>
+          <div>
+            <span class="micro-label">Domain</span>
+            <span class="val">Analytics</span>
+          </div>
+          <div>
+            <span class="micro-label">Platform</span>
+            <span class="val">Web</span>
+          </div>
+          <div>
+            <span class="micro-label">Status</span>
+            <span class="val">Launch ready (design &amp; spec)</span>
+          </div>
+        </div>
+
+        <div class="case-cols">
+          <div class="case-body">
+            <section>
+              <h2>Overview</h2>
+              <p>
+                I designed a conversational, AI-powered chart builder to fix the
+                #1 complaint about SafetyCulture Analytics: that building a chart
+                was too manual and fiddly to bother with. The project reached
+                launch-readiness — design and spec through dogfood → beta → GA —
+                before the roadmap shifted.
+              </p>
+            </section>
+            <section>
+              <h2>The problem</h2>
+              <p class="xy">Manual, fiddly chart-building → charts created through conversation</p>
+              <p>
+                Only ~45% of users who started building a chart actually finished
+                it (Nov 2024 – Mar 2025). In customer calls, "the learning curve"
+                came up repeatedly — the existing builder asked users to make a
+                series of configuration decisions before they saw anything useful.
+              </p>
+            </section>
+          </div>
+          <div class="img-slot" aria-hidden="true"></div>
+        </div>
+
+        <div class="img-slot wide" aria-hidden="true"></div>
+
+        <div class="case-cols">
+          <div class="img-slot" aria-hidden="true"></div>
+          <div class="case-body">
+            <section>
+              <h2>The approach</h2>
+              <p>
+                A natural-language chat interface that generates a chart
+                instantly, then asks guided follow-up questions — metric →
+                attribute → filters → chart type → config — only when needed. V1
+                was deliberately limited to one entry point (the Analytics
+                landing page), excluding dashboard-level creation to avoid
+                filter-consistency issues and match design capacity.
+              </p>
+            </section>
+            <section>
+              <h2>Outcome</h2>
+              <p>
+                Launch-ready: design and spec complete, with a staged rollout
+                planned (dogfood → beta → GA) before the roadmap shifted and the
+                release was paused. Success metrics were defined up front: lift
+                completion past the ~45% baseline, and track the share of charts
+                created via natural language as the adoption signal.
+              </p>
+            </section>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================== Media-editing UX ===================== -->
+      <div class="panel" id="panel-media" role="tabpanel" aria-labelledby="tab-media" hidden>
+        <h2 class="panel-title">Media-editing UX</h2>
+        <div class="case-meta">
+          <div>
+            <span class="micro-label">Role</span>
+            <span class="val">Product Designer, end to end</span>
+          </div>
+          <div>
+            <span class="micro-label">Company</span>
+            <span class="val">SafetyCulture</span>
+          </div>
+          <div>
+            <span class="micro-label">Domain</span>
+            <span class="val">SafetyCulture App</span>
+          </div>
+          <div>
+            <span class="micro-label">Platform</span>
+            <span class="val">Mobile</span>
+          </div>
+          <div>
+            <span class="micro-label">Status</span>
+            <span class="val">Shipped</span>
+          </div>
+        </div>
+
+        <div class="case-body">
+          <section>
+            <p>
+              A refreshed mobile media-editing experience for frontline workers —
+              shipped and validated by user testing.
+            </p>
+            <p style="margin-top: 24px;"><span class="coming-soon">Full case study coming soon</span></p>
+          </section>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap cta">
+      <h2 class="sentence">Ready to work <span>together?</span></h2>
+      <a class="big-btn" href="mailto:sheffield.tara@gmail.com">Get in touch</a>
+    </div>
+    <div class="wrap bottom">
+      <div class="id">
+        <div class="name">Tara Sheffield</div>
+        <div class="sub">Product Designer · Sydney, Australia</div>
+      </div>
+      <div class="copyright">© 2026 SHEFFIELD DESIGN</div>
+    </div>
+  </footer>
+
+  <script>
+    const tabs = document.querySelectorAll('.tab');
+    const panels = {
+      kpi: document.getElementById('panel-kpi'),
+      ttc: document.getElementById('panel-ttc'),
+      media: document.getElementById('panel-media'),
+    };
+    function select(name) {
+      tabs.forEach((t) => {
+        const on = t.dataset.panel === name;
+        t.classList.toggle('active', on);
+        t.setAttribute('aria-selected', on);
+      });
+      Object.entries(panels).forEach(([key, el]) => { el.hidden = key !== name; });
+    }
+    tabs.forEach((t) => t.addEventListener('click', () => {
+      select(t.dataset.panel);
+      history.replaceState(null, '', '#' + t.dataset.panel);
+    }));
+    const initial = location.hash.slice(1);
+    if (panels[initial]) select(initial);
+  </script>
+</body>
+</html>
