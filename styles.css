@@ -252,6 +252,8 @@ img { display: block; max-width: 100%; }
 @media (max-width: 900px) { .tldr br.lg { display: none; } }
 @media (max-width: 760px) { .tldr { padding-bottom: 96px; } }
 
+.about-link-btn { margin-top: 8px; }
+
 /* -------- Experience + Education + Skills (one band, 3 cols) ---- */
 .info-cols {
   display: flex;
@@ -262,7 +264,10 @@ img { display: block; max-width: 100%; }
 @media (max-width: 1100px) { .info-cols { flex-wrap: wrap; } }
 @media (max-width: 760px) { .info-cols { flex-direction: column; } }
 
-.info-cols .col { display: flex; flex-direction: column; gap: 48px; }
+.info-cols .col { display: flex; flex-direction: column; gap: 48px; max-width: 420px; }
+/* Skills has 2 sub-columns side by side, so it needs more room than a
+   single-column list — Experience/Education stay at the base max-width. */
+.info-cols .col:has(.skills-sub) { max-width: 480px; }
 
 .skills-sub {
   display: grid;
@@ -270,6 +275,8 @@ img { display: block; max-width: 100%; }
   gap: 48px 24px;
 }
 @media (max-width: 480px) { .skills-sub { grid-template-columns: 1fr; } }
+
+.download-cv-btn { margin-top: 40px; align-self: flex-start; }
 
 .skill-group h4 {
   font-family: "Outfit", sans-serif;
@@ -419,20 +426,31 @@ img { display: block; max-width: 100%; }
 }
 
 /* Case rows (Figma 127:1188 / 127:1202 / 142:743):
-   default row = copy (flex) + 52% slot; .slot-sm row = 26.5% slot + copy */
+   default row = copy (flex) + 52% slot; .slot-sm row = image sized to its own
+   content (landscape screenshots) + copy filling whatever's left */
 .case-cols {
   display: flex;
   gap: 48px;
   align-items: stretch;
   margin-bottom: 48px;
 }
-.case-cols .case-body { flex: 1; padding-right: 24px; }
+.case-cols .case-body { flex: 1; padding-right: 24px; min-width: 0; }
 .case-cols .img-slot { width: 52%; flex-shrink: 0; }
-.case-cols.slot-sm .img-slot { width: 26.5%; }
+
+/* slot-sm: the box hugs the image's own aspect ratio instead of a fixed
+   26.5% column, so wide screenshots aren't stretched/cropped — the text
+   column (flex: 1 above) automatically takes whatever width is left over. */
+.case-cols.slot-sm { align-items: flex-start; }
+.case-cols.slot-sm .img-slot {
+  width: auto;
+  max-width: 400px;
+  flex: 0 1 auto;
+  min-height: 0;
+}
 @media (max-width: 860px) {
   .case-cols { flex-direction: column; }
-  .case-cols .img-slot,
-  .case-cols.slot-sm .img-slot { order: 2; width: 100%; min-height: 220px; }
+  .case-cols .img-slot { order: 2; width: 100%; min-height: 220px; }
+  .case-cols.slot-sm .img-slot { order: 2; width: 100%; max-width: none; }
   .case-cols .case-body { padding-right: 0; }
 }
 
@@ -444,6 +462,68 @@ img { display: block; max-width: 100%; }
 }
 .img-slot.wide { width: 100%; min-height: 212px; margin-bottom: 48px; }
 .img-slot img { width: 100%; height: 100%; object-fit: cover; border-radius: 20px; }
+
+/* Some images (e.g. a whole exploration board) shouldn't be cropped to fill
+   the slot — show the whole thing, letterboxed, instead. */
+.img-slot img.fit-contain { object-fit: contain; background: rgba(0, 0, 0, 0.15); }
+
+/* slot-sm images: show the full screenshot at its natural proportions
+   (never cropped), capped so it can't dominate the row */
+.case-cols.slot-sm .img-slot img {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 280px;
+  object-fit: contain;
+  display: block;
+}
+
+/* Lightbox: click any case-study image to view it full size. */
+.img-slot img { cursor: zoom-in; }
+.lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 9, 13, 0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 56px;
+  z-index: 300;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease;
+}
+.lightbox.is-open { opacity: 1; visibility: visible; }
+.lightbox img {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 12px;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+  cursor: zoom-out;
+}
+.lightbox-close {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.27);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+.lightbox-close:hover { background: rgba(255, 255, 255, 0.16); }
+@media (max-width: 600px) {
+  .lightbox { padding: 24px; }
+  .lightbox-close { top: 12px; right: 12px; }
+}
 
 .panel .case-body section { padding: 0 0 64px; }
 .panel .case-body section:last-child { padding-bottom: 0; }
@@ -551,23 +631,40 @@ a.project:hover .thumb img { transform: scale(1.04); }
 .experience .edu { width: 400px; max-width: 100%; display: flex; flex-direction: column; gap: 48px; }
 
 .exp-list { display: flex; flex-direction: column; gap: 48px; }
-.exp-item { display: flex; flex-direction: column; gap: 6px; }
-.exp-item .row {
+.exp-item,
+.exp-group { display: flex; flex-direction: column; gap: 6px; }
+.exp-item .row,
+.exp-group .row {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
   gap: 12px;
   flex-wrap: wrap;
 }
-.exp-item .row h3 {
+.exp-item .row h3,
+.exp-group .row h3 {
   font-family: "Outfit", sans-serif;
   font-weight: 600;
   font-size: 18px;
   color: var(--text);
 }
-.exp-item .row .dates { font-weight: 600; font-size: 14px; color: var(--text); }
+.exp-item .row .dates,
+.exp-group .row .dates { font-weight: 600; font-size: 14px; color: var(--text); }
 .exp-item .org { font-family: "Outfit", sans-serif; font-weight: 500; font-size: 15px; color: var(--text); }
-.exp-item .blurb { font-family: "Outfit", sans-serif; font-size: 14px; opacity: 0.6; }
+.exp-item .blurb,
+.exp-group .blurb { font-family: "Outfit", sans-serif; font-size: 14px; opacity: 0.6; }
+
+/* Sub-roles nested within a company group (e.g. Product Design + Brand
+   Design both under one SafetyCulture heading/date range). */
+.exp-role { margin-top: 10px; display: flex; flex-direction: column; gap: 4px; }
+.exp-role + .exp-role { margin-top: 18px; }
+.exp-role h4 {
+  font-family: "Outfit", sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--text);
+  opacity: 0.85;
+}
 
 .edu-list { display: flex; flex-direction: column; gap: 48px; }
 .edu-item h3 {
@@ -653,6 +750,63 @@ a.project:hover .thumb img { transform: scale(1.04); }
 }
 .footer .cta .big-btn:hover { filter: brightness(1.08); transform: translateY(-2px); }
 
+/* Contact popover — click "Get in touch" to reveal email + copy button,
+   instead of a mailto: link (which was opening Outlook). */
+.contact-popover { position: relative; display: inline-flex; }
+.contact-card {
+  position: absolute;
+  bottom: calc(100% + 14px);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+  background: var(--bg-deep);
+  border: 1px solid rgba(233, 239, 255, 0.15);
+  border-radius: 12px;
+  padding: 12px 10px 12px 18px;
+  white-space: nowrap;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+  z-index: 10;
+}
+/* Author `display: flex` above beats the UA [hidden] rule at equal
+   specificity — restate it explicitly so the card stays hidden until JS
+   clears the attribute on click. */
+.contact-card[hidden] { display: none; }
+.contact-card::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 7px solid transparent;
+  border-top-color: var(--bg-deep);
+}
+.contact-row { display: flex; align-items: center; gap: 10px; }
+.contact-email { font-size: 15px; font-weight: 600; color: var(--text); }
+.contact-copy {
+  font-family: var(--body);
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--bg);
+  background: var(--blue);
+  border: none;
+  border-radius: 8px;
+  padding: 9px 16px;
+  cursor: pointer;
+  transition: filter 0.15s ease;
+}
+.contact-copy:hover { filter: brightness(1.08); }
+.contact-copy.is-copied { background: var(--teal); }
+.contact-phone { font-size: 14px; font-weight: 700; color: var(--text); }
+@media (max-width: 480px) {
+  .contact-card { left: auto; right: -8px; transform: none; padding-left: 14px; }
+  .contact-card::after { left: auto; right: 24px; transform: none; }
+  .contact-email { font-size: 13px; }
+  .contact-phone { font-size: 13px; }
+}
+
 .footer .bottom {
   /* Full-bleed: name pinned to the left window edge, copyright to the
      right (per Figma). Overrides .wrap's max-width AND its auto margins —
@@ -676,6 +830,117 @@ a.project:hover .thumb img { transform: scale(1.04); }
 .footer .socials { display: flex; gap: 48px; font-weight: 700; font-size: 16px; color: var(--pink); }
 .footer .socials a:hover { text-decoration: underline; }
 .footer .copyright { font-size: 14px; opacity: 0.3; }
+
+/* ===============================================================
+   About Me page (about.html)
+================================================================ */
+.about-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 80px;
+  padding-top: 64px;
+  padding-bottom: 80px;
+}
+@media (max-width: 1000px) { .about-top { flex-direction: column; gap: 56px; } }
+
+/* Left sidebar: name, photo, Experience / Skills / Education — all
+   right-aligned per Tara's design. */
+.about-sidebar {
+  flex: 0 0 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+  gap: 56px;
+}
+@media (max-width: 1000px) { .about-sidebar { align-items: flex-start; text-align: left; flex-basis: auto; } }
+
+.about-id { display: flex; flex-direction: column; align-items: inherit; gap: 12px; }
+.about-name {
+  font-family: var(--display-alt);
+  font-weight: 400;
+  font-size: clamp(28px, 3vw, 40px);
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--blue);
+}
+
+.about-block { display: flex; flex-direction: column; align-items: inherit; gap: 24px; }
+.about-section-title {
+  font-family: var(--display);
+  font-weight: 900;
+  font-size: 20px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+.about-exp-list { display: flex; flex-direction: column; gap: 32px; width: 100%; }
+.about-exp-head { color: var(--pink); font-family: "Outfit", sans-serif; font-weight: 600; font-size: 16px; }
+.about-exp-role { margin-top: 14px; }
+.about-exp-role + .about-exp-role { margin-top: 18px; }
+.about-exp-role h4 { font-family: "Outfit", sans-serif; font-weight: 700; font-size: 15px; color: var(--text); margin-bottom: 4px; }
+.about-exp-role p { font-family: "Outfit", sans-serif; font-size: 14px; color: var(--text); opacity: 0.6; line-height: 1.5; }
+
+.about-skill-groups { display: flex; flex-direction: column; gap: 28px; width: 100%; }
+.about-skill-group h4 { font-family: "Outfit", sans-serif; font-weight: 700; font-size: 15px; color: var(--teal); margin-bottom: 8px; }
+.about-skill-group ul { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+.about-skill-group li {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  font-family: "Outfit", sans-serif;
+  font-size: 14px;
+  color: var(--text);
+  opacity: 0.85;
+}
+.about-skill-group li::before { content: "•"; font-weight: 700; }
+@media (max-width: 1000px) {
+  .about-skill-group li { justify-content: flex-start; }
+}
+
+.about-edu-list { display: flex; flex-direction: column; gap: 24px; width: 100%; }
+.about-edu-item h4 { font-family: "Outfit", sans-serif; font-weight: 700; font-size: 15px; color: var(--orange); }
+.about-edu-item p { font-family: "Outfit", sans-serif; font-size: 14px; color: var(--text); opacity: 0.6; margin-top: 4px; }
+
+/* Right column: How I design / venn / Most recent / Where I've come from */
+.about-main { flex: 1; display: flex; flex-direction: column; gap: 40px; min-width: 0; }
+.about-main .about-block { gap: 16px; }
+.about-main p { font-size: 15px; line-height: 1.7; opacity: 0.85; max-width: 620px; }
+
+.about-bring-list { display: flex; flex-direction: column; gap: 20px; max-width: 620px; }
+.about-bring-item h4 { font-family: "Outfit", sans-serif; font-weight: 700; font-size: 15px; color: var(--text); margin-bottom: 4px; }
+.about-bring-item p { margin: 0; }
+.about-main .venn { width: min(520px, 100%); align-self: center; margin: 8px 0; }
+.about-main .venn img { width: 100%; height: auto; }
+
+/* Testimonials — single card, no per-item borders. */
+.testimonials-card {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 20px;
+  padding: 48px;
+  margin-bottom: 48px;
+}
+/* Stacked list (not a grid) — testimonial length varies a lot (a one-line
+   placeholder next to a five-paragraph real quote), so equal-width columns
+   don't work here. */
+.testimonial-list { display: flex; flex-direction: column; gap: 40px; margin-top: 32px; }
+.testimonial {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 640px;
+  padding-top: 40px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+.testimonial:first-child { padding-top: 0; border-top: none; }
+.testimonial .quote { font-size: 15px; line-height: 1.7; opacity: 0.8; }
+.testimonial .quote + .quote { margin-top: 4px; }
+.testimonial .name { font-family: var(--display); font-weight: 900; font-size: 16px; color: var(--blue); margin-top: 8px; }
+.testimonial .title { font-size: 13px; opacity: 0.6; }
+.testimonials-note { margin-top: 24px; font-size: 14px; opacity: 0.5; }
+
+.about-ctas { padding-bottom: 96px; }
 
 /* ------------------------------- Motion ------------------------- */
 @media (prefers-reduced-motion: no-preference) {

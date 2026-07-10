@@ -18,9 +18,9 @@
     <div class="wrap inner">
       <a class="logo" href="#">TS<span>.</span></a>
       <nav class="links">
-        <a href="case-studies.html">Work</a>
-        <a href="#contact">Contact</a>
-        <a href="TaraSheffield_Design_CV26.pdf" target="_blank" rel="noopener">Download</a>
+        <a href="case-studies.html">My work</a>
+        <a href="about.html">About me</a>
+        <a href="TaraSheffield_CV-26.pdf" target="_blank" rel="noopener">Download</a>
       </nav>
     </div>
   </div>
@@ -53,6 +53,7 @@
       and <span class="f">feasibility</span> -<br class="lg">
       solving the right problem before solving the problem right.
     </p>
+    <a class="btn-outline-white about-link-btn" href="about.html">Learn more about me →</a>
   </section>
 
   <!-- ============ EXPERIENCE + EDUCATION + SKILLS (one band) ======== -->
@@ -93,41 +94,42 @@
           <div class="skill-group">
             <h4>Soft Skills</h4>
             <ul>
-              <li>Direct Communication</li>
-              <li>Cross-functional Collaboration</li>
+              <li>Direct communication</li>
+              <li>Cross-functional collaboration</li>
               <li>Leading with trust and vulnerability</li>
-              <li>Triad Stakeholder Management</li>
+              <li>Stakeholder management</li>
             </ul>
           </div>
         </div>
+        <a class="btn-outline-white download-cv-btn" href="TaraSheffield_CV-26.pdf" target="_blank" rel="noopener">Download my CV →</a>
       </div>
 
       <div class="col">
         <div class="label teal">Experience</div>
         <div class="exp-list">
-          <div class="exp-item">
+          <div class="exp-group">
             <div class="row">
-              <h3>Product Designer</h3>
+              <h3>SafetyCulture</h3>
               <span class="dates">2021 — 2026</span>
             </div>
-            <span class="org">SafetyCulture</span>
-            <p class="blurb">Led design for Analytics and AI Investigations.</p>
-          </div>
-          <div class="exp-item">
-            <div class="row">
-              <h3>Senior Designer</h3>
-              <span class="dates">2018 — 2021</span>
+            <div class="exp-role">
+              <h4>Product Design</h4>
+              <p class="blurb">Led double-diamond design for Analytics — from legacy dashboards through to SafetyCulture's earliest AI investigation project.</p>
             </div>
-            <span class="org">Freelance + Agency</span>
-            <p class="blurb">End-to-end product design for high-growth startups.</p>
-          </div>
-          <div class="exp-item">
-            <div class="row">
-              <h3>Brand Designer</h3>
-              <span class="dates">2013 — 2018</span>
+            <div class="exp-role">
+              <h4>Brand Design</h4>
+              <p class="blurb">Owned the SafetyCulture brand refresh — logo, visual identity, and company-wide collateral.</p>
             </div>
-            <span class="org">Creative Studio London</span>
-            <p class="blurb">Crafting visual identities for international brands.</p>
+          </div>
+          <div class="exp-group">
+            <div class="row">
+              <h3>Shopper Media</h3>
+              <span class="dates">2019 — 2021</span>
+            </div>
+            <div class="exp-role">
+              <h4>Senior Graphic Designer</h4>
+              <p class="blurb">Led creative for Shopper's brand launch and go-to-market campaigns, including McDonald's and Cetaphil.</p>
+            </div>
           </div>
         </div>
       </div>
@@ -157,7 +159,16 @@
   <footer id="contact" class="footer">
     <div class="wrap cta">
       <h2 class="sentence">Let’s have a chat.</h2>
-      <a class="big-btn" href="mailto:sheffield.tara@gmail.com">Get in touch</a>
+      <div class="contact-popover">
+        <button type="button" class="big-btn" data-contact-btn aria-haspopup="true" aria-expanded="false">Get in touch</button>
+        <div class="contact-card" data-contact-card hidden>
+          <div class="contact-row">
+            <span class="contact-email" data-contact-email>sheffield.tara@gmail.com</span>
+            <button type="button" class="contact-copy" data-contact-copy>Copy</button>
+          </div>
+          <div class="contact-phone">Mobile: 0411 127 913</div>
+        </div>
+      </div>
     </div>
     <div class="wrap bottom">
       <div class="id">
@@ -173,6 +184,55 @@
       entries.forEach((e) => { if (e.isIntersecting) e.target.classList.add('visible'); });
     }, { threshold: 0.08 });
     document.querySelectorAll('.fade-in').forEach((el) => io.observe(el));
+
+    // Contact popover: click "Get in touch" to reveal email + copy button.
+    document.querySelectorAll('.contact-popover').forEach((wrap) => {
+      const btn = wrap.querySelector('[data-contact-btn]');
+      const card = wrap.querySelector('[data-contact-card]');
+      const copyBtn = wrap.querySelector('[data-contact-copy]');
+      const emailEl = wrap.querySelector('[data-contact-email]');
+      const email = emailEl.textContent.trim();
+
+      function onOutside(e) { if (!wrap.contains(e.target)) close(); }
+      function onKey(e) { if (e.key === 'Escape') { close(); btn.focus(); } }
+      function open() {
+        card.hidden = false;
+        btn.setAttribute('aria-expanded', 'true');
+        document.addEventListener('click', onOutside);
+        document.addEventListener('keydown', onKey);
+      }
+      function close() {
+        card.hidden = true;
+        btn.setAttribute('aria-expanded', 'false');
+        document.removeEventListener('click', onOutside);
+        document.removeEventListener('keydown', onKey);
+      }
+
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        card.hidden ? open() : close();
+      });
+
+      copyBtn.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(email);
+        } catch (err) {
+          const range = document.createRange();
+          range.selectNodeContents(emailEl);
+          const sel = window.getSelection();
+          sel.removeAllRanges();
+          sel.addRange(range);
+          document.execCommand('copy');
+          sel.removeAllRanges();
+        }
+        copyBtn.textContent = 'Copied!';
+        copyBtn.classList.add('is-copied');
+        setTimeout(() => {
+          copyBtn.textContent = 'Copy';
+          copyBtn.classList.remove('is-copied');
+        }, 1800);
+      });
+    });
   </script>
 </body>
 </html>
