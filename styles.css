@@ -637,9 +637,11 @@ img { display: block; max-width: 100%; }
 .panel .case-body p + p { margin-top: 10px; }
 
 /* A long section split across two side-by-side text columns instead of
-   one tall block of copy. */
+   one tall block of copy — breaks out of the usual 760px case-body cap
+   so the pair actually spans the full page width. */
+.case-body.case-full:has(.text-cols) { max-width: none; }
 .text-cols { display: flex; gap: 48px; margin-top: 13px; }
-.text-cols .text-col { flex: 1; min-width: 0; }
+.text-cols .text-col { flex: 1; min-width: 0; max-width: 620px; }
 @media (max-width: 760px) {
   .text-cols { flex-direction: column; gap: 0; }
 }
