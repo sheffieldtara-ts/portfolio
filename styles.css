@@ -552,6 +552,17 @@ img { display: block; max-width: 100%; }
 .case-cols.slot-sm .img-slot-padded.tall { max-width: 280px; }
 .case-cols.slot-sm .img-slot-padded.tall img { max-height: 620px; }
 
+/* Stretch to match the paired text column's full height instead of
+   stopping at the usual natural-size cap, so the image reaches all the
+   way down to the bottom of a long text block instead of the row. */
+.case-cols.slot-sm .img-slot-padded.fit-height { align-self: stretch; }
+.case-cols.slot-sm .img-slot-padded.fit-height img {
+  max-height: none;
+  height: 100%;
+  width: auto;
+  object-fit: contain;
+}
+
 /* Push the image flush against the row's right edge instead of leaving a
    gap — the paired case-body is width-capped (.case-body { max-width }),
    so flex-grow alone doesn't close the distance. */
