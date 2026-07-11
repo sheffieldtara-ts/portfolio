@@ -363,73 +363,72 @@
             <div class="img-slot img-slot-padded no-border no-radius align-right" aria-hidden="true"><img src="assets/media-problem.png" alt="The 2013 editor next to the rebuilt 2023 editor, side by side" loading="lazy" onerror="this.remove()"></div>
           </div>
 
-          <div class="case-cols">
-            <div class="case-body">
-              <section>
-                <h2>How I got here</h2>
-                <p>
-                  The guiding decision was <em>not</em> to reinvent the wheel:
-                  every worker's phone has already taught them how a photo
-                  editor behaves, so the new design borrows those conventions
-                  instead of inventing proprietary ones. I prototyped the new
-                  screen pattern in Figma and validated it before build with a
-                  remote preference test — five participants, managers and
-                  frontline workers across construction, manufacturing, and
-                  utilities in four countries. Navigation proved intuitive;
-                  participants moved between features without prompting. The
-                  test also caught a language problem I'd have missed:
-                  "Original" and "Done" didn't clearly say what they did once
-                  edits auto-saved — a copy fix that went straight into the
-                  design.
-                </p>
-                <p>
-                  The design work also fed the build decision: after evaluating
-                  third-party editing SDKs with engineering, the editor was
-                  rebuilt natively — the first release mirroring existing
-                  features under the new UI, on an architecture that let
-                  follow-on features (brightness, crop, rotate) ship behind
-                  flags roughly a week apart.
-                </p>
-                <p>
-                  Native also meant designing for real device diversity, not
-                  one fixed canvas: I tested the toolbar and editing surface
-                  across screen sizes from iPhone SE to iPhone 16 and Android
-                  Compact, letting layout and aspect ratio adapt per platform
-                  (3:4 on iOS, 2:3 on Android) instead of stretching a single
-                  design across all of them. System gestures stayed untouched
-                  — edge-swipe-back on iOS, the Android back button — and
-                  pinch-to-zoom worked exactly as people already expected from
-                  their camera roll.
-                </p>
-                <p>
-                  Building both platforms natively from scratch also meant
-                  accessibility couldn't be inherited for free — there was no
-                  default OS component quietly doing that work for us, so
-                  every decision had to be made on purpose. Toolbar icons
-                  carry visible text labels rather than relying on icon-only
-                  affordances, and tap targets were widened directly in the
-                  spec: icon padding went from 16px up to 20px on one row and
-                  24px on the other, specifically to give people a bigger hit
-                  area than the icon's visual size implied. The annotation
-                  colour palette was chosen with colourblind accessibility in
-                  mind too, so tool and state differences don't rely on
-                  colour alone.
-                </p>
-              </section>
-              <section>
-                <h2>The solution</h2>
-                <p>
-                  A rebuilt mobile editing experience: pen and shape annotation,
-                  arrows, text with styling, colour and stroke controls, rotate
-                  and flip, undo/redo — in a carousel-based UI I designed
-                  natively for both iOS and Android.
-                </p>
-              </section>
-            </div>
-            <div class="img-slot-stack">
-              <div class="img-slot" aria-hidden="true"><img class="fit-contain" src="assets/media-states-full.png" alt="Pattern, native component, and dark/light mode state reference — Default, Disabled, and Selected states for the toolbar" loading="lazy" onerror="this.remove()"></div>
-              <div class="img-slot" aria-hidden="true"><img class="fit-contain" src="assets/media-accessibility.png" alt="Accessibility component reference — header and toolbar components, native colour picker, default/disabled/selected states in dark and light mode, plus the contrast and touch-target audit tables" loading="lazy" onerror="this.remove()"></div>
-            </div>
+          <div class="case-body case-full">
+            <section>
+              <h2>How I got here</h2>
+              <p>
+                The guiding decision was <em>not</em> to reinvent the wheel:
+                every worker's phone has already taught them how a photo
+                editor behaves, so the new design borrows those conventions
+                instead of inventing proprietary ones. I prototyped the new
+                screen pattern in Figma and validated it before build with a
+                remote preference test — five participants, managers and
+                frontline workers across construction, manufacturing, and
+                utilities in four countries. Navigation proved intuitive;
+                participants moved between features without prompting. The
+                test also caught a language problem I'd have missed:
+                "Original" and "Done" didn't clearly say what they did once
+                edits auto-saved — a copy fix that went straight into the
+                design.
+              </p>
+              <p>
+                The design work also fed the build decision: after evaluating
+                third-party editing SDKs with engineering, the editor was
+                rebuilt natively — the first release mirroring existing
+                features under the new UI, on an architecture that let
+                follow-on features (brightness, crop, rotate) ship behind
+                flags roughly a week apart.
+              </p>
+              <p>
+                Native also meant designing for real device diversity, not
+                one fixed canvas: I tested the toolbar and editing surface
+                across screen sizes from iPhone SE to iPhone 16 and Android
+                Compact, letting layout and aspect ratio adapt per platform
+                (3:4 on iOS, 2:3 on Android) instead of stretching a single
+                design across all of them. System gestures stayed untouched
+                — edge-swipe-back on iOS, the Android back button — and
+                pinch-to-zoom worked exactly as people already expected from
+                their camera roll.
+              </p>
+              <p>
+                Building both platforms natively from scratch also meant
+                accessibility couldn't be inherited for free — there was no
+                default OS component quietly doing that work for us, so
+                every decision had to be made on purpose. Toolbar icons
+                carry visible text labels rather than relying on icon-only
+                affordances, and tap targets were widened directly in the
+                spec: icon padding went from 16px up to 20px on one row and
+                24px on the other, specifically to give people a bigger hit
+                area than the icon's visual size implied. The annotation
+                colour palette was chosen with colourblind accessibility in
+                mind too, so tool and state differences don't rely on
+                colour alone.
+              </p>
+            </section>
+            <section>
+              <h2>The solution</h2>
+              <p>
+                A rebuilt mobile editing experience: pen and shape annotation,
+                arrows, text with styling, colour and stroke controls, rotate
+                and flip, undo/redo — in a carousel-based UI I designed
+                natively for both iOS and Android.
+              </p>
+            </section>
+          </div>
+
+          <div class="case-cols img-pair">
+            <div class="img-slot img-slot-padded" aria-hidden="true"><img class="fit-contain" src="assets/media-states-full.png" alt="Pattern, native component, and dark/light mode state reference — Default, Disabled, and Selected states for the toolbar" loading="lazy" onerror="this.remove()"></div>
+            <div class="img-slot img-slot-padded" aria-hidden="true"><img class="fit-contain" src="assets/media-accessibility.png" alt="Accessibility component reference — header and toolbar components, native colour picker, default/disabled/selected states in dark and light mode, plus the contrast and touch-target audit tables" loading="lazy" onerror="this.remove()"></div>
           </div>
 
           <div class="img-slot lead no-border" aria-hidden="true"><img src="assets/media-outcome.png" alt="Default, Draw select, Text select, and Shape select tool states shown on a real evidence photo" loading="lazy" onerror="this.remove()"></div>
