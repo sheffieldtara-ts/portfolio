@@ -82,13 +82,31 @@ and compressed. `media-flow-strip.png` and `media-outcome.png` use
 slots' shapes (near-square and wide-landscape respectively) — same fix as
 kpi-config, prevents cropping.
 
-The remaining 2 panels (Holistic Analytics, Project TARS — 8 slots) are still
-empty — same process, one panel at a time.
-
 **Reminder if any export comes back oversized:** re-export as SVG and ask
 Claude to rasterize it — see the kpi-config note above for why that works
 when a plain PNG doesn't. Tara now defaults to SVG for these exports since
 it's worked twice — good habit to keep.
+
+## Holistic Analytics panel (case-studies.html, `#panel-har`) — 4 slots
+
+Source: **FigJam "Analytics Discovery"**, fileKey `yquKi0L3p291iY02koIETP`.
+The whole board times out through Claude's Figma connector, but the specific
+node Tara linked (`1:1284`, the "SPRINT 1" section) renders fine — so export
+from that same view. Left to right on that board:
+
+| File name                    | Where                                                                                   | Used on (slot)                          | Export |
+|--------------------------------|--------------------------------------------------------------------------------------------|-------------------------------------------|--------|
+| `har-hypotheses.png`          | The 4-column theme cards — **Filtering / Missing Domain Data / Data Gaps / Shareability** with their coloured sticky descriptions | Top-right slot beside Overview/Problem    | PNG, 2x |
+| `har-synthesis-matrix.png`    | The big **Theme / Problem / Evidence / Action** matrix (with the Ranking Priority legend at the bottom) — the "Brief summary" card + full table | Full-width slot below the problem section | PNG, 2x |
+| `har-framework.png`           | The ranking/scoring matrix further right — same 4 themes, scored against the decision framework | Small slot beside "How I got here"        | PNG, 2x |
+| `har-outcome.png`             | The **"Next step: SPRINT 2"** section, far right — mostly empty, since Phase 2 never started | Slot beside Solution/Outcome              | PNG, 2x |
+
+Same rules as the other panels: SVG re-export + cairosvg rasterize if
+anything comes back oversized; `fit-contain` class if an image's proportions
+don't match its slot shape.
+
+Project TARS validation was removed from the Work page tabs (2026-07-11, Tara's
+call) — no images needed for it.
 
 Optional: `avatar-ben.png`, `avatar-kael.png` (48px referral avatars on the
 landing page — they fall back to a gradient if missing).
