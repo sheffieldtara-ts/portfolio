@@ -381,6 +381,31 @@
                   follow-on features (brightness, crop, rotate) ship behind
                   flags roughly a week apart.
                 </p>
+                <p>
+                  Native also meant designing for real device diversity, not
+                  one fixed canvas: I tested the toolbar and editing surface
+                  across screen sizes from iPhone SE to iPhone 16 and Android
+                  Compact, letting layout and aspect ratio adapt per platform
+                  (3:4 on iOS, 2:3 on Android) instead of stretching a single
+                  design across all of them. System gestures stayed untouched
+                  — edge-swipe-back on iOS, the Android back button — and
+                  pinch-to-zoom worked exactly as people already expected from
+                  their camera roll.
+                </p>
+                <p>
+                  Building both platforms natively from scratch also meant
+                  accessibility couldn't be inherited for free — there was no
+                  default OS component quietly doing that work for us, so
+                  every decision had to be made on purpose. Toolbar icons
+                  carry visible text labels rather than relying on icon-only
+                  affordances, and tap targets were widened directly in the
+                  spec: icon padding went from 16px up to 20px on one row and
+                  24px on the other, specifically to give people a bigger hit
+                  area than the icon's visual size implied. The annotation
+                  colour palette was chosen with colourblind accessibility in
+                  mind too, so tool and state differences don't rely on
+                  colour alone.
+                </p>
               </section>
               <section>
                 <h2>The solution</h2>
@@ -476,39 +501,42 @@
 
           <div class="img-slot wide" aria-hidden="true"><img class="fit-contain" src="assets/har-synthesis-matrix.png" alt="The Theme, Problem, Evidence, Action research synthesis matrix with ranking priority legend" loading="lazy" onerror="this.remove()"></div>
 
-          <div class="case-body case-full">
-            <section>
-              <h2>How I got here</h2>
-              <p>
-                I structured the work as the Discover and Define halves of
-                the Double Diamond, run deliberately data-first: before
-                recruiting a single interviewee, Phase 1 mined every source
-                the company already had — Amplitude and Hex behavioural
-                funnels, Gong call reviews, a 90-day Intercom pull plus the
-                2024 migration period, ProductBoard requests, Salesforce
-                win/loss and churn signals, and competitive benchmarks.
-                Each source had a defined job: behavioural data surfaces
-                symptoms like drop-offs and abandoned sessions, calls and
-                support tickets explain cause, Salesforce shows business
-                impact. The themes from that phase defined mutually
-                exclusive customer cohorts, so Phase 2 interviews validated
-                with exactly the right people instead of a convenience
-                sample.
-              </p>
-              <p>
-                The research questions were segmented by usage: power users
-                were asked what almost made them give up and why they
-                didn't; casual users what keeps them coming back and what
-                stops them going deeper; low-usage users what it's like just
-                working out what to do. And because a priority call is only
-                useful if people trust it, I applied an explicit
-                decision-making framework — weighing institutional
-                knowledge, then user-familiarity signals, then behavioural
-                data at scale — with the rationale documented, and the
-                synthesis peer-reviewed by engineering, product, and design
-                before stakeholder sign-off.
-              </p>
-            </section>
+          <div class="case-cols slot-sm">
+            <div class="img-slot img-slot-padded tall" aria-hidden="true"><img class="fit-contain" src="assets/har-phase1-to-do.png" alt="Phase 1 to-do list on the FigJam board, checked off item by item: ProductBoard, Gong, Intercom, HEX data, customer calls, problem statements, ranking, hypotheses" loading="lazy" onerror="this.remove()"></div>
+            <div class="case-body">
+              <section>
+                <h2>How I got here</h2>
+                <p>
+                  I structured the work as the Discover and Define halves of
+                  the Double Diamond, run deliberately data-first: before
+                  recruiting a single interviewee, Phase 1 mined every source
+                  the company already had — Amplitude and Hex behavioural
+                  funnels, Gong call reviews, a 90-day Intercom pull plus the
+                  2024 migration period, ProductBoard requests, Salesforce
+                  win/loss and churn signals, and competitive benchmarks.
+                  Each source had a defined job: behavioural data surfaces
+                  symptoms like drop-offs and abandoned sessions, calls and
+                  support tickets explain cause, Salesforce shows business
+                  impact. The themes from that phase defined mutually
+                  exclusive customer cohorts, so Phase 2 interviews validated
+                  with exactly the right people instead of a convenience
+                  sample.
+                </p>
+                <p>
+                  The research questions were segmented by usage: power users
+                  were asked what almost made them give up and why they
+                  didn't; casual users what keeps them coming back and what
+                  stops them going deeper; low-usage users what it's like just
+                  working out what to do. And because a priority call is only
+                  useful if people trust it, I applied an explicit
+                  decision-making framework — weighing institutional
+                  knowledge, then user-familiarity signals, then behavioural
+                  data at scale — with the rationale documented, and the
+                  synthesis peer-reviewed by engineering, product, and design
+                  before stakeholder sign-off.
+                </p>
+              </section>
+            </div>
           </div>
 
           <div class="img-slot lead" aria-hidden="true"><img src="assets/har-hypotheses.png" alt="The three competing problem hypotheses on the FigJam board: Filtering, Missing Domain Data, Data Gaps, Shareability" loading="lazy" onerror="this.remove()"></div>
