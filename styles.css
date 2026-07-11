@@ -485,6 +485,17 @@ img { display: block; max-width: 100%; }
 .case-cols .case-body { flex: 1; padding-right: 24px; min-width: 0; }
 .case-cols .img-slot { width: 52%; flex-shrink: 0; }
 
+/* Two images stacked in the same column (e.g. a states board sitting
+   above a related audit table) instead of one img-slot per row. */
+.case-cols .img-slot-stack {
+  width: 52%;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.case-cols .img-slot-stack .img-slot { width: 100%; }
+
 /* slot-sm: the box hugs the image's own aspect ratio instead of a fixed
    26.5% column, so wide screenshots aren't stretched/cropped — the text
    column (flex: 1 above) automatically takes whatever width is left over. */
@@ -499,6 +510,7 @@ img { display: block; max-width: 100%; }
   .case-cols { flex-direction: column; }
   .case-cols .img-slot { order: 2; width: 100%; min-height: 220px; }
   .case-cols.slot-sm .img-slot { order: 2; width: 100%; max-width: none; }
+  .case-cols .img-slot-stack { order: 2; width: 100%; }
   .case-cols .case-body { padding-right: 0; }
 }
 
