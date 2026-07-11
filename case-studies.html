@@ -69,7 +69,8 @@
       </div>
       <div class="panel-body">
         <div class="wrap">
-          <div class="case-cols">
+          <div class="case-cols slot-sm">
+            <div class="img-slot img-slot-padded" aria-hidden="true"><img src="assets/ttc-chartbuilder.png" alt="The old dashboard-level chart builder — a multi-step configuration panel for metric, attribute, filters and chart type" loading="lazy" onerror="this.remove()"></div>
             <div class="case-body">
               <section>
                 <h2>Overview</h2>
@@ -90,13 +91,9 @@
                 </p>
               </section>
             </div>
-            <div class="img-slot" aria-hidden="true"><img src="assets/ttc-result.png" alt="AI-generated chart with a follow-up refinement prompt" loading="lazy" onerror="this.remove()"></div>
           </div>
 
-          <div class="img-slot wide" aria-hidden="true"><img src="assets/ttc-flow-strip.png" alt="Full flow: landing search, generating state, chart with refine panel, refined chart" loading="lazy" onerror="this.remove()"></div>
-
           <div class="case-cols slot-sm">
-            <div class="img-slot" aria-hidden="true"><img src="assets/ttc-followup.png" alt="Compact chart card with a follow-up question chip" loading="lazy" onerror="this.remove()"></div>
             <div class="case-body">
               <section>
                 <h2>How I got here</h2>
@@ -125,10 +122,13 @@
                 </p>
               </section>
             </div>
+            <div class="img-slot img-slot-padded" aria-hidden="true"><img src="assets/ttc-followup.png" alt="Compact chart card with a follow-up question chip" loading="lazy" onerror="this.remove()"></div>
           </div>
 
-          <div class="case-cols">
-            <div class="case-body">
+          <div class="img-slot lead" aria-hidden="true"><img src="assets/ttc-flow-strip.png" alt="Full flow: landing search, generating state, chart with refine panel, refined chart" loading="lazy" onerror="this.remove()"></div>
+
+          <div class="case-cols outcome-row">
+            <div class="case-body proto-box">
               <section>
                 <h2>The solution</h2>
                 <p>
@@ -139,6 +139,10 @@
                   filter-consistency issues and outstripped design capacity.
                 </p>
               </section>
+              <a class="btn-teal proto-cta" href="ttc-prototype.html">Try the interactive prototype</a>
+            </div>
+
+            <div class="case-body outcome-aside">
               <section>
                 <h2>Outcome</h2>
                 <p>
@@ -151,7 +155,6 @@
                 </p>
               </section>
             </div>
-            <div class="img-slot" aria-hidden="true"><img src="assets/ttc-outcome.png" alt="The generated chart integrated into an existing inspection dashboard alongside other charts" loading="lazy" onerror="this.remove()"></div>
           </div>
 
           <div class="pager">
@@ -219,13 +222,13 @@
                 </p>
               </section>
             </div>
-            <div class="img-slot" aria-hidden="true"><img class="fit-contain" src="assets/kpi-config.png" data-full="assets/kpi-config-full.png" alt="The full KPI configuration exploration board — every variant and step tried along the way" loading="lazy" onerror="this.remove()"></div>
+            <div class="img-slot" aria-hidden="true"><img src="assets/problem-legacy.png" alt="The legacy single-KPI configuration modal — one target value, no ranges or colour coding" loading="lazy" onerror="this.remove()"></div>
           </div>
 
-          <div class="img-slot wide" aria-hidden="true"><img src="assets/kpi-flow-strip.png" alt="Threshold and display configuration steps in sequence" loading="lazy" onerror="this.remove()"></div>
+          <div class="img-slot lead" aria-hidden="true"><img class="fit-contain" src="assets/kpi-config.png" data-full="assets/kpi-config-full.png" alt="The full KPI configuration exploration board — every variant and step tried along the way" loading="lazy" onerror="this.remove()"></div>
 
           <div class="case-cols slot-sm">
-            <div class="img-slot" aria-hidden="true"><img src="assets/kpi-modes.png" alt="Single-value line KPIs next to min/max range band KPIs" loading="lazy" onerror="this.remove()"></div>
+            <div class="img-slot" aria-hidden="true"><img src="assets/kpi-final.png" alt="Finished multi-KPI colour-coded chart with the colour picker" loading="lazy" onerror="this.remove()"></div>
             <div class="case-body">
               <section>
                 <h2>How I got here</h2>
@@ -253,31 +256,35 @@
             </div>
           </div>
 
-          <div class="case-cols">
-            <div class="case-body">
-              <section>
-                <h2>The solution</h2>
-                <p>
-                  A KPI configuration modal with two modes: single-value KPIs — up
-                  to 4 per chart, shown as line indicators with custom names and
-                  colours — and range KPIs — up to 5 performance bands defined by
-                  min/max values. The design extended the platform's existing
-                  bar-colour behaviour to multiple targets, keeping the mental
-                  model customers already had, across seven chart types: stacked,
-                  column, grouped, bar, line, timetable, and dial.
-                </p>
-              </section>
-              <section>
-                <h2>Outcome</h2>
-                <p>
-                  Released to all customers on web. Post-release impact wasn't
-                  instrumented, so the honest answer is: shipped, impact not
-                  tracked — a gap I'd push to close earlier if I ran this project
-                  again.
-                </p>
-              </section>
-            </div>
-            <div class="img-slot" aria-hidden="true"><img src="assets/kpi-final.png" alt="Finished multi-KPI colour-coded chart with the colour picker" loading="lazy" onerror="this.remove()"></div>
+          <div class="img-slot lead" aria-hidden="true"><img src="assets/kpi-flow-strip.png" alt="Threshold and display configuration steps in sequence" loading="lazy" onerror="this.remove()"></div>
+
+          <div class="case-body case-full">
+            <section>
+              <h2>The solution</h2>
+              <p>
+                A KPI configuration modal with two modes: single-value KPIs — up
+                to 4 per chart, shown as line indicators with custom names and
+                colours — and range KPIs — up to 5 performance bands defined by
+                min/max values. The design extended the platform's existing
+                bar-colour behaviour to multiple targets, keeping the mental
+                model customers already had, across seven chart types: stacked,
+                column, grouped, bar, line, timetable, and dial.
+              </p>
+            </section>
+          </div>
+
+          <div class="img-slot lead" aria-hidden="true"><img class="fit-contain" src="assets/kpi-defaultstate.png" alt="KPI configuration flow showing the default dash-lines display type" loading="lazy" onerror="this.remove()"></div>
+
+          <div class="case-body case-full">
+            <section>
+              <h2>Outcome</h2>
+              <p>
+                Released to all customers on web. Post-release impact wasn't
+                instrumented, so the honest answer is: shipped, impact not
+                tracked — a gap I'd push to close earlier if I ran this project
+                again.
+              </p>
+            </section>
           </div>
 
           <div class="pager">
@@ -319,7 +326,7 @@
       </div>
       <div class="panel-body">
         <div class="wrap">
-          <div class="case-cols">
+          <div class="case-cols slot-sm">
             <div class="case-body">
               <section>
                 <h2>Overview</h2>
@@ -343,13 +350,12 @@
                 </p>
               </section>
             </div>
-            <div class="img-slot" aria-hidden="true"><img class="fit-contain" src="assets/media-editor.png" alt="The redesigned mobile photo editor, dark mode" loading="lazy" onerror="this.remove()"></div>
+            <div class="img-slot img-slot-padded no-border no-radius" aria-hidden="true"><img src="assets/media-problem.png" alt="The 2013 editor next to the rebuilt 2023 editor, side by side" loading="lazy" onerror="this.remove()"></div>
           </div>
 
-          <div class="img-slot wide" aria-hidden="true"><img class="fit-contain" src="assets/media-flow-strip.png" alt="Dark mode and light mode editor patterns side by side, annotated with an evidence photo of building damage" loading="lazy" onerror="this.remove()"></div>
+          <div class="img-slot lead no-border" aria-hidden="true"><img src="assets/media-outcome.png" alt="Default, Draw select, Text select, and Shape select tool states shown on a real evidence photo" loading="lazy" onerror="this.remove()"></div>
 
-          <div class="case-cols slot-sm">
-            <div class="img-slot" aria-hidden="true"><img src="assets/media-states.png" alt="Edit, Draw, Text, Shapes, and Rotate tool states shown on an evidence photo" loading="lazy" onerror="this.remove()"></div>
+          <div class="case-cols">
             <div class="case-body">
               <section>
                 <h2>How I got here</h2>
@@ -377,11 +383,6 @@
                   flags roughly a week apart.
                 </p>
               </section>
-            </div>
-          </div>
-
-          <div class="case-cols">
-            <div class="case-body">
               <section>
                 <h2>The solution</h2>
                 <p>
@@ -393,20 +394,14 @@
               </section>
               <section>
                 <h2>Outcome</h2>
-                <!-- PLACEHOLDER: adoption metric below (~300K increase in photo
-                     uploads) is awaiting final measurement — CONFIRM the number
-                     and its time period before uploading this page to the live
-                     site. -->
                 <p>
                   Shipped to customers through a staged rollout, with the
                   redesigned pattern validated by user testing before a line of
-                  code was written. Early adoption measurement points to an
-                  increase of roughly 300,000 photos uploaded — final numbers
-                  are still being confirmed.
+                  code was written.
                 </p>
               </section>
             </div>
-            <div class="img-slot" aria-hidden="true"><img class="fit-contain" src="assets/media-outcome.png" alt="Default, Draw-selected, Text-selected, and Shape-selected toolbar states on an evidence photo" loading="lazy" onerror="this.remove()"></div>
+            <div class="img-slot" aria-hidden="true"><img class="fit-contain" src="assets/media-states-slot.png" data-full="assets/media-states.png" alt="Pattern, native component, and dark/light mode state reference — Default, Disabled, and Selected states for the toolbar" loading="lazy" onerror="this.remove()"></div>
           </div>
 
           <div class="pager">

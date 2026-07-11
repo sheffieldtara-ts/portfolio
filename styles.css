@@ -400,6 +400,38 @@ img { display: block; max-width: 100%; }
 }
 .panel .case-meta .val { font-weight: 400; font-size: 15px; opacity: 0.6; }
 
+/* CTA linking to a live interactive prototype (ttc-prototype.html) — lives
+   in the same bordered box as "The solution" copy, so the write-up and the
+   CTA read as one unit rather than two separate elements. */
+.proto-box {
+  border: 1px solid rgba(255, 255, 255, 0.27);
+  border-radius: 20px;
+  padding: 40px;
+  margin-bottom: 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+}
+.panel .case-body.proto-box section { padding-bottom: 0; }
+.proto-cta { display: inline-flex; text-align: center; }
+
+/* Outcome sits beside the solution box, unboxed, so it reads as a secondary
+   note rather than competing with the solution + CTA. */
+.case-cols.outcome-row { align-items: flex-start; }
+.case-cols.outcome-row .proto-box { flex: 1 1 auto; margin-bottom: 0; }
+.case-cols.outcome-row .outcome-aside {
+  flex: 1;
+  padding-right: 0;
+  padding-left: 32px;
+}
+@media (max-width: 860px) {
+  .case-cols.outcome-row .outcome-aside {
+    padding-left: 0;
+    padding-top: 24px;
+  }
+}
+
 .panel-head { padding: 40px 0 0; }
 .panel-body { padding: 48px 0 120px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
 
@@ -423,6 +455,22 @@ img { display: block; max-width: 100%; }
 .placeholder {
   font-style: italic;
   opacity: 0.45 !important;
+}
+
+/* Standalone full-width text block (no paired image on this row). */
+.case-full { margin-bottom: 48px; }
+
+/* Lead image: the single strongest image in a case study, shown big and
+   at its natural aspect ratio (never cropped) instead of forced into a
+   fixed-height box — a wide filmstrip stays a short banner, a tall/square
+   board gets the height it needs. */
+.img-slot.lead { width: 100%; min-height: 0; margin-bottom: 48px; }
+.img-slot.lead img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  border-radius: 20px;
 }
 
 /* Case rows (Figma 127:1188 / 127:1202 / 142:743):
@@ -462,6 +510,8 @@ img { display: block; max-width: 100%; }
 }
 .img-slot.wide { width: 100%; min-height: 212px; margin-bottom: 48px; }
 .img-slot img { width: 100%; height: 100%; object-fit: cover; border-radius: 20px; }
+.img-slot.no-border { border: none; }
+.img-slot.no-radius, .img-slot.no-radius img { border-radius: 0; }
 
 /* Some images (e.g. a whole exploration board) shouldn't be cropped to fill
    the slot — show the whole thing, letterboxed, instead. */
@@ -477,6 +527,26 @@ img { display: block; max-width: 100%; }
   object-fit: contain;
   display: block;
 }
+
+/* Extra breathing room inside the frame — for images that look cramped
+   flush against the border (e.g. a screenshot with its own drop shadow). */
+.img-slot-padded { padding: 28px; }
+.case-cols.slot-sm .img-slot-padded { max-width: 480px; }
+.case-cols.slot-sm .img-slot-padded img { max-height: 340px; }
+
+/* Two images side by side, evenly split (not shrink-wrapped to each
+   image's own aspect ratio) so a wide screenshot and a tall one still
+   read as a balanced pair instead of leaving a lopsided gap. */
+.case-cols.img-pair .img-slot {
+  flex: 1;
+  width: auto;
+  max-width: none;
+  min-height: 340px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.case-cols.img-pair .img-slot img { max-width: 100%; }
 
 /* Lightbox: click any case-study image to view it full size. */
 .img-slot img { cursor: zoom-in; }

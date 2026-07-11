@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Text to Chart — Interactive Prototype — Tara Sheffield</title>
+<meta name="description" content="An interactive, click-through simulation of the AI-powered chart builder Tara Sheffield designed at SafetyCulture.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;900&family=Manrope:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  /* ---------------- Prototype page chrome (dark, matches site) ---------------- */
+  .proto-hero { padding-top: 56px; padding-bottom: 40px; }
+  .proto-back {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 14px; font-weight: 700; opacity: 0.65;
+    margin-bottom: 24px; transition: opacity .2s;
+  }
+  .proto-back:hover { opacity: 1; color: var(--teal); }
+  .proto-hero h1 {
+    font-family: var(--display); font-weight: 900;
+    font-size: clamp(32px, 4.5vw, 56px); line-height: 1.05;
+    text-transform: uppercase; margin-bottom: 20px; max-width: 900px;
+  }
+  .proto-hero p.lead { font-size: 17px; opacity: 0.75; max-width: 640px; line-height: 1.6; margin-bottom: 28px; }
+  .proto-flowlist { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 8px; }
+  .proto-flowlist span {
+    font-size: 13px; font-weight: 700; padding: 8px 16px; border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.2); opacity: 0.8;
+  }
+  .proto-flowlist span.on { border-color: var(--teal); color: var(--teal); opacity: 1; }
+
+  .proto-frame-wrap { padding-bottom: 100px; }
+  .proto-frame {
+    border-radius: 24px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.15);
+    box-shadow: 0 40px 100px rgba(0,0,0,0.45);
+  }
+  .proto-titlebar {
+    background: #1b1a20; display: flex; align-items: center; gap: 10px;
+    padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .proto-titlebar .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .proto-titlebar .dot:nth-child(1){ background:#ff5f57; }
+  .proto-titlebar .dot:nth-child(2){ background:#febc2e; }
+  .proto-titlebar .dot:nth-child(3){ background:#28c840; }
+  .proto-titlebar .url {
+    margin-left: 12px; font-size: 12px; color: rgba(255,255,255,0.45);
+    background: rgba(255,255,255,0.06); border-radius: 6px; padding: 4px 12px;
+    font-family: monospace;
+  }
+  .proto-note { margin-top: 20px; font-size: 13px; opacity: 0.5; max-width: 640px; }
+
+  /* ================================================================
+     EMBEDDED "PRODUCT" — deliberately its own light theme + system
+     font, so it reads as the simulated app rather than the portfolio.
+  ================================================================= */
+  #protoApp, #protoApp * { box-sizing: border-box; }
+  #protoApp {
+    --papp-bg: #f4f5f9;
+    --papp-panel: #ffffff;
+    --papp-border: #e5e7f0;
+    --papp-text: #1c1f2e;
+    --papp-muted: #80849a;
+    --papp-indigo: #5b5cff;
+    --papp-indigo-dim: #8f8fff;
+    --papp-indigo-soft: rgba(91,92,255,0.1);
+    --papp-green: #1fb17a;
+    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--papp-text);
+    background: var(--papp-bg);
+    height: 640px;
+    display: flex;
+    position: relative;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  #protoApp button { font-family: inherit; cursor: pointer; }
+  #protoApp input { font-family: inherit; }
+
+  .papp-rail {
+    width: 64px; flex-shrink: 0; background: #1c1f2e;
+    display: flex; flex-direction: column; align-items: center;
+    padding: 20px 0; gap: 22px;
+  }
+  .papp-rail .brand {
+    width: 32px; height: 32px; border-radius: 9px; background: var(--papp-indigo);
+    color: #fff; display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 13px; margin-bottom: 10px;
+  }
+  .papp-rail button {
+    width: 36px; height: 36px; border-radius: 10px; border: none;
+    background: transparent; color: rgba(255,255,255,0.45);
+    display: flex; align-items: center; justify-content: center;
+    transition: background .15s, color .15s;
+  }
+  .papp-rail button:hover { color: #fff; background: rgba(255,255,255,0.08); }
+  .papp-rail button.active { color: #fff; background: rgba(91,92,255,0.35); }
+  .papp-rail svg { width: 18px; height: 18px; }
+
+  .papp-main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+
+  .papp-top {
+    height: 56px; flex-shrink: 0; display: flex; align-items: center;
+    justify-content: space-between; padding: 0 24px;
+    border-bottom: 1px solid var(--papp-border); background: var(--papp-panel);
+  }
+  .papp-top .crumb { font-weight: 700; font-size: 15px; display: flex; align-items: center; gap: 6px; }
+  .papp-top .crumb .dim { color: var(--papp-muted); font-weight: 500; }
+  .papp-top .actions { display: flex; align-items: center; gap: 8px; }
+  .papp-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    border: 1px solid var(--papp-border); background: #fff; color: var(--papp-text);
+    border-radius: 9px; padding: 8px 13px; font-size: 13px; font-weight: 600;
+    transition: background .15s, border-color .15s;
+  }
+  .papp-btn:hover { background: #f6f7fb; border-color: #d3d6e4; }
+  .papp-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+  .papp-btn.primary { background: var(--papp-indigo); border-color: var(--papp-indigo); color: #fff; }
+  .papp-btn.primary:hover { background: #4a4bf0; }
+  .papp-btn.primary.pulse { animation: pappPulse 1.6s ease-in-out infinite; }
+  @keyframes pappPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(91,92,255,0.45); }
+    50% { box-shadow: 0 0 0 7px rgba(91,92,255,0); }
+  }
+  .papp-btn svg { width: 14px; height: 14px; }
+
+  .papp-stage { flex: 1; min-height: 0; display: flex; overflow: hidden; }
+  .papp-view { flex: 1; min-width: 0; overflow-y: auto; display: none; padding: 28px 32px; }
+  .papp-view.is-active { display: block; }
+
+  /* ---------- Home ---------- */
+  .papp-home-hero { max-width: 620px; margin: 18px auto 0; text-align: center; }
+  .papp-home-hero h2 { font-size: 21px; font-weight: 800; margin-bottom: 6px; }
+  .papp-home-hero p { color: var(--papp-muted); font-size: 13.5px; margin-bottom: 22px; }
+  .papp-ask {
+    display: flex; align-items: center; gap: 10px;
+    background: #fff; border: 1.5px solid var(--papp-border); border-radius: 14px;
+    padding: 6px 8px 6px 16px; box-shadow: 0 6px 20px rgba(30,30,60,0.06);
+    transition: border-color .15s;
+  }
+  .papp-ask:focus-within { border-color: var(--papp-indigo); }
+  .papp-ask input {
+    flex: 1; border: none; outline: none; font-size: 14.5px; padding: 10px 0; background: transparent;
+  }
+  .papp-ask button {
+    width: 36px; height: 36px; border-radius: 10px; border: none;
+    background: var(--papp-indigo); color: #fff; display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; transition: background .15s;
+  }
+  .papp-ask button:hover { background: #4a4bf0; }
+  .papp-ask button svg { width: 15px; height: 15px; }
+
+  .papp-chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 16px; }
+  .papp-chip {
+    border: 1px solid var(--papp-border); background: #fff; border-radius: 20px;
+    padding: 8px 14px; font-size: 12.5px; font-weight: 600; color: var(--papp-text);
+    transition: border-color .15s, background .15s;
+  }
+  .papp-chip:hover { border-color: var(--papp-indigo); background: var(--papp-indigo-soft); }
+
+  .papp-home-sections { max-width: 820px; margin: 40px auto 0; display: flex; gap: 24px; }
+  .papp-home-col { flex: 1; min-width: 0; }
+  .papp-home-col h3 { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--papp-muted); margin-bottom: 12px; }
+  .papp-mini-card {
+    background: #fff; border: 1px solid var(--papp-border); border-radius: 12px;
+    padding: 12px 14px; margin-bottom: 8px; display: flex; align-items: center; gap: 10px;
+    transition: border-color .15s;
+  }
+  .papp-mini-card:hover { border-color: var(--papp-indigo-dim); cursor: pointer; }
+  .papp-mini-card .ic { width: 30px; height: 22px; flex-shrink: 0; }
+  .papp-mini-card .tx { min-width: 0; }
+  .papp-mini-card .tx .t { font-weight: 700; font-size: 12.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .papp-mini-card .tx .s { font-size: 11px; color: var(--papp-muted); }
+  .papp-insight-num { font-size: 20px; font-weight: 800; }
+
+  /* ---------- Loading ---------- */
+  .papp-loading { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 16px; }
+  .papp-ring {
+    width: 40px; height: 40px; border-radius: 50%;
+    border: 3px solid var(--papp-border); border-top-color: var(--papp-indigo);
+    animation: pappSpin .8s linear infinite;
+  }
+  @keyframes pappSpin { to { transform: rotate(360deg); } }
+  .papp-loading p { color: var(--papp-muted); font-weight: 600; font-size: 13.5px; }
+
+  /* ---------- Chart view ---------- */
+  .papp-chart-layout { display: flex; gap: 24px; height: 100%; align-items: flex-start; }
+  .papp-chart-main { flex: 1; min-width: 0; }
+  .papp-card {
+    background: #fff; border: 1px solid var(--papp-border); border-radius: 16px;
+    padding: 22px 24px; box-shadow: 0 4px 18px rgba(30,30,60,0.05);
+  }
+  .papp-kpi-label { font-size: 12.5px; font-weight: 700; color: var(--papp-muted); margin-bottom: 4px; }
+  .papp-kpi-num { font-size: 34px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 4px; }
+  /* Neutral state caption — NOT a trend/comparison badge. At the time of
+     this design the chart preview itself couldn't show a "vs last month"
+     delta; that detail was only available if you asked the AI directly
+     (see the "How does this compare?" suggested prompt in the chat). */
+  .papp-kpi-sub { font-size: 12px; color: var(--papp-muted); font-weight: 600; margin-bottom: 14px; }
+  .papp-chart-box { width: 100%; }
+  .papp-chart-box svg { width: 100%; height: auto; display: block; overflow: visible; }
+  .bar { transform: scaleY(0); transform-box: fill-box; transform-origin: bottom; transition: transform .55s cubic-bezier(.2,.8,.2,1); }
+  .bar.grown { transform: scaleY(1); }
+  .papp-line-path { stroke-dasharray: 700; stroke-dashoffset: 700; transition: stroke-dashoffset 1s ease; }
+  .papp-line-path.drawn { stroke-dashoffset: 0; }
+  .papp-legend { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 10px; }
+  .papp-legend span { display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px; color: var(--papp-muted); font-weight: 600; }
+  .papp-legend i { width: 9px; height: 9px; border-radius: 3px; display: inline-block; }
+
+  /* ---------- Chat panel ---------- */
+  .papp-chat { width: 300px; flex-shrink: 0; display: flex; flex-direction: column; height: 100%; background: #fff; border: 1px solid var(--papp-border); border-radius: 16px; overflow: hidden; }
+  .papp-chat-head { padding: 14px 16px; border-bottom: 1px solid var(--papp-border); font-weight: 800; font-size: 13px; display: flex; align-items: center; gap: 8px; }
+  .papp-chat-head .avatar { width: 20px; height: 20px; border-radius: 6px; background: var(--papp-indigo); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; }
+  .papp-chat-thread { flex: 1; min-height: 0; overflow-y: auto; padding: 14px 14px 6px; display: flex; flex-direction: column; gap: 10px; }
+  .papp-msg { max-width: 88%; font-size: 12.5px; line-height: 1.5; padding: 9px 12px; border-radius: 12px; }
+  .papp-msg.assistant { align-self: flex-start; background: #f3f3ff; color: var(--papp-text); border-bottom-left-radius: 4px; }
+  .papp-msg.user { align-self: flex-end; background: var(--papp-indigo); color: #fff; border-bottom-right-radius: 4px; }
+  /* Suggested next question — written as part of the assistant's turn,
+     not a standalone button, so it reads as the AI proposing what's next. */
+  .papp-suggest { align-self: flex-start; display: flex; flex-wrap: wrap; gap: 6px; max-width: 88%; margin-top: -4px; }
+  .papp-suggest .papp-chip { border-color: var(--papp-indigo-dim); color: var(--papp-indigo); font-size: 11.5px; padding: 7px 12px; }
+  .papp-suggest .papp-chip:hover { background: var(--papp-indigo-soft); }
+  .papp-chat-input { display: flex; gap: 6px; padding: 12px; border-top: 1px solid var(--papp-border); }
+  .papp-chat-input input { flex: 1; border: 1px solid var(--papp-border); border-radius: 9px; padding: 9px 11px; font-size: 12.5px; outline: none; }
+  .papp-chat-input input:focus { border-color: var(--papp-indigo); }
+  .papp-chat-input button { width: 34px; border-radius: 9px; border: none; background: var(--papp-indigo); color: #fff; display: flex; align-items: center; justify-content: center; }
+  .papp-chat-input button svg { width: 13px; height: 13px; }
+
+  /* ---------- Dashboard view ---------- */
+  .papp-dash-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+  .papp-dash-head h2 { font-size: 20px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+  .papp-dash-head .pencil { opacity: 0.35; font-size: 13px; }
+  .papp-dash-head .pencil:hover { opacity: 0.8; }
+  .papp-dash-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+  .papp-dash-card {
+    background: #fff; border: 1px solid var(--papp-border); border-radius: 14px; padding: 16px 18px;
+    position: relative; transition: box-shadow .3s, border-color .3s;
+  }
+  .papp-dash-card.is-new { border-color: var(--papp-indigo); box-shadow: 0 0 0 3px var(--papp-indigo-soft); }
+  .papp-dash-card .badge {
+    position: absolute; top: -9px; right: 14px; background: var(--papp-indigo); color: #fff;
+    font-size: 10px; font-weight: 800; padding: 3px 9px; border-radius: 20px; opacity: 0; transition: opacity .3s;
+  }
+  .papp-dash-card.is-new .badge { opacity: 1; }
+  .papp-dash-card h4 { font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+  .papp-dash-card .meta { font-size: 10.5px; color: var(--papp-muted); margin-top: 8px; }
+
+  /* ---------- History view ---------- */
+  .papp-hist-head { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--papp-muted); margin-bottom: 14px; font-weight: 700; }
+  .papp-hist-item {
+    display: flex; align-items: center; gap: 14px; background: #fff; border: 1px solid var(--papp-border);
+    border-radius: 12px; padding: 12px 16px; margin-bottom: 8px; transition: border-color .15s;
+  }
+  .papp-hist-item:hover { border-color: var(--papp-indigo-dim); cursor: pointer; }
+  .papp-hist-item .ic { width: 34px; height: 24px; flex-shrink: 0; }
+  .papp-hist-item .tx { flex: 1; min-width: 0; }
+  .papp-hist-item .tx .t { font-weight: 700; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .papp-hist-item .tx .s { font-size: 11px; color: var(--papp-muted); }
+  .papp-hist-empty { text-align: center; padding: 60px 0; color: var(--papp-muted); font-size: 13px; }
+
+  /* ---------- Modal ---------- */
+  .papp-modal-overlay {
+    position: absolute; inset: 0; background: rgba(20,20,35,0.42);
+    display: none; align-items: center; justify-content: center; z-index: 20;
+  }
+  .papp-modal-overlay.is-open { display: flex; }
+  .papp-modal { background: #fff; border-radius: 16px; width: 360px; max-width: 90%; padding: 22px; box-shadow: 0 30px 70px rgba(0,0,0,0.35); }
+  .papp-modal h3 { font-size: 16px; font-weight: 800; margin-bottom: 4px; }
+  .papp-modal .sub { font-size: 12.5px; color: var(--papp-muted); margin-bottom: 16px; }
+  .papp-modal-option {
+    display: flex; align-items: center; gap: 12px; border: 1.5px solid var(--papp-border);
+    border-radius: 12px; padding: 13px 14px; margin-bottom: 10px; transition: border-color .15s, background .15s;
+  }
+  .papp-modal-option:hover { border-color: var(--papp-indigo); background: var(--papp-indigo-soft); cursor: pointer; }
+  .papp-modal-option .ic { width: 30px; height: 30px; border-radius: 8px; background: var(--papp-indigo-soft); color: var(--papp-indigo); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .papp-modal-option .ic svg { width: 15px; height: 15px; }
+  .papp-modal-option .t { font-weight: 700; font-size: 13px; }
+  .papp-modal-option .s { font-size: 11.5px; color: var(--papp-muted); }
+  .papp-modal input[type=text] {
+    width: 100%; border: 1px solid var(--papp-border); border-radius: 9px; padding: 10px 12px;
+    font-size: 13px; outline: none; margin-bottom: 14px;
+  }
+  .papp-modal input[type=text]:focus { border-color: var(--papp-indigo); }
+  .papp-modal-radio {
+    display: flex; align-items: center; gap: 10px; border: 1.5px solid var(--papp-border);
+    border-radius: 10px; padding: 10px 12px; margin-bottom: 8px; transition: border-color .15s;
+  }
+  .papp-modal-radio.selected { border-color: var(--papp-indigo); background: var(--papp-indigo-soft); }
+  .papp-modal-radio input { accent-color: var(--papp-indigo); }
+  .papp-modal-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; }
+  .papp-link-btn { font-size: 12.5px; font-weight: 700; color: var(--papp-muted); background: none; border: none; }
+  .papp-link-btn:hover { color: var(--papp-text); }
+
+  /* ---------- Toast ---------- */
+  .papp-toast {
+    position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: #1c1f2e; color: #fff; font-size: 12.5px; font-weight: 700;
+    padding: 11px 20px; border-radius: 30px; opacity: 0; transition: opacity .25s, transform .25s;
+    pointer-events: none; z-index: 30; display: flex; align-items: center; gap: 8px;
+  }
+  .papp-toast.is-shown { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  @media (max-width: 900px) {
+    #protoApp { height: auto; flex-direction: column; }
+    .papp-rail { width: 100%; flex-direction: row; padding: 10px 16px; }
+    .papp-chart-layout { flex-direction: column; }
+    .papp-chat { width: 100%; height: 340px; }
+    .papp-home-sections { flex-direction: column; }
+    .papp-dash-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body class="work-page">
+
+  <div class="navbar">
+    <div class="wrap inner">
+      <a class="logo" href="index.html">TS<span>.</span></a>
+      <nav class="links">
+        <a class="active" href="case-studies.html">My work</a>
+        <a href="about.html">About me</a>
+        <a href="TaraSheffield_CV-26.pdf" target="_blank" rel="noopener">Download</a>
+      </nav>
+    </div>
+  </div>
+
+  <main>
+    <section class="proto-hero">
+      <div class="wrap">
+        <a class="proto-back" href="case-studies.html#ttc">← Back to the AI Text to Chart case study</a>
+        <h1>A chart builder<br>you can actually talk to</h1>
+        <p class="lead">
+          This is a working click-through simulation of the flows I designed —
+          not screenshots. Ask a question, refine the chart through guided
+          follow-ups, and save it to a dashboard. Sample data only.
+        </p>
+        <div class="proto-flowlist" id="flowList">
+          <span data-flow="ask">1. Ask → preview a chart</span>
+          <span data-flow="new">2. Add to a new dashboard</span>
+          <span data-flow="existing">3. Add to an existing dashboard</span>
+          <span data-flow="newchat">4. Start a new chat</span>
+          <span data-flow="history">5. View conversation history</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="proto-frame-wrap">
+      <div class="wrap">
+        <div class="proto-frame">
+          <div class="proto-titlebar">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <span class="url">app.safetyculture.io/analytics</span>
+          </div>
+
+          <div id="protoApp">
+            <!-- Sidebar rail -->
+            <div class="papp-rail">
+              <div class="brand">A</div>
+              <button class="active" data-rail="home" title="Analytics home">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+              </button>
+              <button data-rail="dashboards" title="Dashboards (decorative)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></svg>
+              </button>
+              <button data-rail="docs" title="Reports (decorative)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg>
+              </button>
+              <button data-rail="settings" title="Settings (decorative)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.9l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.9-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.1a1.7 1.7 0 00-1-1.6 1.7 1.7 0 00-1.9.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.9 1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.1a1.7 1.7 0 001.5-1 1.7 1.7 0 00-.3-1.9l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.9.3H9a1.7 1.7 0 001-1.5V3a2 2 0 114 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.9-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.9V9a1.7 1.7 0 001.5 1H21a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z"/></svg>
+              </button>
+            </div>
+
+            <!-- Main column -->
+            <div class="papp-main">
+              <div class="papp-top">
+                <div class="crumb"><span>Analytics</span><span class="dim" id="crumbSub"></span></div>
+                <div class="actions">
+                  <button class="papp-btn" id="btnHistory">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+                    History
+                  </button>
+                  <button class="papp-btn" id="btnNewChat">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+                    New chat
+                  </button>
+                  <button class="papp-btn primary" id="btnAddDash" disabled>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M12 8v8M8 12h8"/></svg>
+                    Add to dashboard
+                  </button>
+                </div>
+              </div>
+
+              <div class="papp-stage">
+                <!-- HOME VIEW -->
+                <div class="papp-view is-active" data-view="home">
+                  <div class="papp-home-hero">
+                    <h2>Generate your chart with a question</h2>
+                    <p>Describe what you want to see — no fields, no filters to configure first.</p>
+                    <form class="papp-ask" id="askForm">
+                      <input type="text" id="askInput" placeholder="e.g. What's our inspection completion rate this quarter?" autocomplete="off">
+                      <button type="submit" aria-label="Ask">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                      </button>
+                    </form>
+                    <div class="papp-chips" id="homeChips"></div>
+                  </div>
+
+                  <div class="papp-home-sections">
+                    <div class="papp-home-col">
+                      <h3>Recently viewed</h3>
+                      <div id="recentList"></div>
+                    </div>
+                    <div class="papp-home-col">
+                      <h3>Insights</h3>
+                      <div class="papp-mini-card">
+                        <div class="tx">
+                          <div class="papp-insight-num">52</div>
+                          <div class="s">Overdue equipment inspections</div>
+                        </div>
+                      </div>
+                      <div class="papp-mini-card">
+                        <div class="tx">
+                          <div class="papp-insight-num">39</div>
+                          <div class="s">Trend headcount at risk of lapsing</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- LOADING VIEW -->
+                <div class="papp-view" data-view="loading">
+                  <div class="papp-loading">
+                    <div class="papp-ring"></div>
+                    <p id="loadingText">Generating your chart…</p>
+                  </div>
+                </div>
+
+                <!-- CHART VIEW -->
+                <div class="papp-view" data-view="chart">
+                  <div class="papp-chart-layout">
+                    <div class="papp-chart-main">
+                      <div class="papp-card">
+                        <div class="papp-kpi-label" id="kpiLabel">Metric</div>
+                        <div class="papp-kpi-num" id="kpiNum">0</div>
+                        <div class="papp-kpi-sub" id="kpiSub"></div>
+                        <div class="papp-chart-box" id="chartBox"></div>
+                        <div class="papp-legend" id="chartLegend"></div>
+                      </div>
+                    </div>
+                    <div class="papp-chat">
+                      <div class="papp-chat-head"><span class="avatar">AI</span> Conversation</div>
+                      <div class="papp-chat-thread" id="chatThread"></div>
+                      <form class="papp-chat-input" id="followupForm">
+                        <input type="text" id="followupInput" placeholder="Ask a follow-up…" autocomplete="off">
+                        <button type="submit" aria-label="Send">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- DASHBOARD VIEW -->
+                <div class="papp-view" data-view="dashboard">
+                  <div class="papp-dash-head">
+                    <h2><span id="dashName">Dashboard</span> <span class="pencil" id="renameDash" title="Rename">✎</span></h2>
+                    <button class="papp-btn" id="btnDashHome">Back to Analytics</button>
+                  </div>
+                  <div class="papp-dash-grid" id="dashGrid"></div>
+                </div>
+
+                <!-- HISTORY VIEW -->
+                <div class="papp-view" data-view="history">
+                  <div class="papp-hist-head">Conversation history</div>
+                  <div id="historyList"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Modal: add to dashboard -->
+            <div class="papp-modal-overlay" id="modalOverlay">
+              <div class="papp-modal" id="modalBody"></div>
+            </div>
+
+            <div class="papp-toast" id="toast"></div>
+          </div>
+        </div>
+        <p class="proto-note">
+          Prototype note: this simulates the interaction design with sample data —
+          it isn't connected to a live model or real SafetyCulture data.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap cta">
+      <div class="contact-popover">
+        <button type="button" class="big-btn" data-contact-btn aria-haspopup="true" aria-expanded="false">Get in touch</button>
+        <div class="contact-card" data-contact-card hidden>
+          <div class="contact-row">
+            <span class="contact-email" data-contact-email>sheffield.tara@gmail.com</span>
+            <button type="button" class="contact-copy" data-contact-copy>Copy</button>
+          </div>
+          <div class="contact-phone">Mobile: 0411 127 913</div>
+        </div>
+      </div>
+    </div>
+    <div class="wrap bottom">
+      <div class="id">
+        <div class="name">Tara Sheffield</div>
+        <div class="sub">Product Designer · Sydney, Australia</div>
+      </div>
+      <div class="copyright">© 2026 TS.DESIGN</div>
+    </div>
+  </footer>
+
+<script>
+/* ============================================================
+   Contact popover (shared behaviour, copied from case-studies.html)
+============================================================= */
+document.querySelectorAll('.contact-popover').forEach((wrap) => {
+  const btn = wrap.querySelector('[data-contact-btn]');
+  const card = wrap.querySelector('[data-contact-card]');
+  const copyBtn = wrap.querySelector('[data-contact-copy]');
+  const emailEl = wrap.querySelector('[data-contact-email]');
+  const email = emailEl.textContent.trim();
+  function onOutside(e) { if (!wrap.contains(e.target)) close(); }
+  function onKey(e) { if (e.key === 'Escape') { close(); btn.focus(); } }
+  function open() { card.hidden = false; btn.setAttribute('aria-expanded', 'true'); document.addEventListener('click', onOutside); document.addEventListener('keydown', onKey); }
+  function close() { card.hidden = true; btn.setAttribute('aria-expanded', 'false'); document.removeEventListener('click', onOutside); document.removeEventListener('keydown', onKey); }
+  btn.addEventListener('click', (e) => { e.stopPropagation(); card.hidden ? open() : close(); });
+  copyBtn.addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(email); }
+    catch (err) {
+      const range = document.createRange(); range.selectNodeContents(emailEl);
+      const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
+      document.execCommand('copy'); sel.removeAllRanges();
+    }
+    copyBtn.textContent = 'Copied!'; copyBtn.classList.add('is-copied');
+    setTimeout(() => { copyBtn.textContent = 'Copy'; copyBtn.classList.remove('is-copied'); }, 1800);
+  });
+});
+
+/* ============================================================
+   AI Text-to-Chart interactive prototype
+   Simulates all 5 flow rows from the Figma file: ask→preview,
+   add to new dashboard, add to existing dashboard, new chat,
+   conversation history. All data is fabricated for demo purposes.
+============================================================= */
+(function () {
+  const root = document.getElementById('protoApp');
+  if (!root) return;
+
+  const COLORS = ['#5b5cff', '#8f8fff', '#b7b6ff', '#39c6a6', '#ffb15c'];
+
+  const STARTERS = [
+    { q: "What's our inspection completion rate this quarter?", metric: 'completionRate' },
+    { q: 'Show overdue equipment inspections by site', metric: 'overdue' },
+    { q: 'Compare incident reports across teams', metric: 'incidents' },
+  ];
+
+  const DASHBOARDS = {
+    'dash-qa': { id: 'dash-qa', name: 'Inspection Dashboard QA', charts: [
+      mkChart('Compliance rate', '91%', 'up 4% vs last month', barSeries(['Jan','Feb','Mar','Apr','May','Jun'], [78,81,84,86,89,91])),
+      mkChart('Open corrective actions', '18', 'down 6 vs last month', barSeries(['Site A','Site B','Site C','Site D'], [6,4,5,3])),
+      mkChart('Audits completed', '204', 'on track', barSeries(['W1','W2','W3','W4'], [44,52,58,50])),
+    ]},
+    'dash-comp': { id: 'dash-comp', name: 'Compliance Overview', charts: [
+      mkChart('Policy acknowledgements', '96%', 'steady', barSeries(['Jan','Feb','Mar','Apr'], [90,92,94,96])),
+      mkChart('Training completion', '82%', 'up 2%', barSeries(['Site A','Site B','Site C'], [77,85,84])),
+    ]},
+  };
+
+  const state = {
+    view: 'home',
+    current: null,      // { question, messages, chart, stage }
+    history: [],         // saved conversations
+    modalStep: null,     // 'choose' | 'new' | 'existing'
+    selectedDash: null,
+    dashSeed: 2,
+  };
+
+  function mkChart(label, kpi, sub, series, opts) {
+    return Object.assign({ label, kpi, sub, series, kind: 'bar' }, opts || {});
+  }
+  function barSeries(labels, values, colors) {
+    return { labels, values, colors: colors || null };
+  }
+
+  /* ---------------- view switching ---------------- */
+  function showView(name) {
+    state.view = name;
+    root.querySelectorAll('.papp-view').forEach((v) => v.classList.toggle('is-active', v.dataset.view === name));
+    document.getElementById('btnAddDash').disabled = !(name === 'chart' && state.current && state.current.chart);
+    document.getElementById('crumbSub').textContent =
+      name === 'chart' ? '›  ' + truncate(state.current.question, 40) :
+      name === 'dashboard' ? '›  Dashboard' :
+      name === 'history' ? '›  History' : '';
+    updateFlowHighlight(name);
+  }
+  function updateFlowHighlight(view) {
+    const map = { home: 'ask', loading: 'ask', chart: 'ask', dashboard: null, history: 'history' };
+    document.querySelectorAll('#flowList span').forEach((s) => s.classList.remove('on'));
+  }
+  function truncate(s, n) { return s && s.length > n ? s.slice(0, n - 1) + '…' : (s || ''); }
+
+  /* ---------------- home view ---------------- */
+  function renderHome() {
+    const chips = document.getElementById('homeChips');
+    chips.innerHTML = STARTERS.map((s) => `<button type="button" class="papp-chip" data-q="${escapeAttr(s.q)}">${s.q}</button>`).join('');
+    chips.querySelectorAll('.papp-chip').forEach((c) => c.addEventListener('click', () => askQuestion(c.dataset.q)));
+
+    const recent = document.getElementById('recentList');
+    const recentSource = state.history.slice(-3).reverse();
+    if (recentSource.length === 0) {
+      recent.innerHTML = `
+        <div class="papp-mini-card"><div class="ic">${miniSVG(barSeries(['','','',''],[3,5,4,6]))}</div><div class="tx"><div class="t">Inspection completion rate</div><div class="s">Sample chart</div></div></div>
+        <div class="papp-mini-card"><div class="ic">${miniSVG(barSeries(['','','',''],[6,3,5,2]))}</div><div class="tx"><div class="t">Overdue by site</div><div class="s">Sample chart</div></div></div>`;
+    } else {
+      recent.innerHTML = recentSource.map((h) => `
+        <div class="papp-mini-card" data-open="${h.id}"><div class="ic">${miniSVG(h.chart.series)}</div><div class="tx"><div class="t">${escapeHtml(truncate(h.question, 34))}</div><div class="s">${relTime(h.timestamp)}</div></div></div>`).join('');
+      recent.querySelectorAll('[data-open]').forEach((el) => el.addEventListener('click', () => openHistoryItem(el.dataset.open)));
+    }
+  }
+
+  document.getElementById('askForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const input = document.getElementById('askInput');
+    const val = input.value.trim();
+    if (!val) return;
+    input.value = '';
+    askQuestion(val);
+  });
+
+  // Only the 3 suggested prompts (or a message containing one of their
+  // keywords) map directly to a chart. Anything else is treated as
+  // unrecognized — the real builder couldn't guess a metric from arbitrary
+  // text, so it has to ask. Returns null when nothing matches.
+  function matchStarterMetric(question) {
+    const starter = STARTERS.find((s) => s.q === question);
+    if (starter) return starter.metric;
+    const lower = question.toLowerCase();
+    if (lower.includes('completion')) return 'completionRate';
+    if (lower.includes('overdue')) return 'overdue';
+    if (lower.includes('incident')) return 'incidents';
+    return null;
+  }
+
+  function askQuestion(question) {
+    const metricKey = matchStarterMetric(question);
+    state.current = { question, messages: [], stage: 'metric', chart: null, clarify: null };
+    showView('loading');
+    const loadingMessages = ['Reading your question…', 'Finding the right metric…', 'Building your chart…'];
+    let i = 0;
+    document.getElementById('loadingText').textContent = loadingMessages[0];
+    const iv = setInterval(() => { i++; if (i < loadingMessages.length) document.getElementById('loadingText').textContent = loadingMessages[i]; }, 350);
+    setTimeout(() => {
+      clearInterval(iv);
+      if (metricKey) {
+        const chart = buildInitialChart(metricKey, question);
+        state.current.chart = chart;
+        addMessage('user', question);
+        addMessage('assistant', `Here's your metric — ${chart.label.toLowerCase()} — using sensible defaults over the last 6 months. Want to refine it by an attribute, like site?`);
+        renderChartView(suggestionsFor('metric'));
+      } else {
+        startClarification(question);
+      }
+      showView('chart');
+    }, 1050);
+  }
+
+  /* ---------------- chart data ----------------
+     `sub` is a neutral caption describing the current view (never a
+     comparison claim — the real chart preview didn't have that at design
+     time). `comparison` is the "vs last period" detail, which only ever
+     surfaces through the chat via the "How does this compare?" prompt. */
+  function buildInitialChart(metric, question) {
+    if (metric === 'completionRate') {
+      return mkChart('Inspection completion rate', '87%', '6-month trend', barSeries(['Feb','Mar','Apr','May','Jun','Jul'], [76, 79, 81, 83, 85, 87]), { comparison: 'up 3% vs last month' });
+    }
+    if (metric === 'overdue') {
+      return mkChart('Overdue equipment inspections', '34', '6-month trend', barSeries(['Feb','Mar','Apr','May','Jun','Jul'], [51, 47, 44, 41, 37, 34]), { comparison: 'down 5 vs last month' });
+    }
+    if (metric === 'incidents') {
+      return mkChart('Incident reports this quarter', '12', '6-month trend', barSeries(['Feb','Mar','Apr','May','Jun','Jul'], [19, 17, 16, 15, 13, 12]), { comparison: 'down 2 vs last quarter' });
+    }
+    // Free-text fallback — mirrors the Figma placeholder KPI of "463"
+    const base = [312, 298, 341, 289, 376, 463];
+    return mkChart(question, '463', '6-month trend', barSeries(['Feb','Mar','Apr','May','Jun','Jul'], base), { comparison: 'up 22% vs last month' });
+  }
+
+  function breakdownChart(chart) {
+    const sites = ['Site A', 'Site B', 'Site C', 'Site D', 'Site E'];
+    const total = parseFloat(chart.kpi) || 100;
+    const weights = [0.28, 0.15, 0.24, 0.11, 0.22];
+    const values = weights.map((w) => Math.round(total * w * (0.9 + Math.random() * 0.2)));
+    return mkChart(chart.label + ' by site', chart.kpi, 'broken down by site', barSeries(sites, values, COLORS), { comparison: chart.comparison });
+  }
+  function filterChart(chart) {
+    const last = chart.series.values[chart.series.values.length - 1];
+    return mkChart(chart.label + ' — this month', String(last) + (chart.kpi.includes('%') ? '%' : ''), 'filtered to this month', barSeries(['This month'], [last]), { comparison: chart.comparison });
+  }
+  function lineChart(chart) {
+    return Object.assign({}, chart, { kind: 'line', label: chart.label + ' (line)' });
+  }
+  function shuffledChart(chart, note) {
+    const values = chart.series.values.map((v) => Math.max(1, Math.round(v * (0.85 + Math.random() * 0.3))));
+    return mkChart(chart.label, chart.kpi, note || 'updated view', Object.assign({}, chart.series, { values }), { comparison: chart.comparison });
+  }
+
+  /* ---------------- chat + follow-ups ---------------- */
+  function addMessage(role, text) {
+    state.current.messages.push({ role, text });
+  }
+  // The guided follow-up hierarchy, one clarifying turn per stage:
+  // metric (the initial ask) → attribute → filter → chart type. Rendered
+  // as a suggested next question inside the chat thread — written as
+  // though the assistant is proposing it — rather than a standalone button.
+  const FOLLOWUP_LABELS = {
+    attribute: 'Break down by site →',
+    filter: 'Filter to this month',
+    chartType: 'Switch to line chart',
+    reset: 'Show full trend again',
+    compare: 'How does this compare to before?',
+    // Clarification-flow chips (unrecognized prompt) — see CLARIFY_STEPS.
+    'clarify-metric-completion': 'Inspection completion rate',
+    'clarify-metric-overdue': 'Overdue equipment inspections',
+    'clarify-metric-incidents': 'Incident reports',
+    'clarify-attr-site': 'Break down by site',
+    'clarify-attr-none': 'Just the overall trend',
+    'clarify-filter-month': 'Filter to this month',
+    'clarify-filter-none': 'Show the full range',
+    'clarify-type-bar': 'Bar chart',
+    'clarify-type-line': 'Line chart',
+  };
+  const NEXT_STAGE = { metric: 'attribute', attribute: 'filter', filter: 'chartType', chartType: 'done' };
+
+  // "compare" doesn't advance the hierarchy — it's always offered alongside
+  // whatever the next guided step is, since a trend comparison was only
+  // ever available by asking, never as a badge on the chart itself.
+  function suggestionsFor(stage) {
+    const next = NEXT_STAGE[stage] || 'attribute';
+    return [next === 'done' ? 'reset' : next, 'compare'];
+  }
+
+  function renderChatThread(actions) {
+    const thread = document.getElementById('chatThread');
+    const msgsHtml = state.current.messages.map((m) => `<div class="papp-msg ${m.role}">${escapeHtml(m.text)}</div>`).join('');
+    const suggestHtml = (actions && actions.length)
+      ? `<div class="papp-suggest">${actions.map((a) => `<button type="button" class="papp-chip" data-action="${a}">${FOLLOWUP_LABELS[a]}</button>`).join('')}</div>`
+      : '';
+    thread.innerHTML = msgsHtml + suggestHtml;
+    thread.scrollTop = thread.scrollHeight;
+    thread.querySelectorAll('.papp-suggest [data-action]').forEach((c) => c.addEventListener('click', () => {
+      const a = c.dataset.action;
+      if (a.indexOf('clarify-') === 0) handleClarifyAction(a); else handleFollowupAction(a);
+    }));
+  }
+
+  /* ---------------- clarification / "I couldn't do that" flow ----------
+     Part of the real PRD (error and clarification flows) that was never
+     reflected in the Figma designs. Triggers when a typed question doesn't
+     match one of the 3 suggested prompts — instead of guessing, the
+     assistant explains what it needs and asks for metric, attribute,
+     filter, and chart type one at a time before building anything. */
+  const CLARIFY_STEPS = {
+    metric: {
+      chips: [
+        { action: 'clarify-metric-completion' },
+        { action: 'clarify-metric-overdue' },
+        { action: 'clarify-metric-incidents' },
+      ],
+    },
+    attribute: {
+      ask: "Got the metric. Do you want this broken down by an attribute, like site, or just the overall trend?",
+      chips: [{ action: 'clarify-attr-site' }, { action: 'clarify-attr-none' }],
+    },
+    filter: {
+      ask: 'Should I filter this to a specific time range, like this month, or show the full period?',
+      chips: [{ action: 'clarify-filter-month' }, { action: 'clarify-filter-none' }],
+    },
+    chartType: {
+      ask: 'Last one — bar chart or line chart?',
+      chips: [{ action: 'clarify-type-bar' }, { action: 'clarify-type-line' }],
+    },
+  };
+
+  function startClarification(question) {
+    const cur = state.current;
+    cur.clarify = { step: 'metric', metricKey: null, attribute: false, filter: false, chartType: 'bar' };
+    addMessage('user', question);
+    addMessage('assistant', "I couldn't map that directly to a chart — let's break down what you're asking for, and what's possible. Every chart here needs four things: a metric to measure, an attribute to group by, a filter to narrow the range, and a chart type — I can only ask for them one at a time, there's no form for this. Let's start with the metric — which of these would you like to track?");
+    renderClarifyChips('metric');
+  }
+
+  function renderClarifyChips(step) {
+    document.getElementById('kpiLabel').textContent = 'Building your chart…';
+    document.getElementById('kpiNum').textContent = '—';
+    document.getElementById('kpiSub').textContent = 'Answer a couple of quick questions in the chat to continue.';
+    document.getElementById('chartBox').innerHTML = '';
+    document.getElementById('chartLegend').innerHTML = '';
+    document.getElementById('btnAddDash').disabled = true;
+    renderChatThread(CLARIFY_STEPS[step].chips.map((c) => c.action));
+  }
+
+  function handleClarifyAction(action) {
+    const cur = state.current;
+    const c = cur.clarify;
+    addMessage('user', FOLLOWUP_LABELS[action]);
+    if (action.indexOf('clarify-metric-') === 0) {
+      const map = { 'clarify-metric-completion': 'completionRate', 'clarify-metric-overdue': 'overdue', 'clarify-metric-incidents': 'incidents' };
+      c.metricKey = map[action]; c.step = 'attribute';
+      addMessage('assistant', CLARIFY_STEPS.attribute.ask);
+      renderClarifyChips('attribute');
+    } else if (action.indexOf('clarify-attr-') === 0) {
+      c.attribute = action === 'clarify-attr-site'; c.step = 'filter';
+      addMessage('assistant', CLARIFY_STEPS.filter.ask);
+      renderClarifyChips('filter');
+    } else if (action.indexOf('clarify-filter-') === 0) {
+      c.filter = action === 'clarify-filter-month'; c.step = 'chartType';
+      addMessage('assistant', CLARIFY_STEPS.chartType.ask);
+      renderClarifyChips('chartType');
+    } else if (action.indexOf('clarify-type-') === 0) {
+      c.chartType = action === 'clarify-type-line' ? 'line' : 'bar';
+      finishClarification();
+    }
+  }
+
+  function handleClarifyFreeText(text) {
+    const cur = state.current;
+    const c = cur.clarify;
+    addMessage('user', text);
+    const lower = text.toLowerCase();
+    if (c.step === 'metric') {
+      const key = matchStarterMetric(text);
+      if (!key) {
+        addMessage('assistant', "I still couldn't match that to a specific metric — pick one below and we'll go from there.");
+        renderClarifyChips('metric');
+        return;
+      }
+      c.metricKey = key; c.step = 'attribute';
+      addMessage('assistant', CLARIFY_STEPS.attribute.ask);
+      renderClarifyChips('attribute');
+    } else if (c.step === 'attribute') {
+      c.attribute = lower.includes('site') || lower.includes('team') || lower.includes('break');
+      c.step = 'filter';
+      addMessage('assistant', CLARIFY_STEPS.filter.ask);
+      renderClarifyChips('filter');
+    } else if (c.step === 'filter') {
+      c.filter = lower.includes('month') || lower.includes('filter');
+      c.step = 'chartType';
+      addMessage('assistant', CLARIFY_STEPS.chartType.ask);
+      renderClarifyChips('chartType');
+    } else if (c.step === 'chartType') {
+      c.chartType = lower.includes('line') ? 'line' : 'bar';
+      finishClarification();
+    }
+  }
+
+  function finishClarification() {
+    const cur = state.current;
+    const c = cur.clarify;
+    let chart = buildInitialChart(c.metricKey, cur.question);
+    if (c.attribute) chart = breakdownChart(chart);
+    if (c.filter) chart = filterChart(chart);
+    if (c.chartType === 'line') chart = lineChart(chart);
+    cur.chart = chart;
+    cur.clarify = null;
+    cur.stage = 'chartType';
+    addMessage('assistant', `Here's your chart — ${chart.label.toLowerCase()}. That's the metric, attribute, filter, and chart type all set — keep tweaking, or add it to a dashboard when you're happy with it.`);
+    renderChartView(suggestionsFor(cur.stage));
+  }
+
+  function handleFollowupAction(action) {
+    const cur = state.current;
+    if (action === 'attribute') {
+      addMessage('user', FOLLOWUP_LABELS.attribute.replace(' →', ''));
+      cur.chart = breakdownChart(cur.chart);
+      cur.stage = 'attribute';
+      addMessage('assistant', "Here's the breakdown by site — that's the attribute step. Next, want to narrow it with a filter, like a specific time range?");
+    } else if (action === 'filter') {
+      addMessage('user', FOLLOWUP_LABELS.filter);
+      cur.chart = filterChart(cur.chart);
+      cur.stage = 'filter';
+      addMessage('assistant', "Filtered to this month. Last step in the hierarchy — would a different chart type read better here, like a line chart for the trend?");
+      pulseAddButton();
+    } else if (action === 'chartType') {
+      addMessage('user', FOLLOWUP_LABELS.chartType);
+      cur.chart = lineChart(cur.chart);
+      cur.stage = 'chartType';
+      addMessage('assistant', "That's the full hierarchy — metric, attribute, filter, chart type. Keep tweaking anytime, or add this to a dashboard when you're happy with it.");
+      pulseAddButton();
+    } else if (action === 'reset') {
+      addMessage('user', FOLLOWUP_LABELS.reset);
+      cur.chart = buildInitialChart(null, cur.question);
+      cur.stage = 'metric';
+      addMessage('assistant', "Back to the full 6-month trend. Want to walk through refining it again, starting with an attribute like site?");
+    } else if (action === 'compare') {
+      addMessage('user', FOLLOWUP_LABELS.compare);
+      const cmp = cur.chart.comparison || 'about the same as the prior period';
+      addMessage('assistant', `That's ${cmp}. That kind of comparison only ever lived in conversation — the chart preview itself never showed it as a badge.`);
+    }
+    renderChartView(suggestionsFor(cur.stage));
+  }
+
+  document.getElementById('followupForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const input = document.getElementById('followupInput');
+    const text = input.value.trim();
+    if (!text || !state.current) return;
+    input.value = '';
+    if (state.current.clarify) { handleClarifyFreeText(text); return; }
+    addMessage('user', text);
+    const cur = state.current;
+    const lower = text.toLowerCase();
+    let reply = "Here's an updated view based on that.";
+    if (lower.includes('compare') || lower.includes('vs last') || lower.includes('versus') || lower.includes('last month') || lower.includes('last quarter')) {
+      const cmp = cur.chart.comparison || 'about the same as the prior period';
+      reply = `That's ${cmp}. That kind of comparison only ever lived in conversation — the chart preview itself never showed it as a badge.`;
+    } else if (lower.includes('site') || lower.includes('team') || lower.includes('attribute')) {
+      cur.chart = breakdownChart(cur.chart); cur.stage = 'attribute';
+      reply = "Here's the breakdown by site — that's the attribute step. Want to filter it next?";
+    } else if (lower.includes('month') || lower.includes('filter') || lower.includes('range')) {
+      cur.chart = filterChart(cur.chart); cur.stage = 'filter';
+      reply = 'Filtered to this month. Want to try a different chart type next?';
+      pulseAddButton();
+    } else if (lower.includes('line') || lower.includes('chart type') || lower.includes('bar')) {
+      cur.chart = lineChart(cur.chart); cur.stage = 'chartType';
+      reply = "Switched to a line chart — that's the chart-type step, the last in the hierarchy.";
+      pulseAddButton();
+    } else {
+      cur.chart = shuffledChart(cur.chart, 'updated per your question');
+    }
+    addMessage('assistant', reply);
+    renderChartView(suggestionsFor(cur.stage));
+  });
+
+  function pulseAddButton() {
+    const btn = document.getElementById('btnAddDash');
+    btn.classList.add('pulse');
+    setTimeout(() => btn.classList.remove('pulse'), 4800);
+  }
+
+  /* ---------------- chart view render ---------------- */
+  function renderChartView(followupActions) {
+    const chart = state.current.chart;
+    document.getElementById('kpiLabel').textContent = chart.label;
+    document.getElementById('kpiSub').textContent = chart.sub || '';
+    animateNumber(document.getElementById('kpiNum'), chart.kpi);
+    const box = document.getElementById('chartBox');
+    box.innerHTML = chart.kind === 'line' ? lineSVG(chart.series) : barSVG(chart.series);
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      box.querySelectorAll('.bar').forEach((b) => b.classList.add('grown'));
+      box.querySelectorAll('.papp-line-path').forEach((p) => p.classList.add('drawn'));
+    }));
+    const legend = document.getElementById('chartLegend');
+    if (chart.series.colors) {
+      legend.innerHTML = chart.series.labels.map((l, i) => `<span><i style="background:${chart.series.colors[i % chart.series.colors.length]}"></i>${l}</span>`).join('');
+    } else { legend.innerHTML = ''; }
+    renderChatThread(followupActions || []);
+    document.getElementById('btnAddDash').disabled = false;
+  }
+
+  function animateNumber(el, target) {
+    const suffix = /%$/.test(target) ? '%' : '';
+    const num = parseInt(String(target).replace(/[^0-9]/g, ''), 10) || 0;
+    const from = 0;
+    const dur = 500;
+    const t0 = performance.now();
+    function tick(t) {
+      const p = Math.min(1, (t - t0) / dur);
+      el.textContent = Math.round(from + (num - from) * p) + suffix;
+      if (p < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  /* ---------------- SVG chart builders ---------------- */
+  function barSVG(series, opts) {
+    opts = opts || {};
+    const W = opts.width || 560, H = opts.height || 200;
+    const n = series.values.length;
+    const max = Math.max(...series.values) * 1.2 || 1;
+    const gap = W / n;
+    const barW = Math.min(46, gap * 0.5);
+    let bars = '';
+    series.values.forEach((v, i) => {
+      const h = (v / max) * H;
+      const x = i * gap + (gap - barW) / 2;
+      const y = H - h;
+      const color = series.colors ? series.colors[i % series.colors.length] : 'var(--papp-indigo)';
+      bars += `<rect class="bar" x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${barW.toFixed(1)}" height="${h.toFixed(1)}" rx="5" fill="${color}" style="transition-delay:${i * 55}ms"></rect>`;
+    });
+    const labels = series.labels.map((l, i) => `<text x="${(i * gap + gap / 2).toFixed(1)}" y="${H + 18}" font-size="10" fill="#9298ad" text-anchor="middle">${escapeHtml(l)}</text>`).join('');
+    return `<svg viewBox="0 0 ${W} ${H + 28}">${bars}${labels}</svg>`;
+  }
+
+  function lineSVG(series, opts) {
+    opts = opts || {};
+    const W = opts.width || 560, H = opts.height || 200;
+    const n = series.values.length;
+    const max = Math.max(...series.values) * 1.2 || 1;
+    const min = Math.min(...series.values) * 0.85;
+    const gap = n > 1 ? W / (n - 1) : W;
+    const pts = series.values.map((v, i) => {
+      const x = n > 1 ? i * gap : W / 2;
+      const y = H - ((v - min) / (max - min || 1)) * H;
+      return [x, y];
+    });
+    const path = pts.map((p, i) => (i === 0 ? 'M' : 'L') + p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' ');
+    const dots = pts.map((p) => `<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="4" fill="#5b5cff"></circle>`).join('');
+    const labels = series.labels.map((l, i) => `<text x="${(n > 1 ? i * gap : W / 2).toFixed(1)}" y="${H + 18}" font-size="10" fill="#9298ad" text-anchor="middle">${escapeHtml(l)}</text>`).join('');
+    return `<svg viewBox="0 0 ${W} ${H + 28}"><path class="papp-line-path" d="${path}" fill="none" stroke="#5b5cff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>${dots}${labels}</svg>`;
+  }
+
+  function miniSVG(series) {
+    const W = 30, H = 20;
+    const n = series.values.length;
+    const max = Math.max(...series.values) || 1;
+    const gap = W / n;
+    const barW = gap * 0.55;
+    let bars = '';
+    series.values.forEach((v, i) => {
+      const h = (v / max) * H;
+      bars += `<rect x="${(i * gap + (gap - barW) / 2).toFixed(1)}" y="${(H - h).toFixed(1)}" width="${barW.toFixed(1)}" height="${h.toFixed(1)}" rx="1.5" fill="#5b5cff"></rect>`;
+    });
+    return `<svg viewBox="0 0 ${W} ${H}" width="30" height="20">${bars}</svg>`;
+  }
+
+  /* ---------------- add to dashboard modal ---------------- */
+  document.getElementById('btnAddDash').addEventListener('click', () => openModal('choose'));
+
+  function openModal(step) {
+    state.modalStep = step;
+    document.getElementById('modalOverlay').classList.add('is-open');
+    renderModal();
+  }
+  function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('is-open');
+    state.modalStep = null;
+    state.selectedDash = null;
+  }
+  document.getElementById('modalOverlay').addEventListener('click', (e) => { if (e.target.id === 'modalOverlay') closeModal(); });
+
+  function renderModal() {
+    const body = document.getElementById('modalBody');
+    if (state.modalStep === 'choose') {
+      body.innerHTML = `
+        <h3>Add to dashboard</h3>
+        <p class="sub">Where should this chart live?</p>
+        <div class="papp-modal-option" data-go="new">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></div>
+          <div><div class="t">Create a new dashboard</div><div class="s">Start fresh with just this chart</div></div>
+        </div>
+        <div class="papp-modal-option" data-go="existing">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></svg></div>
+          <div><div class="t">Add to an existing dashboard</div><div class="s">Drop it alongside charts you already have</div></div>
+        </div>
+        <div class="papp-modal-foot"><button type="button" class="papp-link-btn" id="modalCancel">Cancel</button><span></span></div>`;
+      body.querySelectorAll('[data-go]').forEach((el) => el.addEventListener('click', () => openModal(el.dataset.go)));
+      body.querySelector('#modalCancel').addEventListener('click', closeModal);
+    } else if (state.modalStep === 'new') {
+      body.innerHTML = `
+        <h3>New dashboard</h3>
+        <p class="sub">Give it a name — you can change this later.</p>
+        <input type="text" id="newDashName" value="Untitled dashboard">
+        <div class="papp-modal-foot"><button type="button" class="papp-link-btn" id="modalBack">← Back</button><button type="button" class="papp-btn primary" id="modalCreate">Create &amp; add</button></div>`;
+      const nameInput = body.querySelector('#newDashName');
+      nameInput.focus(); nameInput.select();
+      body.querySelector('#modalBack').addEventListener('click', () => openModal('choose'));
+      body.querySelector('#modalCreate').addEventListener('click', () => confirmNewDashboard(nameInput.value.trim() || 'Untitled dashboard'));
+    } else if (state.modalStep === 'existing') {
+      const list = Object.values(DASHBOARDS);
+      body.innerHTML = `
+        <h3>Add to existing dashboard</h3>
+        <p class="sub">Choose a dashboard.</p>
+        ${list.map((d) => `
+          <label class="papp-modal-radio${state.selectedDash === d.id ? ' selected' : ''}" data-radio="${d.id}">
+            <input type="radio" name="dashPick" ${state.selectedDash === d.id ? 'checked' : ''}>
+            <div><div class="t" style="font-weight:700;font-size:13px">${d.name}</div><div class="s" style="font-size:11px;color:var(--papp-muted)">${d.charts.length} charts</div></div>
+          </label>`).join('')}
+        <div class="papp-modal-foot"><button type="button" class="papp-link-btn" id="modalBack">← Back</button><button type="button" class="papp-btn primary" id="modalAdd" ${state.selectedDash ? '' : 'disabled'}>Add chart</button></div>`;
+      body.querySelectorAll('[data-radio]').forEach((el) => el.addEventListener('click', () => { state.selectedDash = el.dataset.radio; renderModal(); }));
+      body.querySelector('#modalBack').addEventListener('click', () => openModal('choose'));
+      const addBtn = body.querySelector('#modalAdd');
+      if (addBtn) addBtn.addEventListener('click', () => confirmExistingDashboard(state.selectedDash));
+    }
+  }
+
+  function confirmNewDashboard(name) {
+    const id = 'dash-new-' + (state.dashSeed++);
+    DASHBOARDS[id] = { id, name, charts: [state.current.chart] };
+    closeModal();
+    renderDashboard(id, true);
+    toast('Created "' + name + '" and added your chart');
+  }
+  function confirmExistingDashboard(id) {
+    if (!id) return;
+    DASHBOARDS[id].charts.push(state.current.chart);
+    closeModal();
+    renderDashboard(id, true);
+    toast('Added to ' + DASHBOARDS[id].name);
+  }
+
+  /* ---------------- dashboard view ---------------- */
+  function renderDashboard(id, highlightLast) {
+    const dash = DASHBOARDS[id];
+    document.getElementById('dashName').textContent = dash.name;
+    const grid = document.getElementById('dashGrid');
+    grid.innerHTML = dash.charts.map((c, i) => {
+      const isNew = highlightLast && i === dash.charts.length - 1;
+      return `<div class="papp-dash-card${isNew ? ' is-new' : ''}"><span class="badge">New</span>
+        <h4>${escapeHtml(c.label)}</h4>
+        <div class="papp-kpi-num" style="font-size:22px">${c.kpi}</div>
+        <div class="papp-chart-box">${c.kind === 'line' ? lineSVG(c.series, { width: 260, height: 90 }) : barSVG(c.series, { width: 260, height: 90 })}</div>
+        <div class="meta">${c.sub || ''}</div></div>`;
+    }).join('');
+    grid.querySelectorAll('.bar').forEach((b, i) => requestAnimationFrame(() => requestAnimationFrame(() => b.classList.add('grown'))));
+    grid.querySelectorAll('.papp-line-path').forEach((p) => requestAnimationFrame(() => requestAnimationFrame(() => p.classList.add('drawn'))));
+    showView('dashboard');
+    if (highlightLast) setTimeout(() => { const c = grid.querySelector('.is-new'); if (c) c.classList.remove('is-new'); }, 3200);
+  }
+
+  document.getElementById('btnDashHome').addEventListener('click', () => { renderHome(); showView('home'); });
+  document.getElementById('renameDash').addEventListener('click', () => {
+    const dash = Object.values(DASHBOARDS).find((d) => d.name === document.getElementById('dashName').textContent);
+    if (!dash) return;
+    const name = prompt('Rename dashboard', dash.name);
+    if (name && name.trim()) { dash.name = name.trim(); document.getElementById('dashName').textContent = dash.name; }
+  });
+
+  /* ---------------- new chat / history ---------------- */
+  document.getElementById('btnNewChat').addEventListener('click', startNewChat);
+
+  function startNewChat() {
+    if (state.current && state.current.chart) {
+      state.history.push({
+        id: 'h' + Date.now() + Math.random().toString(36).slice(2, 6),
+        question: state.current.question,
+        messages: state.current.messages.slice(),
+        chart: state.current.chart,
+        stage: state.current.stage || 'metric',
+        timestamp: Date.now(),
+      });
+    }
+    state.current = null;
+    renderHome();
+    showView('home');
+    document.getElementById('askInput').focus();
+  }
+
+  document.getElementById('btnHistory').addEventListener('click', renderHistoryView);
+  function renderHistoryView() {
+    const list = document.getElementById('historyList');
+    const items = state.history.slice().reverse();
+    if (items.length === 0) {
+      list.innerHTML = '<div class="papp-hist-empty">No conversations yet — ask a question to get started.</div>';
+    } else {
+      list.innerHTML = items.map((h) => `
+        <div class="papp-hist-item" data-open="${h.id}">
+          <div class="ic">${miniSVG(h.chart.series)}</div>
+          <div class="tx"><div class="t">${escapeHtml(h.question)}</div><div class="s">${relTime(h.timestamp)} · ${h.messages.length} messages</div></div>
+        </div>`).join('');
+      list.querySelectorAll('[data-open]').forEach((el) => el.addEventListener('click', () => openHistoryItem(el.dataset.open)));
+    }
+    showView('history');
+  }
+
+  function openHistoryItem(id) {
+    const item = state.history.find((h) => h.id === id);
+    if (!item) return;
+    const stage = item.stage || 'metric';
+    state.current = { question: item.question, messages: item.messages.slice(), chart: item.chart, stage };
+    renderChartView(suggestionsFor(stage));
+    showView('chart');
+  }
+
+  /* ---------------- utils ---------------- */
+  function toast(msg) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.add('is-shown');
+    clearTimeout(toast._t);
+    toast._t = setTimeout(() => el.classList.remove('is-shown'), 2600);
+  }
+  function relTime(ts) {
+    const s = Math.round((Date.now() - ts) / 1000);
+    if (s < 10) return 'Just now';
+    if (s < 60) return s + 's ago';
+    const m = Math.round(s / 60);
+    if (m < 60) return m + (m === 1 ? ' min ago' : ' mins ago');
+    const h = Math.round(m / 60);
+    return h + (h === 1 ? ' hour ago' : ' hours ago');
+  }
+  function escapeHtml(s) { return String(s).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+  function escapeAttr(s) { return escapeHtml(s); }
+
+  /* Decorative rail buttons: dashboards/docs/settings just acknowledge the
+     click with a toast — they're out of scope for this prototype. */
+  root.querySelectorAll('.papp-rail button[data-rail]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      root.querySelectorAll('.papp-rail button').forEach((b) => b.classList.remove('active'));
+      btn.classList.add('active');
+      if (btn.dataset.rail === 'home') { startNewChatSoft(); }
+      else { toast('Not part of this prototype — showing Analytics only'); btn.classList.remove('active'); document.querySelector('.papp-rail button[data-rail="home"]').classList.add('active'); }
+    });
+  });
+  function startNewChatSoft() {
+    // "Home" in the rail just returns to the home view without archiving —
+    // distinct from the toolbar's explicit "New chat".
+    if (state.view !== 'home') { renderHome(); showView('home'); }
+  }
+
+  /* ---------------- init ---------------- */
+  renderHome();
+  showView('home');
+})();
+</script>
+</body>
+</html>
