@@ -635,6 +635,14 @@ img { display: block; max-width: 100%; }
 .panel .case-body h2::after { background: var(--teal); }
 .panel .case-body p { font-size: 15px; opacity: 1; }
 .panel .case-body p + p { margin-top: 10px; }
+
+/* A long section split across two side-by-side text columns instead of
+   one tall block of copy. */
+.text-cols { display: flex; gap: 48px; margin-top: 13px; }
+.text-cols .text-col { flex: 1; min-width: 0; }
+@media (max-width: 760px) {
+  .text-cols { flex-direction: column; gap: 0; }
+}
 .xy {
   font-weight: 400;
   color: var(--text) !important;
