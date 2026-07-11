@@ -87,19 +87,28 @@ Claude to rasterize it — see the kpi-config note above for why that works
 when a plain PNG doesn't. Tara now defaults to SVG for these exports since
 it's worked twice — good habit to keep.
 
-## Holistic Analytics panel (case-studies.html, `#panel-har`) — 4 slots
+## Holistic Analytics panel (case-studies.html, `#panel-har`) — 3 slots
 
-Source: **FigJam "Analytics Discovery"**, fileKey `yquKi0L3p291iY02koIETP`.
-The whole board times out through Claude's Figma connector, but the specific
-node Tara linked (`1:1284`, the "SPRINT 1" section) renders fine — so export
-from that same view. Left to right on that board:
+**✅ Done (2026-07-11).** Source: **FigJam "Analytics Discovery"**, fileKey
+`yquKi0L3p291iY02koIETP`. The whole board times out through Claude's Figma
+connector, but the specific node Tara linked (`1:1284`, the "SPRINT 1"
+section) renders fine.
 
-| File name                    | Where                                                                                   | Used on (slot)                          | Export |
-|--------------------------------|--------------------------------------------------------------------------------------------|-------------------------------------------|--------|
-| `har-hypotheses.png`          | The 4-column theme cards — **Filtering / Missing Domain Data / Data Gaps / Shareability** with their coloured sticky descriptions | Top-right slot beside Overview/Problem    | PNG, 2x |
-| `har-synthesis-matrix.png`    | The big **Theme / Problem / Evidence / Action** matrix (with the Ranking Priority legend at the bottom) — the "Brief summary" card + full table | Full-width slot below the problem section | PNG, 2x |
-| `har-framework.png`           | The ranking/scoring matrix further right — same 4 themes, scored against the decision framework | Small slot beside "How I got here"        | PNG, 2x |
-| `har-outcome.png`             | The **"Next step: SPRINT 2"** section, far right — mostly empty, since Phase 2 never started | Slot beside Solution/Outcome              | PNG, 2x |
+| File name                    | Where                                                                                   | Used on (slot)                          |
+|--------------------------------|--------------------------------------------------------------------------------------------|-------------------------------------------|
+| `har-hypotheses.png`          | The 4-column theme cards — Filtering / Missing Domain Data / Data Gaps / Shareability, with testable hypotheses per theme | Top-right slot beside Overview/Problem (`fit-contain`) |
+| `har-synthesis-matrix.png`    | The Theme / Problem / Evidence / Quotes matrix — "Brief summary" card + full table | Full-width slot below the problem section (`fit-contain`) |
+| `har-framework.png`           | The clean "what do we believe they're trying to do?" belief-statement summary | Small slot beside "How I got here" |
+
+**Note on `har-synthesis-matrix.png`:** this names real customers (Disney,
+DHL, Heathrow Airport, Pernod Ricard, and more) with direct call quotes and
+one specific deal outcome ("lost $552K AUD deal"). Tara reviewed this
+explicitly and is comfortable publishing it as is (2026-07-11) — flagging
+here for the record in case that changes later.
+
+The 4th slot (beside Solution/Outcome) was removed per Tara's request —
+that row is now full-width text only, no image. `har-outcome.png` is not
+needed.
 
 Same rules as the other panels: SVG re-export + cairosvg rasterize if
 anything comes back oversized; `fit-contain` class if an image's proportions
@@ -107,6 +116,10 @@ don't match its slot shape.
 
 Project TARS validation was removed from the Work page tabs (2026-07-11, Tara's
 call) — no images needed for it.
+
+**Tab order (2026-07-11):** AI Text to Chart → Media-editing UX → KPI
+Visualisation → Holistic Analytics (Media and KPI swapped from original
+order — nav tabs and Back/Next pager sequence both updated to match).
 
 Optional: `avatar-ben.png`, `avatar-kael.png` (48px referral avatars on the
 landing page — they fall back to a gradient if missing).
