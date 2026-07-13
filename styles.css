@@ -261,13 +261,25 @@ img { display: block; max-width: 100%; }
   align-items: flex-start;
   gap: 64px;
 }
+@media (max-width: 1300px) { .info-cols { gap: 40px; } }
 @media (max-width: 1100px) { .info-cols { flex-wrap: wrap; } }
 @media (max-width: 760px) { .info-cols { flex-direction: column; } }
 
-.info-cols .col { display: flex; flex-direction: column; gap: 48px; max-width: 420px; }
+.info-cols .col { display: flex; flex-direction: column; gap: 48px; flex: 0 1 420px; min-width: 0; }
 /* Skills has 2 sub-columns side by side, so it needs more room than a
-   single-column list — Experience/Education stay at the base max-width. */
-.info-cols .col:has(.skills-sub) { max-width: 480px; }
+   single-column list — Experience/Education stay at the base basis.
+   Skills also resists shrinking (its 2-col grid gets cramped fast), while
+   Experience is just flowing paragraphs that reflow cleanly, so it takes
+   the biggest share of the squeeze as the row narrows. Education sits in
+   between. This keeps the row wrapping evenly instead of Skills alone
+   getting crushed. */
+.info-cols .col:has(.skills-sub) {
+  flex: 0 1 480px;
+  flex-shrink: 0.5;
+  container-type: inline-size;
+}
+#experience-col { flex-shrink: 1.6; }
+#education-col { flex-shrink: 1; }
 
 .skills-sub {
   display: grid;
@@ -275,6 +287,9 @@ img { display: block; max-width: 100%; }
   gap: 48px 24px;
 }
 @media (max-width: 480px) { .skills-sub { grid-template-columns: 1fr; } }
+/* Collapse to one sub-column based on the Skills column's own width, not
+   the viewport — so it folds before the bullets get squeezed two-across. */
+@container (max-width: 340px) { .skills-sub { grid-template-columns: 1fr; } }
 
 .download-cv-btn { margin-top: 40px; align-self: flex-start; }
 
@@ -384,7 +399,8 @@ img { display: block; max-width: 100%; }
 /* Compact inline meta row (Figma 127:1171): 15px, gap 48 */
 .panel .case-meta {
   display: flex;
-  gap: 48px;
+  row-gap: 16px;
+  column-gap: 48px;
   flex-wrap: wrap;
   margin: 0;
   padding-bottom: 0;
@@ -522,6 +538,11 @@ img { display: block; max-width: 100%; }
   overflow: hidden;
 }
 .img-slot.wide { width: 100%; min-height: 212px; margin-bottom: 48px; }
+/* Some source screenshots are much taller than wide (e.g. a full scrolling
+   app capture) — left to stretch, they blow the whole row way past the
+   text column's height. Cap it to a fixed height and opt out of stretch so
+   it settles to roughly match the copy beside it instead. */
+.case-cols .img-slot.cap-height { height: 480px; align-self: flex-start; }
 .img-slot img { width: 100%; height: 100%; object-fit: cover; border-radius: 20px; }
 .img-slot.no-border { border: none; }
 .img-slot.no-radius, .img-slot.no-radius img { border-radius: 0; }
@@ -551,6 +572,13 @@ img { display: block; max-width: 100%; }
    the usual 340px cap allows before the text on them stops being legible. */
 .case-cols.slot-sm .img-slot-padded.tall { max-width: 280px; }
 .case-cols.slot-sm .img-slot-padded.tall img { max-height: 620px; }
+
+/* Wide artifacts paired with a long block of copy (e.g. the Discover/Define
+   write-up) look lost at the default 480px cap — size the card up so it
+   reads as evenly weighted against the text column instead of a small
+   thumbnail with empty space beneath it. */
+.case-cols.slot-sm .img-slot-padded.lg { max-width: 560px; }
+.case-cols.slot-sm .img-slot-padded.lg img { max-height: 460px; }
 
 /* Stretch to match the paired text column's full height instead of
    stopping at the usual natural-size cap, so the image reaches all the
@@ -1132,6 +1160,39 @@ a.project:hover .thumb img { transform: scale(1.04); }
 .case-body ul { margin: 12px 0 0 20px; }
 .case-body li { margin-bottom: 10px; opacity: 0.85; }
 .case-body li strong { color: var(--text); opacity: 1; }
+#panel-har .case-body ul, #panel-har .define-aside ul { margin: 6px 0 0 36px; }
+#panel-har .case-body li, #panel-har .define-aside li { margin-bottom: 2px; line-height: 1.35; }
+#panel-har .case-body ul + p, #panel-har .define-aside ul + p { margin-top: 16px; }
+/* Define block sits stacked under the image instead of continuing the
+   right-hand copy column — capped to the image's own width so the pair
+   reads as one contained left-hand block. */
+.case-cols.slot-sm .define-aside {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  flex: 0 1 auto;
+  max-width: 560px;
+}
+#panel-har .phase-label {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--teal);
+  margin: 28px 0 10px;
+}
+#panel-har .phase:first-child .phase-label { margin-top: 8px; }
+#panel-har .sub-label {
+  font-family: var(--body);
+  font-weight: 800;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--pink);
+  margin: 16px 0 4px;
+}
+#panel-har .phase-label + .sub-label { margin-top: 2px; }
 
 .tension {
   background: var(--bg-alt);

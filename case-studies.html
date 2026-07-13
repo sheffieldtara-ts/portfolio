@@ -29,10 +29,10 @@
     <section class="work-header-band">
       <div class="wrap work-header">
         <div class="tabs" role="tablist" aria-label="Projects">
-          <button class="tab active" id="tab-ttc" role="tab" aria-selected="true" aria-controls="panel-ttc" data-panel="ttc">AI Text to Chart</button>
-          <button class="tab" id="tab-media" role="tab" aria-selected="false" aria-controls="panel-media" data-panel="media">Media-editing UX</button>
-          <button class="tab" id="tab-kpi" role="tab" aria-selected="false" aria-controls="panel-kpi" data-panel="kpi">KPI Visualisation</button>
-          <button class="tab" id="tab-har" role="tab" aria-selected="false" aria-controls="panel-har" data-panel="har">Holistic Analytics discovery research</button>
+          <button class="tab active" id="tab-ttc" role="tab" aria-selected="true" aria-controls="panel-ttc" data-panel="ttc">AI case study</button>
+          <button class="tab" id="tab-media" role="tab" aria-selected="false" aria-controls="panel-media" data-panel="media">Mobile case study</button>
+          <button class="tab" id="tab-kpi" role="tab" aria-selected="false" aria-controls="panel-kpi" data-panel="kpi">Web case study</button>
+          <button class="tab" id="tab-har" role="tab" aria-selected="false" aria-controls="panel-har" data-panel="har">Research &amp; Validation case study</button>
         </div>
       </div>
     </section>
@@ -61,7 +61,7 @@
             </div>
             <div>
               <span class="micro-label">Status</span>
-              <span class="val">Launch ready (design &amp; spec)</span>
+              <span class="val">In backend build — paused for AI TARS</span>
             </div>
             <div>
               <span class="micro-label">Key result</span>
@@ -329,7 +329,7 @@
             </div>
             <div>
               <span class="micro-label">Key result</span>
-              <span class="val">Access: colourblind-safe palette, widened tap targets</span>
+              <span class="val">Rebuilt UX, flows, and UI increased usage of the editor</span>
             </div>
           </div>
         </div>
@@ -510,56 +510,88 @@
               <section>
                 <h2>The problem</h2>
                 <p class="xy">Three competing problem hypotheses → one evidence-backed priority</p>
+                <p>The three hypotheses:</p>
+                <ul>
+                  <li>a legacy experience gap — the top feedback on Analytics was that users missed the old experience</li>
+                  <li>a chart builder with no scalable version</li>
+                  <li>low discoverability of Analytics features</li>
+                </ul>
                 <p>
-                  The three hypotheses: a legacy experience gap (the top
-                  feedback on Analytics was that users missed the old
-                  experience), a chart builder with no scalable version, and
-                  low discoverability of Analytics features. The brief was
-                  explicitly not a solution — it was a sharp, evidenced
-                  problem definition with a recommended priority order the
-                  team could act on.
+                  The brief was explicitly not a solution — it was a sharp,
+                  evidenced problem definition with a recommended priority
+                  order the team could act on.
                 </p>
               </section>
             </div>
-            <div class="img-slot" aria-hidden="true"><img class="fit-contain" src="assets/har-framework.png" alt="Belief statements for each theme: Filtering, Missing Domain Data, Data Gaps, Shareability" loading="lazy" onerror="this.remove()"></div>
+            <div class="img-slot cap-height" aria-hidden="true"><img class="fit-contain" src="assets/har-phase1-to-do.png" alt="Phase 1 to-do list on the FigJam board, checked off item by item: ProductBoard, Gong, Intercom, HEX data, customer calls, problem statements, ranking, hypotheses" loading="lazy" onerror="this.remove()"></div>
           </div>
 
           <div class="img-slot wide" aria-hidden="true"><img class="fit-contain" src="assets/har-synthesis-matrix.png" alt="The Theme, Problem, Evidence, Action research synthesis matrix with ranking priority legend" loading="lazy" onerror="this.remove()"></div>
 
           <div class="case-cols slot-sm">
-            <div class="img-slot img-slot-padded tall" aria-hidden="true"><img class="fit-contain" src="assets/har-phase1-to-do.png" alt="Phase 1 to-do list on the FigJam board, checked off item by item: ProductBoard, Gong, Intercom, HEX data, customer calls, problem statements, ranking, hypotheses" loading="lazy" onerror="this.remove()"></div>
+            <div class="define-aside">
+              <div class="img-slot img-slot-padded lg" aria-hidden="true"><img class="fit-contain" src="assets/har-framework.png" alt="Belief statements for each theme: Filtering, Missing Domain Data, Data Gaps, Shareability" loading="lazy" onerror="this.remove()"></div>
+
+              <div class="phase">
+                <h3 class="phase-label">Define</h3>
+
+                <div class="sub-label">Research questions</div>
+                <p>The research questions were segmented by usage:</p>
+                <ul>
+                  <li>power users: asked what almost made them give up and why they didn't</li>
+                  <li>casual users: what keeps them coming back and what stops them going deeper</li>
+                  <li>low-usage users: what it's like just working out what to do</li>
+                </ul>
+
+                <div class="sub-label">Prioritisation</div>
+                <p>
+                And because a priority call is only useful if people trust
+                it, I applied an explicit decision-making framework —
+                weighing institutional knowledge, then user-familiarity
+                signals, then behavioural data at scale — with the
+                rationale documented, and the synthesis peer-reviewed by
+                engineering, product, and design before stakeholder
+                sign-off.
+                </p>
+              </div>
+            </div>
             <div class="case-body">
               <section>
                 <h2>How I got here</h2>
                 <p>
-                  I structured the work as the Discover and Define halves of
-                  the Double Diamond, run deliberately data-first: before
-                  recruiting a single interviewee, Phase 1 mined every source
-                  the company already had — Amplitude and Hex behavioural
-                  funnels, Gong call reviews, a 90-day Intercom pull plus the
-                  2024 migration period, ProductBoard requests, Salesforce
-                  win/loss and churn signals, and competitive benchmarks.
-                  Each source had a defined job: behavioural data surfaces
-                  symptoms like drop-offs and abandoned sessions, calls and
-                  support tickets explain cause, Salesforce shows business
-                  impact. The themes from that phase defined mutually
-                  exclusive customer cohorts, so Phase 2 interviews validated
-                  with exactly the right people instead of a convenience
-                  sample.
+                  I structure my research using the Double Diamond method,
+                  starting at Discover and Define.
                 </p>
-                <p>
-                  The research questions were segmented by usage: power users
-                  were asked what almost made them give up and why they
-                  didn't; casual users what keeps them coming back and what
-                  stops them going deeper; low-usage users what it's like just
-                  working out what to do. And because a priority call is only
-                  useful if people trust it, I applied an explicit
-                  decision-making framework — weighing institutional
-                  knowledge, then user-familiarity signals, then behavioural
-                  data at scale — with the rationale documented, and the
-                  synthesis peer-reviewed by engineering, product, and design
-                  before stakeholder sign-off.
-                </p>
+
+                <div class="phase">
+                  <h3 class="phase-label">Discover</h3>
+
+                  <div class="sub-label">Data</div>
+                  <p>Phase 1 mined every data source the company already had:</p>
+                  <ul>
+                    <li>Amplitude and Hex behavioural funnels</li>
+                    <li>"Gong" customer call reviews</li>
+                    <li>a 90-day Intercom pull, as well as the 2024 migration period</li>
+                    <li>ProductBoard data — aggregated customer feedback</li>
+                    <li>Salesforce win/loss and churn signals (phase 2)</li>
+                    <li>competitive benchmarks (phase 2)</li>
+                  </ul>
+
+                  <div class="sub-label">Synthesis</div>
+                  <p>Each source had a defined job:</p>
+                  <ul>
+                    <li>behavioural data surfaces symptoms like drop-offs and abandoned sessions</li>
+                    <li>calls and support tickets explain cause</li>
+                    <li>Salesforce shows business impact</li>
+                  </ul>
+
+                  <div class="sub-label">Hypotheses</div>
+                  <p>
+                    The themes from phase 1 defined mutually exclusive
+                    customer cohorts, so Phase 2 interviews validated with
+                    exactly the right people instead of a convenience sample.
+                  </p>
+                </div>
               </section>
             </div>
           </div>
