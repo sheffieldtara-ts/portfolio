@@ -435,9 +435,10 @@ img { display: block; max-width: 100%; }
 /* Outcome sits beside the solution box, unboxed, so it reads as a secondary
    note rather than competing with the solution + CTA. */
 .case-cols.outcome-row { align-items: flex-start; }
-.case-cols.outcome-row .proto-box { flex: 1 1 auto; margin-bottom: 0; }
+.case-cols.outcome-row .proto-box { flex: 1 1 0; min-width: 0; margin-bottom: 0; }
 .case-cols.outcome-row .outcome-aside {
-  flex: 1;
+  flex: 1 1 0;
+  min-width: 0;
   padding-right: 0;
   padding-left: 32px;
 }
@@ -542,7 +543,20 @@ img { display: block; max-width: 100%; }
    app capture) — left to stretch, they blow the whole row way past the
    text column's height. Cap it to a fixed height and opt out of stretch so
    it settles to roughly match the copy beside it instead. */
-.case-cols .img-slot.cap-height { height: 480px; align-self: flex-start; }
+.case-cols .img-slot.cap-height {
+  width: auto;
+  height: 480px;
+  align-self: flex-start;
+  padding: 20px;
+  box-sizing: border-box;
+}
+.case-cols .img-slot.cap-height img {
+  width: auto;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  border-radius: 0;
+}
 .img-slot img { width: 100%; height: 100%; object-fit: cover; border-radius: 20px; }
 .img-slot.no-border { border: none; }
 .img-slot.no-radius, .img-slot.no-radius img { border-radius: 0; }
