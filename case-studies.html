@@ -80,17 +80,20 @@
                 <p>
                   I designed a conversational, AI-powered chart builder to fix the
                   #1 complaint about SafetyCulture Analytics: that building a chart
-                  was too manual and fiddly to bother with.
+                  was too manual and the mental load too high without understanding
+                  value for time.
                 </p>
               </section>
               <section>
                 <h2>The problem</h2>
                 <p class="xy">Manual, fiddly chart-building → charts created through conversation</p>
                 <p>
-                  Completion lagged badly for anyone who started building a chart,
-                  between Nov 2024 and Mar 2025. In customer calls, "the learning curve"
-                  came up repeatedly — the existing builder asked users to make a
-                  series of configuration decisions before they saw anything useful.
+                  We narrowed our research between Nov 2024 and Mar 2025, and
+                  completion lagged badly for anyone who started building a
+                  chart. In customer calls, "the learning curve" came up
+                  repeatedly — the existing builder asked users to make a
+                  series of configuration decisions before they saw anything
+                  useful.
                 </p>
               </section>
             </div>
@@ -113,16 +116,17 @@
                   already built charts manually.
                 </p>
                 <p>
-                  Just as important is what I designed out. Editing inside the
-                  chat was cut — it blurred "save" and "edit" and duplicated the
-                  dashboard editor. Saving multiple charts per session was cut —
-                  mismatched filters break a dashboard's global filters.
-                  Click-based chart editing was cut — syncing chart interactions
-                  back to the model added complexity V1 didn't need. And the
-                  unglamorous half of the work: error and clarification flows,
-                  session and token limits, and a model-agnostic UI that
-                  survives the underlying model being swapped.
+                  Just as important is what I designed out. There were many
+                  scenarios and considerations to explore and account for,
+                  given the existing chart builder and the way it functioned,
+                  which meant:
                 </p>
+                <ul>
+                  <li>editing inside the chat was cut — it blurred "save" and "edit" and duplicated the dashboard editor</li>
+                  <li>saving multiple charts per session was cut — mismatched filters break a dashboard's global filters</li>
+                  <li>click-based chart editing was cut — syncing chart interactions back to the model added complexity V1 didn't need</li>
+                  <li>the unglamorous half of the work: error and clarification flows, session and token limits, and a model-agnostic UI that survives the underlying model being swapped</li>
+                </ul>
               </section>
             </div>
             <div class="img-slot img-slot-padded" aria-hidden="true"><img src="assets/ttc-followup.png" alt="Compact chart card with a follow-up question chip" loading="lazy" onerror="this.remove()"></div>
@@ -137,10 +141,16 @@
                 <p>
                   A conversational chart builder on the Analytics landing page:
                   describe what you want, get a chart instantly, refine it
-                  through guided follow-ups. V1 was deliberately limited to that
-                  single entry point — dashboard-level creation introduced
-                  filter-consistency issues and outstripped design capacity.
+                  through guided follow-ups.
                 </p>
+                <p>V1 was to achieve:</p>
+                <ul>
+                  <li>a single entry point on the landing page, to ensure no overlap with other AI features being introduced</li>
+                  <li>suggested prompts of frequently sought-after data combinations, for ease of use</li>
+                  <li>AI guidance to steer chart creation through follow-up responses</li>
+                  <li>clear guidance for saving to an existing or new dashboard</li>
+                  <li>clear next steps for users who hit an error message</li>
+                </ul>
               </section>
               <a class="btn-teal proto-cta" href="ttc-prototype.html">Try the interactive prototype</a>
             </div>

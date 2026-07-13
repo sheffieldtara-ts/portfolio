@@ -688,7 +688,7 @@ img { display: block; max-width: 100%; }
   .text-cols { flex-direction: column; gap: 0; }
 }
 .xy {
-  font-weight: 400;
+  font-weight: 700;
   color: var(--text) !important;
   opacity: 1 !important;
   margin-bottom: 12px;
@@ -1174,9 +1174,9 @@ a.project:hover .thumb img { transform: scale(1.04); }
 .case-body ul { margin: 12px 0 0 20px; }
 .case-body li { margin-bottom: 10px; opacity: 0.85; }
 .case-body li strong { color: var(--text); opacity: 1; }
-#panel-har .case-body ul, #panel-har .define-aside ul { margin: 6px 0 0 36px; }
-#panel-har .case-body li, #panel-har .define-aside li { margin-bottom: 2px; line-height: 1.35; }
-#panel-har .case-body ul + p, #panel-har .define-aside ul + p { margin-top: 16px; }
+#panel-har .case-body ul, #panel-har .define-aside ul, #panel-ttc .case-body ul { margin: 6px 0 0 36px; }
+#panel-har .case-body li, #panel-har .define-aside li, #panel-ttc .case-body li { margin-bottom: 2px; line-height: 1.35; }
+#panel-har .case-body ul + p, #panel-har .define-aside ul + p, #panel-ttc .case-body ul + p { margin-top: 16px; }
 /* Define block sits stacked under the image instead of continuing the
    right-hand copy column — capped to the image's own width so the pair
    reads as one contained left-hand block. */
