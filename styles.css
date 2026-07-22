@@ -432,13 +432,13 @@ img { display: block; max-width: 100%; }
 .panel .case-body.proto-box section { padding-bottom: 0; }
 .proto-cta { display: inline-flex; text-align: center; }
 
-/* Outcome sits beside the solution box in a matching bordered container,
-   so the two read as an even pair rather than one boxed / one loose. */
+/* Outcome sits beside the solution box. On TTC (which has an image sitting
+   above its Outcome text) it gets a matching bordered container so the two
+   read as an even pair; Media's Outcome is text-only and stays unboxed. */
 .case-cols.outcome-row { align-items: flex-start; }
 .case-cols.outcome-row .proto-box { flex: 1 1 0; min-width: 0; margin-bottom: 0; }
-.case-cols.outcome-row .outcome-aside {
-  flex: 1 1 0;
-  min-width: 0;
+.case-cols.outcome-row .outcome-aside { flex: 1 1 0; min-width: 0; }
+#panel-ttc .case-cols.outcome-row .outcome-aside {
   border: 1px solid rgba(255, 255, 255, 0.27);
   border-radius: 20px;
   padding: 40px;
@@ -447,7 +447,7 @@ img { display: block; max-width: 100%; }
   align-items: flex-start;
   gap: 24px;
 }
-.case-cols.outcome-row .outcome-aside .img-slot {
+#panel-ttc .case-cols.outcome-row .outcome-aside .img-slot {
   width: auto;
   max-width: 320px;
   border: none;
