@@ -64,8 +64,8 @@
               <span class="val">In backend build — paused for AI special projects</span>
             </div>
             <div>
-              <span class="micro-label">Key result</span>
-              <span class="val">Baseline: ~45% completion rate before redesign</span>
+              <span class="micro-label">Timeframe</span>
+              <span class="val">March – May 2025</span>
             </div>
           </div>
         </div>
@@ -73,27 +73,36 @@
       <div class="panel-body">
         <div class="wrap">
           <div class="case-cols slot-sm">
-            <div class="img-slot img-slot-padded" aria-hidden="true"><img src="assets/ttc-chartbuilder.png" alt="The old dashboard-level chart builder — a multi-step configuration panel for metric, attribute, filters and chart type" loading="lazy" onerror="this.remove()"></div>
+            <div class="img-slot img-slot-padded" aria-hidden="true"><img src="assets/ttc-chartbuilder.png" alt="Before: the old dashboard-level chart builder — a multi-step configuration panel for metric, attribute, filters and chart type, with nothing shown until every step is complete" loading="lazy" onerror="this.remove()"></div>
             <div class="case-body">
               <section>
                 <h2>Overview</h2>
                 <p>
-                  I designed a conversational, AI-powered chart builder to fix the
-                  #1 complaint about SafetyCulture Analytics: that building a chart
-                  was too manual and the mental load too high without understanding
-                  value for time.
+                  This started as a mandate from product leadership to find
+                  AI's shape within each domain — not a specific feature
+                  brief. We matched it to the #1 complaint about SafetyCulture
+                  Analytics: building a chart was too manual, and the mental
+                  load was high enough that people couldn't tell if finishing
+                  was worth it, so they dropped off partway through. I
+                  designed a conversational, AI-powered chart builder to fix
+                  it.
                 </p>
               </section>
               <section>
                 <h2>The problem</h2>
                 <p class="xy">Manual, fiddly chart-building → charts created through conversation</p>
                 <p>
-                  We narrowed our research between Nov 2024 and Mar 2025, and
-                  completion lagged badly for anyone who started building a
-                  chart. In customer calls, "the learning curve" came up
-                  repeatedly — the existing builder asked users to make a
-                  series of configuration decisions before they saw anything
-                  useful.
+                  Before: the existing builder (pictured) made users pick a
+                  metric, then an attribute, then filters, then a chart type —
+                  in that order, with nothing shown until every step was
+                  complete. That surfaced in three places: a live dashboard
+                  tracking completion between Nov 2024 and Mar 2025 (the
+                  baseline above), a cluster of customer calls specifically
+                  flagged for "learning curve" and "too complex" language, and
+                  matching demand on the product feedback board. We treated it
+                  as a testable hypothesis — that natural language input would
+                  lower the barrier to entry and lift completion — rather than
+                  a hunch.
                 </p>
               </section>
             </div>
@@ -104,32 +113,46 @@
               <section>
                 <h2>How I got here</h2>
                 <p>
-                  The drop-off data pointed at a specific failure: the old
-                  builder made users answer every question before showing them
-                  anything. So the design inverts it — show a chart first,
-                  refine after. Given even just a metric, the system generates a
-                  chart with sensible defaults, then asks the single most
-                  valuable follow-up question, in a fixed hierarchy: metric →
+                  There wasn't time to run new customer calls due to an
+                  impending AI project we were all about to be placed on, so
+                  instead, I analysed the prompts and feedback coming through
+                  SafetyCulture's existing AI Assistant (Closed EA at the
+                  time). A pattern jumped out: people kept asking what their
+                  data actually meant, then asking to see it as a graph —
+                  something Assistant couldn't do. We also had collated
+                  ProductBoard data where there was a high indication that
+                  "chart builder experience is difficult to use" was a top
+                  pain point for customers. That, plus the drop-off data,
+                  pointed at a specific failure: <em>the current builder made
+                  users answer every question before showing them
+                  anything</em>.
+                </p>
+                <p>
+                  The resulting insight signalled the design needed to invert
+                  the current experience — show a chart first, refine after.
+                  Given even just a metric, the system generates a chart with
+                  sensible defaults, then asks the single most valuable
+                  follow-up question, in a fixed hierarchy: metric →
                   attribute → filters and chart type → configuration. That order
                   wasn't arbitrary — it mirrors the existing chart builder's
                   sequence, so the AI asks questions in the same order customers
                   already built charts manually.
                 </p>
                 <p>
-                  Just as important is what I designed out. There were many
-                  scenarios and considerations to explore and account for,
-                  given the existing chart builder and the way it functioned,
-                  which meant:
+                  Mapping the full flow space took real focus: every branch
+                  had to account for both the existing chart builder's
+                  mechanics and how early the underlying AI model still was —
+                  would people know what to ask, would they trust a chart they
+                  didn't build themselves. I also used the project to
+                  establish the first UI patterns and components for AI
+                  interactions in the product, working closely with our
+                  design systems designer so the rest of the design team
+                  could reuse them for the AI features that came after.
                 </p>
-                <ul>
-                  <li>editing inside the chat was cut — it blurred "save" and "edit" and duplicated the dashboard editor</li>
-                  <li>saving multiple charts per session was cut — mismatched filters break a dashboard's global filters</li>
-                  <li>click-based chart editing was cut — syncing chart interactions back to the model added complexity V1 didn't need</li>
-                  <li>the unglamorous half of the work: error and clarification flows, session and token limits, and a model-agnostic UI that survives the underlying model being swapped</li>
-                </ul>
               </section>
+              <div class="img-slot img-slot-padded" style="width:100%;max-width:none;box-sizing:border-box" aria-hidden="true"><img src="assets/ttc-flow-exploration-full.png" alt="Wider exploration of the chart-builder flow options" loading="lazy" onerror="this.remove()" style="width:100%;height:auto;display:block"></div>
             </div>
-            <div class="img-slot img-slot-padded" aria-hidden="true"><img src="assets/ttc-followup.png" alt="Compact chart card with a follow-up question chip" loading="lazy" onerror="this.remove()"></div>
+            <div class="img-slot img-slot-padded tall" aria-hidden="true"><img src="assets/ttc-ui-explorations.png" data-full="assets/ttc-ui-explorations-full.png" alt="UI explorations for the chart-builder flow" loading="lazy" onerror="this.remove()"></div>
           </div>
 
           <div class="img-slot lead" aria-hidden="true"><img src="assets/ttc-flow-strip.png" alt="Full flow: landing search, generating state, chart with refine panel, refined chart" loading="lazy" onerror="this.remove()"></div>
@@ -156,15 +179,18 @@
             </div>
 
             <div class="case-body outcome-aside">
+              <div class="img-slot img-slot-padded" aria-hidden="true"><img src="assets/ttc-followup.png" alt="Compact chart card with a follow-up question chip" loading="lazy" onerror="this.remove()"></div>
               <section>
                 <h2>Outcome</h2>
                 <p>
                   Design and spec were complete and the project was entering
                   back-end review — with a staged rollout planned (dogfood →
                   closed EA → GA) — when the roadmap shifted and the release was
-                  paused. Success metrics were defined up front: lift completion
-                  past the ~45% baseline, and track the share of charts created
-                  via natural language as the adoption signal.
+                  paused, before it reached that first dogfood stage. No
+                  usability testing ran as a result. Success metrics were
+                  defined up front for when it did: lift completion past the
+                  ~45% baseline, and track the share of charts created via
+                  natural language as the adoption signal.
                 </p>
               </section>
             </div>
@@ -205,8 +231,8 @@
               <span class="val">Released</span>
             </div>
             <div>
-              <span class="micro-label">Key result</span>
-              <span class="val">Demand: $770K AUD in linked ARR</span>
+              <span class="micro-label">Timeframe</span>
+              <span class="val">May – July 2025</span>
             </div>
           </div>
         </div>
@@ -219,8 +245,11 @@
                 <h2>Overview</h2>
                 <p>
                   Customers used KPI thresholds to judge performance at a glance —
-                  but charts supported only a single KPI, with no custom ranges or
-                  colour coding. I designed multiple-KPI support across
+                  but charts only supported a single pass/fail-style target, with
+                  no way to benchmark or bucket their data into their own bands
+                  (poor, fair, good, great — or however their business needed to
+                  read it). Giving customers that flexibility was a priority for
+                  the Analytics team, so I designed multiple-KPI support across
                   SafetyCulture's chart library, letting customers track several
                   targets and performance bands in a single chart.
                 </p>
@@ -295,10 +324,14 @@
             <section>
               <h2>Outcome</h2>
               <p>
-                Released to all customers on web. Post-release impact wasn't
-                instrumented, so the honest answer is: shipped, impact not
-                tracked — a gap I'd push to close earlier if I ran this project
-                again.
+                Released to all customers on web. Formal usage metrics weren't
+                instrumented, but customer conversations after release
+                surfaced one thing clearly: colour customisation was the
+                standout. Customers could finally set their own KPI colours —
+                either as a traffic-light system, or matched to their brand —
+                so charts dropped into reports looking consistent, something
+                they'd never been able to do with bars or columns before. It
+                was one of the most-requested asks we heard.
               </p>
             </section>
           </div>
@@ -338,130 +371,123 @@
               <span class="val">Shipped</span>
             </div>
             <div>
-              <span class="micro-label">Key result</span>
-              <span class="val">Rebuilt UX, flows, and UI increased usage of the editor</span>
+              <span class="micro-label">Timeframe</span>
+              <span class="val">Aug – Oct 2024</span>
             </div>
           </div>
         </div>
       </div>
       <div class="panel-body">
         <div class="wrap">
-          <div class="case-cols slot-sm">
-            <div class="case-body">
-              <section>
-                <h2>Overview</h2>
-                <p>
-                  For frontline workers, annotating a photo is how evidence gets
-                  made — circling the hazard, marking the defect. But the mobile
-                  editing experience they relied on was built in 2013 and had
-                  barely changed since. I redesigned it end to end, validated
-                  the new pattern with user testing, and it shipped.
-                </p>
-              </section>
-              <section>
-                <h2>The problem</h2>
-                <p class="xy">An editor unchanged since 2013 → editing patterns workers already know</p>
-                <p>
-                  The iOS editor dated back to 2013 and its flows were a long
-                  way from what anyone now expects from a photo tool. Every
-                  inspection that needed an annotated image ran through that
-                  friction. The project goal was to bring the user flow and UI
-                  in line with current-day intuitive editing experiences.
-                </p>
-              </section>
-            </div>
-            <div class="img-slot img-slot-padded no-border no-radius align-right" aria-hidden="true"><img src="assets/media-problem.png" alt="The 2013 editor next to the rebuilt 2023 editor, side by side" loading="lazy" onerror="this.remove()"></div>
-          </div>
+          <div class="img-slot lead" aria-hidden="true"><img src="assets/media-flow-old.png" alt="The old Android editor in real use: opening an inspection, adding a photo, capturing it, then annotating with the colour picker, text tool, and shape tool" loading="lazy" onerror="this.remove()"></div>
 
           <div class="case-body case-full">
-            <section>
-              <h2>How I got here</h2>
-              <div class="text-cols">
-                <div class="text-col">
+            <div class="text-cols">
+              <div class="text-col">
+                <section>
+                  <h2>Overview</h2>
                   <p>
-                    The guiding decision was <em>not</em> to reinvent the wheel:
-                    every worker's phone has already taught them how a photo
-                    editor behaves, so the new design borrows those conventions
-                    instead of inventing proprietary ones. I prototyped the new
-                    screen pattern in Figma and validated it before build with a
-                    remote preference test — five participants, managers and
-                    frontline workers across construction, manufacturing, and
-                    utilities in four countries. Navigation proved intuitive;
-                    participants moved between features without prompting. The
-                    test also caught a language problem I'd have missed:
-                    "Original" and "Done" didn't clearly say what they did once
-                    edits auto-saved — a copy fix that went straight into the
-                    design.
+                    For frontline workers, annotating a photo is how evidence gets
+                    made — circling the hazard, marking the defect. But the mobile
+                    editing experience they relied on was built in 2013 and had
+                    barely changed since. I redesigned it end to end, validated
+                    the new pattern with user testing, and it shipped.
                   </p>
-                  <p>
-                    The design work also fed the build decision: after evaluating
-                    third-party editing SDKs with engineering, the editor was
-                    rebuilt natively — the first release mirroring existing
-                    features under the new UI, on an architecture that let
-                    follow-on features (brightness, crop, rotate) ship behind
-                    flags roughly a week apart.
-                  </p>
-                </div>
-                <div class="text-col">
-                  <p>
-                    Native also meant designing for real device diversity, not
-                    one fixed canvas: I tested the toolbar and editing surface
-                    across screen sizes from iPhone SE to iPhone 16 and Android
-                    Compact, letting layout and aspect ratio adapt per platform
-                    (3:4 on iOS, 2:3 on Android) instead of stretching a single
-                    design across all of them. System gestures stayed untouched
-                    — edge-swipe-back on iOS, the Android back button — and
-                    pinch-to-zoom worked exactly as people already expected from
-                    their camera roll.
-                  </p>
-                  <p>
-                    Building both platforms natively from scratch also meant
-                    accessibility couldn't be inherited for free — there was no
-                    default OS component quietly doing that work for us, so
-                    every decision had to be made on purpose. Toolbar icons
-                    carry visible text labels rather than relying on icon-only
-                    affordances, and tap targets were widened directly in the
-                    spec: icon padding went from 16px up to 20px on one row and
-                    24px on the other, specifically to give people a bigger hit
-                    area than the icon's visual size implied. The annotation
-                    colour palette was chosen with colourblind accessibility in
-                    mind too, so tool and state differences don't rely on
-                    colour alone.
-                  </p>
-                </div>
+                </section>
               </div>
-            </section>
+              <div class="text-col">
+                <section>
+                  <h2>The problem</h2>
+                  <p class="xy">An editor unchanged since 2013 → editing patterns workers already know</p>
+                  <p>
+                    The old editor (pictured above) dated back to 2013 and its
+                    flows were a long way from what anyone now expects from a
+                    photo tool. Every
+                    inspection that needed an annotated image ran through that
+                    friction. The project goal was to bring the user flow and UI
+                    in line with current-day intuitive editing experiences.
+                  </p>
+                </section>
+              </div>
+            </div>
           </div>
 
           <div class="case-cols img-pair">
-            <div class="img-slot img-slot-padded" aria-hidden="true"><img class="fit-contain" src="assets/media-states-full.png" alt="Pattern, native component, and dark/light mode state reference — Default, Disabled, and Selected states for the toolbar" loading="lazy" onerror="this.remove()"></div>
-            <div class="img-slot img-slot-padded" aria-hidden="true"><img class="fit-contain" src="assets/media-accessibility.png" alt="Accessibility component reference — header and toolbar components, native colour picker, default/disabled/selected states in dark and light mode, plus the contrast and touch-target audit tables" loading="lazy" onerror="this.remove()"></div>
+            <div class="img-slot img-slot-padded cap-height" style="flex:1;height:490px;box-sizing:border-box" aria-hidden="true"><img class="fit-contain" style="width:100%;height:100%;object-fit:contain;display:block" src="assets/media-problem.png" alt="The 2013 editor next to the rebuilt 2023 editor, side by side" loading="lazy" onerror="this.remove()"></div>
+            <div class="img-slot img-slot-padded cap-height" style="flex:1;height:490px;box-sizing:border-box" aria-hidden="true"><img style="width:100%;height:100%;object-fit:cover;display:block" src="assets/media-flow-diagram.png" alt="Decision-tree map of the old iOS editor's options — pen, stroke colour, fill colour, width, and undo/redo, each behind its own nested menu" loading="lazy" onerror="this.remove()"></div>
           </div>
 
-          <div class="case-body case-full">
-            <section>
-              <h2>The solution</h2>
-              <p>
-                A rebuilt mobile editing experience: pen and shape annotation,
-                arrows, text with styling, colour and stroke controls, rotate
-                and flip, undo/redo — in a carousel-based UI I designed
-                natively for both iOS and Android.
-              </p>
-            </section>
+          <div class="case-cols">
+            <div class="case-body">
+              <section>
+                <h2>How I got here</h2>
+                <p>
+                  It had been a known problem for a long time without anyone
+                  owning it — a Principal PM pushed to finally get it
+                  prioritized, and I put my hand up to lead it.
+                </p>
+                <p>
+                  The guiding decision was <em>not</em> to reinvent the wheel:
+                  every worker's phone had already taught them how a photo
+                  editor behaves, so the redesign borrows those conventions
+                  instead of inventing proprietary ones.
+                </p>
+                <p><strong>Validated before build</strong> with a remote preference test — 5 participants (managers and frontline workers) across construction, manufacturing, and utilities, in 4 countries:</p>
+                <ul>
+                  <li>Navigation proved intuitive — participants moved between features without prompting.</li>
+                  <li>One participant, who takes frequent photos for compliance reporting, called out how much the simplicity would help in her day-to-day.</li>
+                  <li>Caught a language problem I'd have missed: a participant pointed out that if edits auto-save, <em>"Done"</em> doesn't actually mean anything — the labels didn't match what was happening. Fixed before build.</li>
+                </ul>
+                <p><strong>Build decision:</strong> worked closely with a knowledgeable Principal PM throughout, and with the iOS and Android engineers building both front and back end — a genuinely great collaboration.</p>
+                <ul>
+                  <li>Evaluated third-party editing SDKs with engineering together, then chose to rebuild natively.</li>
+                  <li>First release mirrored existing features under the new UI; the architecture let follow-on features (brightness, crop, rotate) ship behind flags about a week apart.</li>
+                </ul>
+                <p><strong>Device diversity:</strong> the part I enjoyed most — researching how individual editing features are natively used and expected to behave on each platform, then designing toward something that would feel intuitive on both, not just familiar on one.</p>
+                <ul>
+                  <li>Tested the toolbar and editing surface from iPhone SE to iPhone 16, and Android Compact.</li>
+                  <li>Layout and aspect ratio adapt per platform (3:4 iOS, 2:3 Android) instead of stretching one design across all of them.</li>
+                  <li>System gestures stayed untouched (edge-swipe-back on iOS, the Android back button); pinch-to-zoom works exactly as people expect from their camera roll.</li>
+                </ul>
+                <p><strong>Technical limitation: accessibility wasn't free.</strong> Building both platforms natively meant there was no default OS component quietly handling it — every decision had to be made on purpose:</p>
+                <ul>
+                  <li>Toolbar icons carry visible text labels, not icon-only affordances.</li>
+                  <li>Tap targets widened directly in the spec — icon padding went from 16px to 20px on one row, 24px on the other, for a bigger hit area than the icon's visual size implied.</li>
+                  <li>Annotation colour palette chosen with colourblind accessibility in mind, so tool and state differences don't rely on colour alone.</li>
+                </ul>
+              </section>
+            </div>
+            <div class="img-slot-stack">
+              <div class="img-slot img-slot-padded" aria-hidden="true"><img class="fit-contain" src="assets/media-states-full.png" alt="Pattern, native component, and dark/light mode state reference — Default, Disabled, and Selected states for the toolbar" loading="lazy" onerror="this.remove()"></div>
+              <div class="img-slot img-slot-padded" aria-hidden="true"><img class="fit-contain" src="assets/media-accessibility.png" alt="Accessibility component reference — header and toolbar components, native colour picker, default/disabled/selected states in dark and light mode, plus the contrast and touch-target audit tables" loading="lazy" onerror="this.remove()"></div>
+            </div>
           </div>
 
-          <div class="img-slot lead no-border" aria-hidden="true"><img src="assets/media-outcome.png" alt="Default, Draw select, Text select, and Shape select tool states shown on a real evidence photo" loading="lazy" onerror="this.remove()"></div>
-
-          <div class="case-body case-full">
-            <section>
-              <h2>Outcome</h2>
-              <p>
-                Shipped to customers through a staged rollout, with the
-                redesigned pattern validated by user testing before a line of
-                code was written.
-              </p>
-            </section>
+          <div class="case-cols outcome-row">
+            <div class="case-body">
+              <section>
+                <h2>The solution</h2>
+                <p>
+                  A rebuilt mobile editing experience: pen and shape annotation,
+                  arrows, text with styling, colour and stroke controls, rotate
+                  and flip, undo/redo — in a carousel-based UI I designed
+                  natively for both iOS and Android.
+                </p>
+              </section>
+            </div>
+            <div class="case-body outcome-aside">
+              <section>
+                <h2>Outcome</h2>
+                <p>
+                  Shipped to customers through a staged rollout, with the
+                  redesigned pattern validated by user testing before a line of
+                  code was written.
+                </p>
+              </section>
+            </div>
           </div>
+
+          <div class="img-slot lead" aria-hidden="true"><img src="assets/media-outcome.png" alt="Default, Draw select, Text select, and Shape select tool states shown on a real evidence photo" loading="lazy" onerror="this.remove()"></div>
 
           <div class="pager">
             <button class="pager-btn" type="button" data-goto="ttc">Back</button>
@@ -498,6 +524,10 @@
             <div>
               <span class="micro-label">Status</span>
               <span class="val">Discovery — cut short</span>
+            </div>
+            <div>
+              <span class="micro-label">Timeframe</span>
+              <span class="val">May – June 2026</span>
             </div>
           </div>
         </div>

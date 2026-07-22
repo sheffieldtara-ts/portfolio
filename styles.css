@@ -432,21 +432,26 @@ img { display: block; max-width: 100%; }
 .panel .case-body.proto-box section { padding-bottom: 0; }
 .proto-cta { display: inline-flex; text-align: center; }
 
-/* Outcome sits beside the solution box, unboxed, so it reads as a secondary
-   note rather than competing with the solution + CTA. */
+/* Outcome sits beside the solution box in a matching bordered container,
+   so the two read as an even pair rather than one boxed / one loose. */
 .case-cols.outcome-row { align-items: flex-start; }
 .case-cols.outcome-row .proto-box { flex: 1 1 0; min-width: 0; margin-bottom: 0; }
 .case-cols.outcome-row .outcome-aside {
   flex: 1 1 0;
   min-width: 0;
-  padding-right: 0;
-  padding-left: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.27);
+  border-radius: 20px;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
 }
-@media (max-width: 860px) {
-  .case-cols.outcome-row .outcome-aside {
-    padding-left: 0;
-    padding-top: 24px;
-  }
+.case-cols.outcome-row .outcome-aside .img-slot {
+  width: auto;
+  max-width: 320px;
+  border: none;
+  padding: 0;
 }
 
 .panel-head { padding: 40px 0 0; }
@@ -481,7 +486,7 @@ img { display: block; max-width: 100%; }
    at its natural aspect ratio (never cropped) instead of forced into a
    fixed-height box — a wide filmstrip stays a short banner, a tall/square
    board gets the height it needs. */
-.img-slot.lead { width: 100%; min-height: 0; margin-bottom: 48px; }
+.img-slot.lead { width: 100%; min-height: 0; margin-bottom: 48px; padding: 20px; box-sizing: border-box; }
 .img-slot.lead img {
   width: 100%;
   height: auto;
@@ -489,6 +494,12 @@ img { display: block; max-width: 100%; }
   display: block;
   border-radius: 20px;
 }
+
+/* Dense, near-square diagrams (e.g. a decision-tree map) blow up to an
+   enormous height at full page width with nothing to crop — cap them to a
+   smaller centered card instead. Click-to-zoom (lightbox) still gives the
+   full-detail view. */
+.img-slot.lead.diagram-cap { max-width: 760px; margin-left: auto; margin-right: auto; }
 
 /* Case rows (Figma 127:1188 / 127:1202 / 142:743):
    default row = copy (flex) + 52% slot; .slot-sm row = image sized to its own
@@ -511,7 +522,14 @@ img { display: block; max-width: 100%; }
   flex-direction: column;
   gap: 24px;
 }
-.case-cols .img-slot-stack .img-slot { width: 100%; }
+.case-cols .img-slot-stack .img-slot { width: 100%; flex: 1 1 0; min-height: 0; }
+.case-cols .img-slot-stack .img-slot img { height: 100%; }
+
+/* Stacked images inside a slot-sm row should hug natural width like any
+   other slot-sm slot, not the 52% default stack width. */
+.case-cols.slot-sm .img-slot-stack { width: auto; max-width: 400px; flex: 0 1 auto; }
+.case-cols.slot-sm .img-slot-stack .img-slot { width: 100%; }
+.case-cols.slot-sm .img-slot-stack .img-slot img { width: 100%; height: auto; max-height: 280px; }
 
 /* slot-sm: the box hugs the image's own aspect ratio instead of a fixed
    26.5% column, so wide screenshots aren't stretched/cropped — the text
@@ -577,8 +595,9 @@ img { display: block; max-width: 100%; }
 }
 
 /* Extra breathing room inside the frame — for images that look cramped
-   flush against the border (e.g. a screenshot with its own drop shadow). */
-.img-slot-padded { padding: 28px; }
+   flush against the border (e.g. a screenshot with its own drop shadow).
+   Standardized to 20px (top/bottom, and all sides) to match everywhere. */
+.img-slot-padded { padding: 20px; }
 .case-cols.slot-sm .img-slot-padded { max-width: 480px; }
 .case-cols.slot-sm .img-slot-padded img { max-height: 340px; }
 
@@ -593,6 +612,13 @@ img { display: block; max-width: 100%; }
    thumbnail with empty space beneath it. */
 .case-cols.slot-sm .img-slot-padded.lg { max-width: 560px; }
 .case-cols.slot-sm .img-slot-padded.lg img { max-height: 460px; }
+
+/* TTC's "How I got here" UI-explorations image is a tall portrait board
+   (~0.58:1) — sized up from the shared .tall preset (280/620, tuned for a
+   narrow checklist) to roughly match the full narrative column beside it,
+   now that all the copy lives in one column again. */
+#panel-ttc .case-cols.slot-sm .img-slot-padded.tall { max-width: 500px; }
+#panel-ttc .case-cols.slot-sm .img-slot-padded.tall img { max-height: 900px; }
 
 /* Stretch to match the paired text column's full height instead of
    stopping at the usual natural-size cap, so the image reaches all the
@@ -1171,12 +1197,17 @@ a.project:hover .thumb img { transform: scale(1.04); }
 }
 .case-body p { opacity: 0.85; }
 .case-body p + p { margin-top: 16px; }
+/* TTC's "designed out" paragraph sits in a .phase wrapper with no heading
+   (removed per Tara), so the usual p+p sibling-margin trick doesn't reach
+   it — give the wrapper its own top margin so it still reads as a new
+   paragraph instead of running on from the line above. */
+#panel-ttc .case-body .phase { margin-top: 16px; }
 .case-body ul { margin: 12px 0 0 20px; }
 .case-body li { margin-bottom: 10px; opacity: 0.85; }
 .case-body li strong { color: var(--text); opacity: 1; }
-#panel-har .case-body ul, #panel-har .define-aside ul, #panel-ttc .case-body ul { margin: 6px 0 0 36px; }
-#panel-har .case-body li, #panel-har .define-aside li, #panel-ttc .case-body li { margin-bottom: 2px; line-height: 1.35; }
-#panel-har .case-body ul + p, #panel-har .define-aside ul + p, #panel-ttc .case-body ul + p { margin-top: 16px; }
+#panel-har .case-body ul, #panel-har .define-aside ul, #panel-ttc .case-body ul, #panel-media .case-body ul { margin: 6px 0 0 36px; }
+#panel-har .case-body li, #panel-har .define-aside li, #panel-ttc .case-body li, #panel-media .case-body li { margin-bottom: 2px; line-height: 1.35; }
+#panel-har .case-body ul + p, #panel-har .define-aside ul + p, #panel-ttc .case-body ul + p, #panel-media .case-body ul + p { margin-top: 16px; }
 /* Define block sits stacked under the image instead of continuing the
    right-hand copy column — capped to the image's own width so the pair
    reads as one contained left-hand block. */
@@ -1187,7 +1218,7 @@ a.project:hover .thumb img { transform: scale(1.04); }
   flex: 0 1 auto;
   max-width: 560px;
 }
-#panel-har .phase-label {
+#panel-har .phase-label, #panel-ttc .phase-label {
   font-family: var(--display);
   font-weight: 800;
   font-size: 14px;
@@ -1196,7 +1227,7 @@ a.project:hover .thumb img { transform: scale(1.04); }
   color: var(--teal);
   margin: 28px 0 10px;
 }
-#panel-har .phase:first-child .phase-label { margin-top: 8px; }
+#panel-har .phase:first-child .phase-label, #panel-ttc .phase:first-child .phase-label { margin-top: 8px; }
 #panel-har .sub-label {
   font-family: var(--body);
   font-weight: 800;
