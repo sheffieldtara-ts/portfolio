@@ -459,6 +459,12 @@ img { display: block; max-width: 100%; }
   border: none;
   padding: 0;
 }
+/* The caption needs its own breathing room even though the plain image
+   version of this box goes flush (padding: 0 above) — otherwise the text
+   runs edge-to-edge and clips against the box/border. */
+#panel-ttc .case-cols.outcome-row .outcome-aside .img-slot.has-caption {
+  padding: 16px;
+}
 
 .panel-head { padding: 40px 0 0; }
 .panel-body { padding: 48px 0 120px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
@@ -514,9 +520,9 @@ img { display: block; max-width: 100%; }
    text-align/margin as needed. */
 .img-caption {
   text-align: center;
-  font-size: 13px;
+  font-size: 13px !important;
   line-height: 1.5;
-  opacity: 0.55;
+  opacity: 0.55 !important;
   max-width: 700px;
   margin: 12px auto 0;
 }
