@@ -74,42 +74,47 @@
       <div class="panel-body">
         <div class="wrap">
           <div class="case-cols slot-sm">
-            <div class="img-slot img-slot-padded" aria-hidden="true"><img src="assets/ttc-chartbuilder.png" alt="Before: the old dashboard-level chart builder — a multi-step configuration panel for metric, attribute, filters and chart type, with nothing shown until every step is complete" loading="lazy" onerror="this.remove()"></div>
+            <div class="img-slot img-slot-padded has-caption"><img class="fit-contain" src="assets/ttc-chartbuilder.png" alt="Before: the old dashboard-level chart builder — a multi-step configuration panel for metric, attribute, filters and chart type, with nothing shown until every step is complete" loading="lazy" onerror="this.remove()">
+              <p class="img-caption" style="text-align:left;max-width:none">The old builder — pick everything, see nothing until the end.</p>
+            </div>
             <div class="case-body">
               <section>
                 <h2>Overview</h2>
                 <p>
-                  This started as a mandate from product leadership to find
-                  AI's shape within each domain — not a specific feature
-                  brief. We matched it to the #1 complaint about SafetyCulture
-                  Analytics: building a chart was too manual, and the mental
-                  load was high enough that people couldn't tell if finishing
-                  was worth it, so they dropped off partway through. I
-                  designed a conversational, AI-powered chart builder to fix
-                  it.
+                  Product leadership set an open mandate: figure out where AI
+                  made sense in each product domain, not a fixed feature
+                  brief. I matched it to Analytics and designed a
+                  conversational, AI-powered chart builder around one idea —
+                  <span class="insight-inline">chart first, revise after</span>
+                  — instead of interrogating people before they'd seen
+                  anything.
                 </p>
               </section>
               <section>
                 <h2>The problem</h2>
                 <p class="xy">Manual, fiddly chart-building → charts created through conversation</p>
                 <p>
-                  Before: the existing builder (pictured) made users pick a
-                  metric, then an attribute, then filters, then a chart type —
-                  in that order, with nothing shown until every step was
-                  complete. That surfaced in three places: a live dashboard
-                  tracking completion between Nov 2024 and Mar 2025 (the
-                  baseline above), a cluster of customer calls specifically
-                  flagged for "learning curve" and "too complex" language, and
-                  matching demand on the product feedback board. We treated it
-                  as a testable hypothesis — that natural language input would
-                  lower the barrier to entry and lift completion — rather than
-                  a hunch.
+                  Before: the existing builder (pictured) made users
+                  pick a metric, then an attribute, then filters, then a
+                  chart type — in that order, with nothing shown until every
+                  step was complete. That was Analytics' #1 complaint:
+                  building a chart was too manual, and the mental load was
+                  high enough that people couldn't tell if finishing was
+                  worth it, so they dropped off partway through. It surfaced
+                  in three places: a live dashboard tracking completion
+                  between Nov 2024 and Mar 2025 (the baseline above), a
+                  cluster of customer calls specifically flagged for
+                  "learning curve" and "too complex" language, and matching
+                  demand on the product feedback board. We treated it as a
+                  testable hypothesis — that natural language input would
+                  lower the barrier to entry and lift completion — rather
+                  than a hunch.
                 </p>
               </section>
             </div>
           </div>
 
-          <div class="case-cols slot-sm">
+          <div class="case-cols">
             <div class="case-body">
               <section>
                 <h2>How I got here</h2>
@@ -123,40 +128,119 @@
                   something Assistant couldn't do. We also had collated
                   ProductBoard data where there was a high indication that
                   "chart builder experience is difficult to use" was a top
-                  pain point for customers. That, plus the drop-off data,
-                  pointed at a specific failure: <em>the current builder made
-                  users answer every question before showing them
-                  anything</em>.
+                  pain point for customers.
                 </p>
                 <p>
-                  The resulting insight signalled the design needed to invert
-                  the current experience — show a chart first, refine after.
-                  Given even just a metric, the system generates a chart with
-                  sensible defaults, then asks the single most valuable
-                  follow-up question, in a fixed hierarchy: metric →
-                  attribute → filters and chart type → configuration. That order
-                  wasn't arbitrary — it mirrors the existing chart builder's
-                  sequence, so the AI asks questions in the same order customers
-                  already built charts manually.
+                  <span class="insight-inline">The bigger call was scope:</span> we seriously considered a "Text
+                  to Dashboard" — natural language producing a full
+                  dashboard, not just one chart. It was the more ambitious
+                  answer, but it needed far more design and engineering
+                  resource than we had, and I'd rather learn fast from
+                  something real than spend that time speculating. A single
+                  conversational chart shipped faster and would teach us just
+                  as much about how people actually wanted this to work.
                 </p>
                 <p>
-                  Mapping the full flow space took real focus: every branch
-                  had to account for both the existing chart builder's
-                  mechanics and how early the underlying AI model still was —
-                  would people know what to ask, would they trust a chart they
-                  didn't build themselves. I also used the project to
-                  establish the first UI patterns and components for AI
-                  interactions in the product, working closely with our
-                  design systems designer so the rest of the design team
-                  could reuse them for the AI features that came after.
+                  <span class="insight-inline">The fix was to invert the failure:</span> given even just a
+                  metric, the system generates a chart with sensible
+                  defaults, then asks the single most valuable follow-up
+                  question, in a fixed hierarchy — metric → attribute →
+                  filters and chart type → configuration. That order mirrors
+                  the existing chart builder's own sequence, so the AI asks
+                  in the order customers already built charts manually. The
+                  hierarchy is fixed rather than model-chosen on purpose: on
+                  a brand-new feature, a dead end or a question that led
+                  nowhere would read as broken, and a customer base that
+                  already relied on Analytics daily wouldn't give it a second
+                  chance easily.
+                </p>
+                <p>
+                  <span class="insight-inline">The flow-mapping had two halves:</span> a graceful fallback for
+                  every branch the model couldn't confidently answer, and
+                  language flexible enough to catch phrasing like "most
+                  common X" or "trends in Y," not just exact matches. That
+                  fallback existed for a real reason: the model only had
+                  access to data inside the Analytics domain, not the rest of
+                  the platform. Ask it for something Analytics couldn't
+                  produce, and without very specific guardrails in the
+                  backend prompting, it could hallucinate an answer instead
+                  of saying so. That risk was sharper than it looked, because
+                  of a second, unshipped feature running in parallel:
+                  SafetyCulture's AI Assistant, which I was separately
+                  analysing for prompt patterns, had access to more of the
+                  platform than Analytics did. If Assistant ever surfaced
+                  something a customer then couldn't find in their own
+                  Analytics data, that inconsistency would cost trust in both
+                  features at once — a comparison that never got tested,
+                  because Assistant hadn't shipped before this paused either.
+                </p>
+                <p>
+                  I also used the project to establish the first UI patterns
+                  and components for AI interactions in the product, working
+                  closely with our design systems designer, so the rest of
+                  the design team could reuse them for the AI features that
+                  came after.
                 </p>
               </section>
-              <div class="img-slot img-slot-padded" style="width:100%;max-width:none;box-sizing:border-box" aria-hidden="true"><img src="assets/ttc-flow-exploration-full.png" alt="Wider exploration of the chart-builder flow options" loading="lazy" onerror="this.remove()" style="width:100%;height:auto;display:block"></div>
             </div>
-            <div class="img-slot img-slot-padded tall" aria-hidden="true"><img src="assets/ttc-ui-explorations.png" data-full="assets/ttc-ui-explorations-full.png" alt="UI explorations for the chart-builder flow" loading="lazy" onerror="this.remove()"></div>
+            <div class="img-slot-stack" style="margin-top:93px">
+              <div class="img-slot has-caption" style="border:none;padding-top:0">
+                <svg viewBox="0 0 1040 490" preserveAspectRatio="xMidYMin meet" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ttcDiagramTitle ttcDiagramDesc" style="display:block;aspect-ratio:1040/490">
+                  <title id="ttcDiagramTitle">Four evidence signals converging on one insight</title>
+                  <desc id="ttcDiagramDesc">A completion dashboard, tagged customer calls, ProductBoard demand, and AI Assistant prompt patterns all point to the same failure, leading to the insight: show a chart first, then ask.</desc>
+                  <defs>
+                    <marker id="ttcArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                      <path d="M0,0 L10,5 L0,10 z" fill="rgba(255,255,255,0.35)"></path>
+                    </marker>
+                  </defs>
+                  <g font-family="Manrope, sans-serif">
+                    <rect x="44" y="24" width="220" height="128" rx="14" fill="none" stroke="rgba(255,255,255,0.27)"></rect>
+                    <text x="154" y="54" text-anchor="middle" font-size="12" letter-spacing="1.2" fill="#e85baf" font-weight="700">SIGNAL 1</text>
+                    <text x="154" y="80" text-anchor="middle" font-size="15" fill="#e9efff" font-weight="600">Completion dashboard</text>
+                    <text x="154" y="102" text-anchor="middle" font-size="13" fill="#e9efff" opacity="0.65">Nov '24 – Mar '25</text>
+                    <text x="154" y="120" text-anchor="middle" font-size="13" fill="#e9efff" opacity="0.65">baseline: ~45%</text>
+
+                    <rect x="288" y="24" width="220" height="128" rx="14" fill="none" stroke="rgba(255,255,255,0.27)"></rect>
+                    <text x="398" y="54" text-anchor="middle" font-size="12" letter-spacing="1.2" fill="#e85baf" font-weight="700">SIGNAL 2</text>
+                    <text x="398" y="80" text-anchor="middle" font-size="15" fill="#e9efff" font-weight="600">Customer calls</text>
+                    <text x="398" y="102" text-anchor="middle" font-size="13" fill="#e9efff" opacity="0.65">tagged "learning curve,"</text>
+                    <text x="398" y="120" text-anchor="middle" font-size="13" fill="#e9efff" opacity="0.65">"too complex"</text>
+
+                    <rect x="532" y="24" width="220" height="128" rx="14" fill="none" stroke="rgba(255,255,255,0.27)"></rect>
+                    <text x="642" y="54" text-anchor="middle" font-size="12" letter-spacing="1.2" fill="#e85baf" font-weight="700">SIGNAL 3</text>
+                    <text x="642" y="80" text-anchor="middle" font-size="15" fill="#e9efff" font-weight="600">ProductBoard</text>
+                    <text x="642" y="102" text-anchor="middle" font-size="13" fill="#e9efff" opacity="0.65">top-voted: chart builder</text>
+                    <text x="642" y="120" text-anchor="middle" font-size="13" fill="#e9efff" opacity="0.65">hard to use</text>
+
+                    <rect x="776" y="24" width="220" height="128" rx="14" fill="none" stroke="rgba(255,255,255,0.27)"></rect>
+                    <text x="886" y="54" text-anchor="middle" font-size="12" letter-spacing="1.2" fill="#e85baf" font-weight="700">SIGNAL 4</text>
+                    <text x="886" y="80" text-anchor="middle" font-size="15" fill="#e9efff" font-weight="600">AI Assistant prompts</text>
+                    <text x="886" y="102" text-anchor="middle" font-size="13" fill="#e9efff" opacity="0.65">"what does this mean" →</text>
+                    <text x="886" y="120" text-anchor="middle" font-size="13" fill="#e9efff" opacity="0.65">"show it as a graph"</text>
+
+                    <path d="M154,152 C154,220 480,220 520,336" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="1.5" marker-end="url(#ttcArrow)"></path>
+                    <path d="M398,152 C398,210 480,230 518,336" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="1.5" marker-end="url(#ttcArrow)"></path>
+                    <path d="M642,152 C642,210 560,230 522,336" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="1.5" marker-end="url(#ttcArrow)"></path>
+                    <path d="M886,152 C886,220 560,220 524,336" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="1.5" marker-end="url(#ttcArrow)"></path>
+
+                    <rect x="170" y="340" width="700" height="130" rx="18" fill="rgba(92,255,220,0.08)" stroke="#5cffdc" stroke-width="1.5"></rect>
+                    <text x="520" y="372" text-anchor="middle" font-size="12" letter-spacing="1.2" fill="#5cffdc" font-weight="700">THE INSIGHT</text>
+                    <text x="520" y="402" text-anchor="middle" font-size="18" fill="#e9efff" font-weight="700">Show a chart first, revise after</text>
+                    <text x="520" y="428" text-anchor="middle" font-size="13" fill="#e9efff" opacity="0.7">Invert an order that made users answer everything</text>
+                    <text x="520" y="446" text-anchor="middle" font-size="13" fill="#e9efff" opacity="0.7">before they'd seen anything at all</text>
+                  </g>
+                </svg>
+                <p class="img-caption" style="text-align:left;max-width:none">Four signals, triangulated without new research — a completion dashboard, tagged customer calls, ProductBoard demand, and AI Assistant prompt patterns — all pointing at the same failure.</p>
+              </div>
+              <div class="img-slot img-slot-padded has-caption"><img src="assets/ttc-flow-exploration-full.png" alt="Wider exploration of the chart-builder flow options" loading="lazy" onerror="this.remove()">
+                <p class="img-caption" style="text-align:left;max-width:none">Wider exploration of how the flow could branch, before settling on a fixed hierarchy.</p>
+              </div>
+            </div>
           </div>
 
-          <div class="img-slot lead" aria-hidden="true"><img src="assets/ttc-flow-strip.png" alt="Full flow: landing search, generating state, chart with refine panel, refined chart" loading="lazy" onerror="this.remove()"></div>
+          <div class="img-slot lead has-caption"><img src="assets/ttc-flow-strip.png" alt="Full flow: landing search, generating state, chart with refine panel, refined chart" loading="lazy" onerror="this.remove()">
+            <p class="img-caption">The full flow: search, generate, refine, done.</p>
+          </div>
 
           <div class="case-cols outcome-row">
             <div class="case-body proto-box">
@@ -167,20 +251,36 @@
                   describe what you want, get a chart instantly, refine it
                   through guided follow-ups.
                 </p>
-                <p>V1 was to achieve:</p>
-                <ul>
-                  <li>a single entry point on the landing page, to ensure no overlap with other AI features being introduced</li>
-                  <li>suggested prompts of frequently sought-after data combinations, for ease of use</li>
-                  <li>AI guidance to steer chart creation through follow-up responses</li>
-                  <li>clear guidance for saving to an existing or new dashboard</li>
-                  <li>clear next steps for users who hit an error message</li>
-                </ul>
+                <p>
+                  V1 carried five decisions, not just five scope items. A
+                  single entry point on the landing page, so it wouldn't
+                  compete or overlap with the other AI features launching
+                  around the same time. Suggested prompts of
+                  frequently-sought data combinations, to solve a cold-start
+                  problem — most people had no idea what natural language
+                  input this could even handle, so the prompts taught the
+                  format by example instead of a tutorial. Guided follow-ups
+                  rather than free re-prompting, for the same trust reason as
+                  the fixed question hierarchy above: a dead end this early
+                  would read as a broken feature, not an unfinished one.
+                  Clear guidance for saving to an existing or new dashboard,
+                  which matched how people already saved charts in the old
+                  builder — though it was also non-negotiable: our charting
+                  library, E-Charts, had no concept of a standalone chart, so
+                  every chart had to live inside a dashboard, one way or
+                  another. And clear next steps on error, tied directly to
+                  the data-access risk above — when the model couldn't
+                  produce what was asked, the failure needed to say so
+                  plainly rather than guess.
+                </p>
               </section>
               <a class="btn-teal proto-cta" href="ttc-prototype.html">Try the interactive prototype</a>
             </div>
 
             <div class="case-body outcome-aside">
-              <div class="img-slot img-slot-padded" aria-hidden="true"><img src="assets/ttc-followup.png" alt="Compact chart card with a follow-up question chip" loading="lazy" onerror="this.remove()"></div>
+              <div class="img-slot img-slot-padded has-caption"><img src="assets/ttc-followup.png" alt="Compact chart card with a follow-up question chip" loading="lazy" onerror="this.remove()">
+                <p class="img-caption" style="text-align:left;max-width:none">Mid-conversation — a follow-up question waiting for an answer.</p>
+              </div>
               <section>
                 <h2>Outcome</h2>
                 <p>
@@ -188,10 +288,27 @@
                   back-end review — with a staged rollout planned (dogfood →
                   closed EA → GA) — when the roadmap shifted and the release was
                   paused, before it reached that first dogfood stage. No
-                  usability testing ran as a result. Success metrics were
-                  defined up front for when it did: lift completion past the
-                  ~45% baseline, and track the share of charts created via
-                  natural language as the adoption signal.
+                  usability testing ran as a result.
+                </p>
+                <p>
+                  Success metrics were defined up front for when it did: lift
+                  completion past the ~45% baseline, and track the share of
+                  charts created via natural language as the adoption
+                  signal. That predicted effect wasn't a guess — in
+                  SafetyCulture's own taxonomy analysis of AI Assistant
+                  queries, Analytics &amp; Reporting was the single largest
+                  category, at roughly 80% of all requests, ranked the
+                  highest priority of five.
+                </p>
+                <p>
+                  If I'm honest about what I'd change: trust was the real
+                  risk here, not usability. Producing the wrong chart, or
+                  none at all, risked losing customers who relied on
+                  Analytics daily. With more time, I'd have scoped V1 to data
+                  the model could reliably produce, and iterated the
+                  guidance live wherever it couldn't — accurate first, then
+                  leading people to the job they actually came to Analytics
+                  to do.
                 </p>
               </section>
             </div>
@@ -268,13 +385,19 @@
                 </p>
               </section>
             </div>
-            <div class="img-slot" aria-hidden="true"><img src="assets/problem-legacy.png" alt="The legacy single-KPI configuration modal — one target value, no ranges or colour coding" loading="lazy" onerror="this.remove()"></div>
+            <div class="img-slot has-caption"><img class="fit-contain" src="assets/problem-legacy.png" alt="The legacy single-KPI configuration modal — one target value, no ranges or colour coding" loading="lazy" onerror="this.remove()">
+              <p class="img-caption" style="text-align:left;max-width:none">The legacy modal — one target value, no ranges, no colour coding.</p>
+            </div>
           </div>
 
-          <div class="img-slot lead" aria-hidden="true"><img class="fit-contain" src="assets/kpi-config.png" data-full="assets/kpi-config-full.png" alt="The full KPI configuration exploration board — every variant and step tried along the way" loading="lazy" onerror="this.remove()"></div>
+          <div class="img-slot lead has-caption"><img class="fit-contain" src="assets/kpi-config.png" data-full="assets/kpi-config-full.png" alt="The full KPI configuration exploration board — every variant and step tried along the way" loading="lazy" onerror="this.remove()">
+            <p class="img-caption">Every variant and step tried on the way to the final config.</p>
+          </div>
 
           <div class="case-cols slot-sm">
-            <div class="img-slot" aria-hidden="true"><img src="assets/kpi-final.png" alt="Finished multi-KPI colour-coded chart with the colour picker" loading="lazy" onerror="this.remove()"></div>
+            <div class="img-slot has-caption"><img class="fit-contain" src="assets/kpi-final.png" alt="Finished multi-KPI colour-coded chart with the colour picker" loading="lazy" onerror="this.remove()">
+              <p class="img-caption" style="text-align:left;max-width:none">The finished result — multiple KPIs, colour-coded, one chart.</p>
+            </div>
             <div class="case-body">
               <section>
                 <h2>How I got here</h2>
@@ -302,7 +425,9 @@
             </div>
           </div>
 
-          <div class="img-slot lead" aria-hidden="true"><img src="assets/kpi-flow-strip.png" alt="Threshold and display configuration steps in sequence" loading="lazy" onerror="this.remove()"></div>
+          <div class="img-slot lead has-caption"><img src="assets/kpi-flow-strip.png" alt="Threshold and display configuration steps in sequence" loading="lazy" onerror="this.remove()">
+            <p class="img-caption">Threshold and display configuration, step by step.</p>
+          </div>
 
           <div class="case-body case-full">
             <section>
@@ -319,7 +444,9 @@
             </section>
           </div>
 
-          <div class="img-slot lead" aria-hidden="true"><img class="fit-contain" src="assets/kpi-defaultstate.png" alt="KPI configuration flow showing the default dash-lines display type" loading="lazy" onerror="this.remove()"></div>
+          <div class="img-slot lead has-caption"><img class="fit-contain" src="assets/kpi-defaultstate.png" alt="KPI configuration flow showing the default dash-lines display type" loading="lazy" onerror="this.remove()">
+            <p class="img-caption">The default state: dashed lines, before any colour coding is applied.</p>
+          </div>
 
           <div class="case-body case-full">
             <section>
@@ -380,7 +507,9 @@
       </div>
       <div class="panel-body">
         <div class="wrap">
-          <div class="img-slot lead" aria-hidden="true"><img src="assets/media-flow-old.png" alt="The old Android editor in real use: opening an inspection, adding a photo, capturing it, then annotating with the colour picker, text tool, and shape tool" loading="lazy" onerror="this.remove()"></div>
+          <div class="img-slot lead has-caption"><img src="assets/media-flow-old.png" alt="The old Android editor in real use: opening an inspection, adding a photo, capturing it, then annotating with the colour picker, text tool, and shape tool" loading="lazy" onerror="this.remove()">
+            <p class="img-caption">The old Android editor, in real use — open, add, capture, annotate.</p>
+          </div>
 
           <div class="case-body case-full">
             <div class="text-cols">
@@ -414,8 +543,12 @@
           </div>
 
           <div class="case-cols img-pair">
-            <div class="img-slot img-slot-padded cap-height" style="flex:1;height:490px;box-sizing:border-box" aria-hidden="true"><img class="fit-contain" style="width:100%;height:100%;object-fit:contain;display:block" src="assets/media-problem.png" alt="The 2013 editor next to the rebuilt 2023 editor, side by side" loading="lazy" onerror="this.remove()"></div>
-            <div class="img-slot img-slot-padded cap-height" style="flex:1;height:490px;box-sizing:border-box" aria-hidden="true"><img style="width:100%;height:100%;object-fit:cover;display:block" src="assets/media-flow-diagram.png" alt="Decision-tree map of the old iOS editor's options — pen, stroke colour, fill colour, width, and undo/redo, each behind its own nested menu" loading="lazy" onerror="this.remove()"></div>
+            <div class="img-slot img-slot-padded cap-height has-caption" style="flex:1;height:534px;box-sizing:border-box"><img class="fit-contain" src="assets/media-problem.png" alt="The 2013 editor next to the rebuilt 2023 editor, side by side" loading="lazy" onerror="this.remove()">
+              <p class="img-caption" style="text-align:left;max-width:none">Ten years apart, side by side.</p>
+            </div>
+            <div class="img-slot img-slot-padded cap-height has-caption" style="flex:1;height:534px;box-sizing:border-box"><img class="fit-contain" src="assets/media-flow-diagram.png" alt="Decision-tree map of the old iOS editor's options — pen, stroke colour, fill colour, width, and undo/redo, each behind its own nested menu" loading="lazy" onerror="this.remove()">
+              <p class="img-caption" style="text-align:left;max-width:none">Every option, nested behind its own menu.</p>
+            </div>
           </div>
 
           <div class="case-cols">
@@ -459,8 +592,12 @@
               </section>
             </div>
             <div class="img-slot-stack">
-              <div class="img-slot img-slot-padded" aria-hidden="true"><img class="fit-contain" src="assets/media-states-full.png" alt="Pattern, native component, and dark/light mode state reference — Default, Disabled, and Selected states for the toolbar" loading="lazy" onerror="this.remove()"></div>
-              <div class="img-slot img-slot-padded" aria-hidden="true"><img class="fit-contain" src="assets/media-accessibility.png" alt="Accessibility component reference — header and toolbar components, native colour picker, default/disabled/selected states in dark and light mode, plus the contrast and touch-target audit tables" loading="lazy" onerror="this.remove()"></div>
+              <div class="img-slot img-slot-padded has-caption"><img class="fit-contain" src="assets/media-states-full.png" alt="Pattern, native component, and dark/light mode state reference — Default, Disabled, and Selected states for the toolbar" loading="lazy" onerror="this.remove()">
+                <p class="img-caption" style="text-align:left;max-width:none">Default, disabled, selected — mapped across both platforms and themes.</p>
+              </div>
+              <div class="img-slot img-slot-padded has-caption"><img class="fit-contain" src="assets/media-accessibility.png" alt="Accessibility component reference — header and toolbar components, native colour picker, default/disabled/selected states in dark and light mode, plus the contrast and touch-target audit tables" loading="lazy" onerror="this.remove()">
+                <p class="img-caption" style="text-align:left;max-width:none">The accessibility audit: contrast and touch targets, checked.</p>
+              </div>
             </div>
           </div>
 
@@ -488,7 +625,9 @@
             </div>
           </div>
 
-          <div class="img-slot lead" aria-hidden="true"><img src="assets/media-outcome.png" alt="Default, Draw select, Text select, and Shape select tool states shown on a real evidence photo" loading="lazy" onerror="this.remove()"></div>
+          <div class="img-slot lead has-caption"><img src="assets/media-outcome.png" alt="Default, Draw select, Text select, and Shape select tool states shown on a real evidence photo" loading="lazy" onerror="this.remove()">
+            <p class="img-caption">The shipped tool states, shown on a real evidence photo.</p>
+          </div>
 
           <div class="pager">
             <button class="pager-btn" type="button" data-goto="ttc">Back</button>
@@ -564,14 +703,20 @@
                 </p>
               </section>
             </div>
-            <div class="img-slot cap-height" aria-hidden="true"><img class="fit-contain" src="assets/har-phase1-to-do.png" alt="Phase 1 to-do list on the FigJam board, checked off item by item: ProductBoard, Gong, Intercom, HEX data, customer calls, problem statements, ranking, hypotheses" loading="lazy" onerror="this.remove()"></div>
+            <div class="img-slot cap-height has-caption" style="height:524px"><img class="fit-contain" src="assets/har-phase1-to-do.png" alt="Phase 1 to-do list on the FigJam board, checked off item by item: ProductBoard, Gong, Intercom, HEX data, customer calls, problem statements, ranking, hypotheses" loading="lazy" onerror="this.remove()">
+              <p class="img-caption" style="text-align:left;max-width:none">Phase 1, checked off item by item.</p>
+            </div>
           </div>
 
-          <div class="img-slot wide" aria-hidden="true"><img class="fit-contain" src="assets/har-synthesis-matrix.png" alt="The Theme, Problem, Evidence, Action research synthesis matrix with ranking priority legend" loading="lazy" onerror="this.remove()"></div>
+          <div class="img-slot wide has-caption"><img class="fit-contain" src="assets/har-synthesis-matrix.png" alt="The Theme, Problem, Evidence, Action research synthesis matrix with ranking priority legend" loading="lazy" onerror="this.remove()">
+            <p class="img-caption">Theme, problem, evidence, action — ranked by priority.</p>
+          </div>
 
           <div class="case-cols slot-sm">
             <div class="define-aside">
-              <div class="img-slot img-slot-padded lg" aria-hidden="true"><img class="fit-contain" src="assets/har-framework.png" alt="Belief statements for each theme: Filtering, Missing Domain Data, Data Gaps, Shareability" loading="lazy" onerror="this.remove()"></div>
+              <div class="img-slot img-slot-padded lg has-caption"><img class="fit-contain" src="assets/har-framework.png" alt="Belief statements for each theme: Filtering, Missing Domain Data, Data Gaps, Shareability" loading="lazy" onerror="this.remove()">
+                <p class="img-caption" style="text-align:left;max-width:none">What we believed each theme's users were trying to do.</p>
+              </div>
 
               <div class="phase">
                 <h3 class="phase-label">Define</h3>
@@ -637,7 +782,9 @@
             </div>
           </div>
 
-          <div class="img-slot lead" aria-hidden="true"><img src="assets/har-hypotheses.png" alt="The three competing problem hypotheses on the FigJam board: Filtering, Missing Domain Data, Data Gaps, Shareability" loading="lazy" onerror="this.remove()"></div>
+          <div class="img-slot lead has-caption"><img src="assets/har-hypotheses.png" alt="The three competing problem hypotheses on the FigJam board: Filtering, Missing Domain Data, Data Gaps, Shareability" loading="lazy" onerror="this.remove()">
+            <p class="img-caption">Competing problem hypotheses, mapped side by side.</p>
+          </div>
 
           <div class="case-cols">
             <div class="case-body">
@@ -673,7 +820,9 @@
           </div>
 
           <div class="case-cols slot-sm">
-            <div class="img-slot img-slot-padded" aria-hidden="true"><img class="fit-contain" src="assets/har-phase2.png" alt="The Phase 2 section of the FigJam board — a Lean UX Canvas and planning notes, left largely unstarted" loading="lazy" onerror="this.remove()"></div>
+            <div class="img-slot img-slot-padded has-caption"><img class="fit-contain" src="assets/har-phase2.png" alt="The Phase 2 section of the FigJam board — a Lean UX Canvas and planning notes, left largely unstarted" loading="lazy" onerror="this.remove()">
+              <p class="img-caption" style="text-align:left;max-width:none">Phase 2 — a Lean UX Canvas, mapped but not yet run.</p>
+            </div>
             <div class="case-body">
               <section>
                 <h2>Next steps</h2>

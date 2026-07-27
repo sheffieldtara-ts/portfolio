@@ -396,6 +396,12 @@ img { display: block; max-width: 100%; }
   color: var(--text);
   margin-bottom: 24px;
 }
+/* Inline emphasis for a case study's core insight, sitting inside a normal
+   paragraph (e.g. Overview) rather than as its own quote block. */
+.insight-inline {
+  font-weight: 700;
+  color: var(--teal);
+}
 /* Compact inline meta row (Figma 127:1171): 15px, gap 48 */
 .panel .case-meta {
   display: flex;
@@ -500,6 +506,52 @@ img { display: block; max-width: 100%; }
    smaller centered card instead. Click-to-zoom (lightbox) still gives the
    full-detail view. */
 .img-slot.lead.diagram-cap { max-width: 760px; margin-left: auto; margin-right: auto; }
+
+/* Light-grey caption sitting inside an image container, under the
+   image/diagram, instead of living only in the alt attribute. Used across
+   every case study — default (centered, 700px cap) suits a full-width lead
+   image; instances inside a narrower column pass inline overrides for
+   text-align/margin as needed. */
+.img-caption {
+  text-align: center;
+  font-size: 13px;
+  line-height: 1.5;
+  opacity: 0.55;
+  max-width: 700px;
+  margin: 12px auto 0;
+}
+
+/* Any image container carrying a caption becomes a flex column so the
+   caption sits inside the bordered box, under the image, rather than
+   outside it. Deliberately low-specificity on the image itself (object-fit:
+   contain, fills remaining space) — most existing modifier classes
+   (lead/cap-height/etc.) already set compatible sizing, this just adds the
+   caption slot without fighting them. */
+.img-slot.has-caption {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  gap: 10px;
+  box-sizing: border-box;
+}
+.img-slot.has-caption > img,
+.img-slot.has-caption > svg {
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  border-radius: 14px;
+  display: block;
+}
+.img-slot.has-caption > .img-caption { flex: 0 0 auto; margin-top: 0; }
+/* Inside a stack (two boxes sharing a column), each image DOES need to grow
+   to fill its share of the stack's height rather than sitting at natural
+   size — otherwise the two boxes end up mismatched heights. */
+.img-slot-stack .img-slot.has-caption > img,
+.img-slot-stack .img-slot.has-caption > svg {
+  flex: 1 1 auto;
+  min-height: 0;
+}
 
 /* Case rows (Figma 127:1188 / 127:1202 / 142:743):
    default row = copy (flex) + 52% slot; .slot-sm row = image sized to its own
