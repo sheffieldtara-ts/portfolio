@@ -463,7 +463,14 @@ img { display: block; max-width: 100%; }
    version of this box goes flush (padding: 0 above) — otherwise the text
    runs edge-to-edge and clips against the box/border. */
 #panel-ttc .case-cols.outcome-row .outcome-aside .img-slot.has-caption {
-  padding: 16px;
+  padding: 16px 0;
+}
+/* object-fit: contain centers by default when the image doesn't exactly
+   fill its box — that leaves it visually indented from the caption below,
+   which is explicitly left-aligned. Anchor the image to the left too so
+   both share the same starting edge. */
+#panel-ttc .case-cols.outcome-row .outcome-aside .img-slot.has-caption > img {
+  object-position: left center;
 }
 
 .panel-head { padding: 40px 0 0; }
@@ -557,6 +564,16 @@ img { display: block; max-width: 100%; }
 .img-slot-stack .img-slot.has-caption > svg {
   flex: 1 1 auto;
   min-height: 0;
+}
+/* The SVG diagram has a fixed aspect-ratio, so letting it flex-grow to fill
+   the stack's height (like the rule above) stretches its box taller than
+   its actual rendered content, leaving empty space between the diagram and
+   its own caption below. Pin it to its natural size instead — the sibling
+   image in the stack still grows to absorb the leftover height, so the
+   diagram's position/size is unaffected, but its caption now sits right
+   underneath it. */
+#panel-ttc .img-slot-stack .img-slot.has-caption > svg {
+  flex: 0 0 auto;
 }
 
 /* Case rows (Figma 127:1188 / 127:1202 / 142:743):
